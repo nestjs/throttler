@@ -2,8 +2,8 @@ import { ThrottlerStorage } from './throttler-storage.interface';
 import { Type } from './type';
 
 export interface ThrottlerOptions {
-  ignoreList?: string[];
-  callLimit?: number;
-  callWindow?: number;
+  ignoreRoutes?: string[];
+  limit?: number;
+  ttl?: number;
   storage?: Type<ThrottlerStorage>
 }
