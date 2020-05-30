@@ -6,8 +6,9 @@ An Express request throttler for controllers and routes.
 
 @Throttle(limit: number = 20, ttl: number = 60)
 
-This decorator will set MAX_LIMIT and TTL_LIMIT metadatas on the route, for
-retrieval from the `Reflector` class. Can be applied to controllers and routes.
+This decorator will set THROTTLER_LIMIT and THROTTLER_TTL metadatas on the
+route, for retrieval from the `Reflector` class. Can be applied to controllers
+and routes.
 
 ## ThrottleGuard
 
