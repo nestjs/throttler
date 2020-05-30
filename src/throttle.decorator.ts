@@ -9,7 +9,7 @@ function setThrottlerMetadata(
   Reflect.defineMetadata(THROTTLER_TTL, ttl, target);
 }
 
-export const Throttler = (
+export const Throttle = (
   limit = 20,
   ttl = 60,
 ): ClassDecorator | MethodDecorator => {
