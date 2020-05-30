@@ -27,7 +27,7 @@ export function httpPromise(
         }),
       );
     });
-    req.method = method.toLowerCase();
+    req.method = method;
     switch (method) {
       case 'GET':
         break;
