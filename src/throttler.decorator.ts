@@ -1,6 +1,6 @@
-import { CALL_LIMIT, RATE_TTL } from './limiter.constants';
+import { CALL_LIMIT, RATE_TTL } from './throttler.constants';
 
-function setRateLimitMetadata(
+function setThrottlerMetadata(
   target: Function,
   limit: number,
   ttl: number,
@@ -9,7 +9,7 @@ function setRateLimitMetadata(
   Reflect.defineMetadata(RATE_TTL, ttl, target);
 }
 
-export const RateLimit = (
+export const Throttler = (
   callLimit = 20,
   ttl = 60,
 ): ClassDecorator | MethodDecorator => {
@@ -19,7 +19,7 @@ export const RateLimit = (
     descriptor: TypedPropertyDescriptor<any>,
   ) => {
     const metaTarget = descriptor ? descriptor.value : target;
-    setRateLimitMetadata(metaTarget, callLimit, ttl);
+    setThrottlerMetadata(metaTarget, callLimit, ttl);
     return descriptor ? descriptor.value : target;
   };
 };
