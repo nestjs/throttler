@@ -1,3 +1,3 @@
-import { RateLimitStorage } from './rate-storage.interface';
+import { ThrottlerStorage } from './throttler-storage.interface';
 
-export type Type<T extends RateLimitStorage> = { new(...args: any[]): T };
+export type Type<T extends ThrottlerStorage> = { new(...args: any[]): T };
