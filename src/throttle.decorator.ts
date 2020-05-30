@@ -12,14 +12,17 @@ function setThrottlerMetadata(
 export const Throttle = (
   limit = 20,
   ttl = 60,
-): ClassDecorator | MethodDecorator => {
+) => {
   return (
-    target: Function | Record<string, any>,
+    target: any,
     propertyKey: string | symbol,
     descriptor: TypedPropertyDescriptor<any>,
   ) => {
-    const metaTarget = descriptor ? descriptor.value : target;
-    setThrottlerMetadata(metaTarget, limit, ttl);
-    return descriptor ? descriptor.value : target;
+    if (descriptor) {
+      setThrottlerMetadata(descriptor.value, limit, ttl);
+      return descriptor;
+    }
+    setThrottlerMetadata(target, limit, ttl);
+    return target;
   };
 };

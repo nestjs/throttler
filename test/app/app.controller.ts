@@ -1,5 +1,5 @@
 import { Controller, Get } from '@nestjs/common';
-import { Throttle } from '../../../src/throttle.decorator';
+import { Throttle } from '../../src/throttle.decorator';
 
 @Controller()
 export class AppController {
