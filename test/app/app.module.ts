@@ -5,7 +5,7 @@ import { AppService } from './app.service';
 
 @Module({
   imports: [ThrottlerModule.forRoot({
-    ignoreRoutes: [
+    excludeRoutes: [
       'ignored',
       { path: 'ignored-2', method: RequestMethod.POST },
       { path: 'ignored-3', method: RequestMethod.ALL },
