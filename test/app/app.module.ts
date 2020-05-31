@@ -1,18 +1,18 @@
-import { Module, RequestMethod } from '@nestjs/common';
-import { ThrottlerModule } from '../../src';
+import { Module, DynamicModule } from '@nestjs/common';
+import { ThrottlerModule, ThrottlerOptions } from '../../src';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { ThrottlerController } from './throttler.controller';
 
 @Module({
-  imports: [ThrottlerModule.forRoot({
-    excludeRoutes: [
-      'ignored',
-      { path: 'ignored-2', method: RequestMethod.POST },
-      { path: 'ignored-3', method: RequestMethod.ALL },
-      { path: 'ignored/:foo', method: RequestMethod.GET },
-    ],
-  })],
-  controllers: [AppController],
+  controllers: [AppController, ThrottlerController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule {
+  static forRoot(options?: ThrottlerOptions): DynamicModule {
+    return {
+      module: AppModule,
+      imports: [ThrottlerModule.forRoot(options)],
+    };
+  }
+}

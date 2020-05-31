@@ -1,10 +1,11 @@
 import { createConfigurableDynamicRootModule } from '@golevelup/nestjs-modules';
 import { Module } from '@nestjs/common';
+import { APP_GUARD } from '@nestjs/core';
 import { THROTTLER_OPTIONS } from './throttler.constants';
+import { ThrottlerGuard } from './throttler.guard';
 import { ThrottlerOptions } from './throttler.interface';
 import { ThrottlerStorageService } from './throttler.service';
-import { APP_GUARD } from '@nestjs/core';
-import { ThrottlerGuard } from './throttler.guard';
+import { ThrottlerStorage } from './throttler-storage.interface';
 
 @Module({})
 export class ThrottlerCoreModule extends createConfigurableDynamicRootModule<
@@ -12,11 +13,16 @@ export class ThrottlerCoreModule extends createConfigurableDynamicRootModule<
   ThrottlerOptions
 >(THROTTLER_OPTIONS, {
   providers: [
-    ThrottlerStorageService,
+    {
+      provide: ThrottlerStorage,
+      inject: [THROTTLER_OPTIONS],
+      useFactory: (options: ThrottlerOptions) => {
+        return options.storage ? options.storage : new ThrottlerStorageService();
+      }
+    },
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard,
     },
   ],
-  exports: [ThrottlerStorageService],
 }) {}
