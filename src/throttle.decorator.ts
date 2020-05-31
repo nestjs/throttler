@@ -9,11 +9,14 @@ function setThrottlerMetadata(
   Reflect.defineMetadata(THROTTLER_TTL, ttl, target);
 }
 
-export const Throttle = (limit = 20, ttl = 60) => {
+export const Throttle = (
+  limit = 20,
+  ttl = 60,
+): MethodDecorator & ClassDecorator => {
   return (
     target: any,
-    propertyKey: string | symbol,
-    descriptor: TypedPropertyDescriptor<any>,
+    propertyKey?: string | symbol,
+    descriptor?: TypedPropertyDescriptor<any>,
   ) => {
     if (descriptor) {
       setThrottlerMetadata(descriptor.value, limit, ttl);
