@@ -24,6 +24,7 @@ via `getRecord()` method. Will return a number, if number is gte max, return
 
 Class to handle the details when it comes to keeping track of the requests.
 Early implementation would be something like this
+
 ```ts
 class ThrottlerStorage {
   private storage: Record<string, number>;
@@ -41,4 +42,10 @@ class ThrottlerStorage {
 
 More than likely, the key would be a mixture of IP and REST route, to allow for
 keeping each route separate and still track multiple IPs. The guard would need
-to be in charge of checking if `req.ips` or `req.ip` needs to be used.
+to be in charge of checking if `req.ips` or `req.ip` needs to be used. The key
+will be hashed using MD5 with the intention to avoid arbitrary characters.
+
+For more information regarding the RFC specifications:
+
+- https://tools.ietf.org/html/rfc6585#section-4
+- https://tools.ietf.org/id/draft-polli-ratelimit-headers-00.html#header-specifications

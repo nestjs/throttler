@@ -1,11 +1,12 @@
-import { Controller, Get } from '@nestjs/common';
-import { Throttle } from '../../src/throttle.decorator';
+import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Throttle, ThrottlerGuard } from '../../src';
 
 @Controller()
 export class AppController {
-  @Get('restricted')
-  @Throttle(2, 60)
-  async restricted() {
-    return 'restricted';
+  @Get()
+  @Throttle(2, 10)
+  @UseGuards(ThrottlerGuard)
+  async test() {
+    return 'test';
   }
 }

@@ -2,15 +2,24 @@ import { Injectable } from '@nestjs/common';
 import { ThrottlerStorage } from './throttler-storage.interface';
 
 @Injectable()
-export class LocalLimitStorage implements ThrottlerStorage {
-  storage: Record<string, number>;
+export class ThrottlerStorageService implements ThrottlerStorage {
+  storage: Record<string, Date[]> = {};
 
-  getRecord(key: string): number {
-    return this.storage[key] || 0;
+  getRecord(key: string): Date[] {
+    return this.storage[key] || [];
   }
 
   addRecord(key: string, ttl: number): void {
-    this.storage[key] = this.storage[key] ? this.storage[key] + 1 : 1;
-    setTimeout(() => this.storage[key]--, ttl * 1000);
+    const ttlMilliseconds = ttl * 1000;
+    if (!this.storage[key]) {
+      this.storage[key] = [];
+    }
+
+    this.storage[key].push(new Date(new Date().getTime() + ttlMilliseconds));
+
+    const timeoutId = setTimeout(() => {
+      this.storage[key].shift();
+      clearTimeout(timeoutId);
+    }, ttlMilliseconds);
   }
 }
