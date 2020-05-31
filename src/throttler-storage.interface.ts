@@ -1,8 +1,8 @@
 export interface ThrottlerStorage {
-  storage: Record<string, number>;
+  storage: Record<string, Date[]>;
 
-  getRecord(key: string): number;
-  addRecord(key: string, tty: number): void;
+  getRecord(key: string): Date[];
+  addRecord(key: string, ttl: number): void;
 }
 
 export const ThrottlerStorage = Symbol('ThrottlerStorage');

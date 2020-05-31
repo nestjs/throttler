@@ -9,10 +9,7 @@ function setThrottlerMetadata(
   Reflect.defineMetadata(THROTTLER_TTL, ttl, target);
 }
 
-export const Throttle = (
-  limit = 20,
-  ttl = 60,
-) => {
+export const Throttle = (limit = 20, ttl = 60) => {
   return (
     target: any,
     propertyKey: string | symbol,
