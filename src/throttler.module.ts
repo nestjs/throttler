@@ -1,5 +1,5 @@
 import { AsyncModuleConfig } from '@golevelup/nestjs-modules';
-import { Global, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { ThrottlerCoreModule } from './throttler-core.module';
 import { ThrottlerOptions } from './throttler.interface';
 
