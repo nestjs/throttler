@@ -15,6 +15,7 @@ export class ThrottlerGuard implements CanActivate {
   // TODO: Return true if current route is in ignoreRoutes.
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const handler = context.getHandler();
+    const headerPrefix = 'X-RateLimit';
 
     const limit = this.reflector.get<number>(THROTTLER_LIMIT, handler);
     const ttl = this.reflector.get<number>(THROTTLER_TTL, handler);
@@ -37,9 +38,9 @@ export class ThrottlerGuard implements CanActivate {
       throw new ThrottlerException();
     }
 
-    res.header('RateLimit-Limit', limit);
-    res.header('RateLimit-Remaining', Math.max(0, limit - record.length));
-    res.header('RateLimit-Reset', nearestExpiryTime);
+    res.header(`${headerPrefix}-Limit`, limit);
+    res.header(`${headerPrefix}-Remaining`, Math.max(0, limit - record.length));
+    res.header(`${headerPrefix}-Reset`, nearestExpiryTime);
 
     this.storageService.addRecord(key, ttl);
     return true;
