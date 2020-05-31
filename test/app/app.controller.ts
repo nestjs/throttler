@@ -9,30 +9,30 @@ export class AppController {
     return 'test';
   }
 
-  // Route that are defined in the `ignoreRoutes` property.
+  // Route that are defined in the `excludeRoutes` property.
 
-  // ignoreRoutes: ['ignored']
+  // excludeRoutes: ['ignored']
   @Get('ignored')
   @Throttle(2, 10)
   async ignored() {
     return 'ignored';
   }
 
-  // ignoreRoutes: [{ path: 'ignored-2', method: RequestMethod.POST }]
+  // excludeRoutes: [{ path: 'ignored-2', method: RequestMethod.POST }]
   @Post('ignored-2')
   @Throttle(2, 10)
   async ignored2() {
     return 'ignored';
   }
 
-  // ignoreRoutes: [{ path: 'ignored-3', method: RequestMethod.ALL }]
+  // excludeRoutes: [{ path: 'ignored-3', method: RequestMethod.ALL }]
   @All('ignored-3')
   @Throttle(2, 10)
   async ignored3() {
     return 'ignored';
   }
 
-  // ignoreRoutes: [{ path: 'ignored/:foo', method: RequestMethod.GET }]
+  // excludeRoutes: [{ path: 'ignored/:foo', method: RequestMethod.GET }]
   @Get('ignored/:foo')
   @Throttle(2, 10)
   async ignored4() {

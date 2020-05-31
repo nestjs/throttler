@@ -18,7 +18,7 @@ export class ThrottlerGuard implements CanActivate {
     private readonly storageService: ThrottlerStorageService,
   ) {}
 
-  // TODO: Return true if current route is in ignoreRoutes.
+  // TODO: Return true if current route is in excludeRoutes.
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const handler = context.getHandler();
     const headerPrefix = 'X-RateLimit';
@@ -30,21 +30,25 @@ export class ThrottlerGuard implements CanActivate {
       return true;
     }
 
-    // Return early if the current route is ignored.
+    // Return early if the current route should be excluded.
     const req = context.switchToHttp().getRequest();
-    const routes = this.normalizeRoutes(this.options.ignoreRoutes);
-    for (const route of routes) {
-      const currentRoutePath = req.url.replace(/^\/+/, '');
-      const currentRouteMethod = this.reflector.get<RequestMethod>('method', handler);
+    const routes = this.normalizeRoutes(this.options.excludeRoutes);
+    const originalUrl = req.originalUrl.replace(/^\/+/, '');
+    const reqMethod = req.method;
+    const queryParamsIndex = originalUrl && originalUrl.indexOf('?');
+    const pathname = queryParamsIndex >= 0
+      ? originalUrl.slice(0, queryParamsIndex)
+      : originalUrl;
 
-      const ignored = (
-        route.path === currentRoutePath &&
-        [RequestMethod.ALL, currentRouteMethod].indexOf(route.method) !== -1
-      ) || route.regex.exec(currentRoutePath);
+    const isExcluded = routes.some(({ method, regex }) => {
+      if (RequestMethod.ALL === method || RequestMethod[method] === reqMethod) {
+        return regex.exec(pathname);
+      }
+      return false;
+    });
+    if (isExcluded) return true;
 
-      if (ignored) return true;
-    }
-
+    // Here we start to check the amount of requests being done against the ttl.
     const res = context.switchToHttp().getResponse();
     const key = md5(`${req.ip}-${context.getClass().name}-${handler.name}`)
     const record = this.storageService.getRecord(key);

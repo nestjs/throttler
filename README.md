@@ -13,7 +13,7 @@ and routes.
 ## ThrottleGuard
 
 Global guard. Check if metadata exists for guard. If not, check if route is in
-`ignoreRoutes`. If so, return `true`. If not, apply defaults from package
+`excludeRoutes`. If so, return `true`. If not, apply defaults from package
 (configured via module). If metadata does exist, use metadata instead of
 defaults (easy overriding) Pull throttlerStorage from `ThrottlerStorage` class
 via `getRecord()` method. Will return a number, if number is gte max, return

@@ -4,7 +4,7 @@ import { Type } from './type';
 
 
 export interface ThrottlerOptions {
-  ignoreRoutes?: Array<string | RouteInfo>;
+  excludeRoutes?: Array<string | RouteInfo>;
   limit?: number;
   ttl?: number;
   storage?: Type<ThrottlerStorage>
