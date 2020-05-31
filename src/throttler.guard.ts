@@ -24,8 +24,8 @@ export class ThrottlerGuard implements CanActivate {
 
     const req = context.switchToHttp().getRequest();
     const res = context.switchToHttp().getResponse();
-    const className = context.getClass().name;
-    const key = md5(`${req.ip}-${className}-${handler.name}`)
+    const key = md5(`${req.ip}-${context.getClass().name}-${handler.name}`)
+
     const record = this.storageService.getRecord(key);
     const nearestExpiryTime = record.length > 0
       ? Math.ceil((record[0].getTime() - new Date().getTime()) / 1000)
@@ -38,7 +38,7 @@ export class ThrottlerGuard implements CanActivate {
     }
 
     res.header('RateLimit-Limit', limit);
-    res.header('RateLimit-Remaining', limit - record.length);
+    res.header('RateLimit-Remaining', Math.max(0, limit - record.length));
     res.header('RateLimit-Reset', nearestExpiryTime);
 
     this.storageService.addRecord(key, ttl);
