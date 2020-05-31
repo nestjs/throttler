@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { RateLimitStorage } from './rate-storage.interface';
+import { ThrottlerStorage } from './throttler-storage.interface';
 
 @Injectable()
-export class LocalLimitStorage implements RateLimitStorage {
+export class LocalLimitStorage implements ThrottlerStorage {
   storage: Record<string, number>;
 
   getRecord(key: string): number {

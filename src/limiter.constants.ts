@@ -1,3 +1,0 @@
-export const CALL_LIMIT = 'LIMITER:CALL_LIMIT';
-export const RATE_TTL = 'LIMITER:RATE_TTL';
-export const LIMIT_OPTIONS = 'LIMITER:MODULE_OPTIONS';
