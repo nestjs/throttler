@@ -1,8 +1,6 @@
-import { CanActivate, ExecutionContext, Inject, Injectable, RequestMethod } from '@nestjs/common';
-import { RouteInfo } from '@nestjs/common/interfaces/middleware';
+import { CanActivate, ExecutionContext, Inject, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import * as md5 from 'md5';
-import { pathToRegexp } from 'path-to-regexp';
 import { ThrottlerStorage } from './throttler-storage.interface';
 import {
   THROTTLER_LIMIT,
@@ -12,8 +10,6 @@ import {
 } from './throttler.constants';
 import { ThrottlerException } from './throttler.exception';
 import { ThrottlerOptions } from './throttler.interface';
-
-type RouteInfoRegex = RouteInfo & { regex: RegExp };
 
 @Injectable()
 export class ThrottlerGuard implements CanActivate {

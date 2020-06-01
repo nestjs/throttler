@@ -15,9 +15,7 @@ describe.each`
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [
-        AppModule.forRoot(),
-      ],
+      imports: [AppModule.forRoot()],
     }).compile();
 
     app = moduleFixture.createNestApplication(adapter);
@@ -38,18 +36,15 @@ describe.each`
      * Tests for setting `@Throttle()` at the method level and for ignore routes
      */
     describe('AppController', () => {
-      it(
-        'GET /ignored',
-        async () => {
-          const response = await httPromise(appUrl + '/ignored');
-          expect(response.data).toEqual({ ignored: true });
-          expect(response.headers).not.toMatchObject({
-            'x-ratelimit-limit': '2',
-            'x-ratelimit-remaining': '1',
-            'x-ratelimit-reset': /\d+/,
-          });
-        },
-      );
+      it('GET /ignored', async () => {
+        const response = await httPromise(appUrl + '/ignored');
+        expect(response.data).toEqual({ ignored: true });
+        expect(response.headers).not.toMatchObject({
+          'x-ratelimit-limit': '2',
+          'x-ratelimit-remaining': '1',
+          'x-ratelimit-reset': /\d+/,
+        });
+      });
       it('GET /', async () => {
         const response = await httPromise(appUrl + '/');
         expect(response.data).toEqual({ success: true });
