@@ -32,6 +32,8 @@
     "reflect-metadata": "^0.1.13"
   },
   "devDependencies": {
+    "@commitlint/cli": "^8.3.5",
+    "@commitlint/config-conventional": "^8.3.4",
     "@nestjs/cli": "^7.0.0",
     "@nestjs/platform-express": "^7.0.0",
     "@nestjs/platform-fastify": "^7.1.1",
@@ -76,7 +78,8 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn format && yarn lint"
+      "pre-commit": "yarn format && yarn lint",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
   }
 }
