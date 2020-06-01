@@ -28,6 +28,11 @@ export class ThrottlerGuard implements CanActivate {
     const classRef = context.getClass();
     const headerPrefix = 'X-RateLimit';
 
+    // Return early if the current route should be skipped.
+    if (this.reflector.getAllAndOverride<boolean>(THROTTLER_SKIP, [handler, classRef])) {
+      return true;
+    }
+
     // Return early when we have no limit or ttl data.
     const routeOrClassLimit = this.reflector.getAllAndOverride<number>(THROTTLER_LIMIT, [
       handler,
@@ -41,14 +46,9 @@ export class ThrottlerGuard implements CanActivate {
     // Check if specific limits are set at class or route level, otherwise use global options.
     const limit = routeOrClassLimit || this.options.limit;
     const ttl = routeOrClassTtl || this.options.ttl;
-    if (typeof limit === 'undefined' || typeof ttl === 'undefined') {
+    /* if (typeof limit === 'undefined' || typeof ttl === 'undefined') {
       return true;
-    }
-
-    // Return early if the current route should be skipped.
-    if (this.reflector.getAllAndOverride<boolean>(THROTTLER_SKIP, [handler, classRef])) {
-      return true;
-    }
+    } */
 
     // Here we start to check the amount of requests being done against the ttl.
     const req = context.switchToHttp().getRequest();
@@ -72,23 +72,5 @@ export class ThrottlerGuard implements CanActivate {
 
     this.storageService.addRecord(key, ttl);
     return true;
-  }
-
-  normalizeRoutes(routes: Array<string | RouteInfo>): RouteInfoRegex[] {
-    if (!Array.isArray(routes)) return [];
-
-    return routes.map(
-      (routeObj: string | RouteInfo): RouteInfoRegex => {
-        const route =
-          typeof routeObj === 'string'
-            ? {
-                path: routeObj,
-                method: RequestMethod.ALL,
-              }
-            : routeObj;
-
-        return { ...route, regex: pathToRegexp(route.path) };
-      },
-    );
   }
 }
