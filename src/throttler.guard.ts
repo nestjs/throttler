@@ -3,10 +3,15 @@ import { RouteInfo } from '@nestjs/common/interfaces/middleware';
 import { Reflector } from '@nestjs/core';
 import * as md5 from 'md5';
 import { pathToRegexp } from 'path-to-regexp';
-import { THROTTLER_LIMIT, THROTTLER_OPTIONS, THROTTLER_TTL } from './throttler.constants';
+import { ThrottlerStorage } from './throttler-storage.interface';
+import {
+  THROTTLER_LIMIT,
+  THROTTLER_OPTIONS,
+  THROTTLER_SKIP,
+  THROTTLER_TTL,
+} from './throttler.constants';
 import { ThrottlerException } from './throttler.exception';
 import { ThrottlerOptions } from './throttler.interface';
-import { ThrottlerStorage } from './throttler-storage.interface';
 
 type RouteInfoRegex = RouteInfo & { regex: RegExp };
 
@@ -18,49 +23,37 @@ export class ThrottlerGuard implements CanActivate {
     private readonly reflector: Reflector,
   ) {}
 
-  // TODO: Return true if current route is in excludeRoutes.
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const handler = context.getHandler();
+    const classRef = context.getClass();
     const headerPrefix = 'X-RateLimit';
 
     // Return early when we have no limit or ttl data.
     const routeOrClassLimit = this.reflector.getAllAndOverride<number>(THROTTLER_LIMIT, [
       handler,
-      context.getClass(),
+      classRef,
     ]);
     const routeOrClassTtl = this.reflector.getAllAndOverride<number>(THROTTLER_TTL, [
       handler,
-      context.getClass(),
+      classRef,
     ]);
-    // check if specific limits are set at class or route level
-    // use global options if not
+
+    // Check if specific limits are set at class or route level, otherwise use global options.
     const limit = routeOrClassLimit || this.options.limit;
     const ttl = routeOrClassTtl || this.options.ttl;
     if (typeof limit === 'undefined' || typeof ttl === 'undefined') {
       return true;
     }
 
-    // Return early if the current route should be excluded.
-    const req = context.switchToHttp().getRequest();
-    const routes = this.normalizeRoutes(this.options.excludeRoutes);
-    const originalUrl = (req.raw ? req.raw : req).originalUrl.replace(/^\/+/, '');
-    const reqMethod = (req.raw ? req.raw : req).method;
-    const queryParamsIndex = originalUrl && originalUrl.indexOf('?');
-    const pathname = queryParamsIndex >= 0 ? originalUrl.slice(0, queryParamsIndex) : originalUrl;
-
-    const isExcluded = routes.some(({ method, regex }) => {
-      if (RequestMethod.ALL === method || RequestMethod[method] === reqMethod) {
-        return regex.exec(pathname);
-      }
-      return false;
-    });
-    if (isExcluded) {
+    // Return early if the current route should be skipped.
+    if (this.reflector.getAllAndOverride<boolean>(THROTTLER_SKIP, [handler, classRef])) {
       return true;
     }
 
     // Here we start to check the amount of requests being done against the ttl.
+    const req = context.switchToHttp().getRequest();
     const res = context.switchToHttp().getResponse();
-    const key = md5(`${req.ip}-${context.getClass().name}-${handler.name}`);
+    const key = md5(`${req.ip}-${classRef.name}-${handler.name}`);
     const record = this.storageService.getRecord(key);
     const nearestExpiryTime =
       record.length > 0 ? Math.ceil((record[0].getTime() - new Date().getTime()) / 1000) : 0;
