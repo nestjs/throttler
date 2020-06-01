@@ -1,7 +1,7 @@
-import { HttpException } from '@nestjs/common';
+import { HttpException, HttpStatus } from '@nestjs/common';
 
 export class ThrottlerException extends HttpException {
   constructor() {
-    super('ThrottlerException: Too Many Requests', 429);
+    super('ThrottlerException: Too Many Requests', HttpStatus.TOO_MANY_REQUESTS);
   }
 }

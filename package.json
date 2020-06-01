@@ -20,21 +20,21 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "test:e2e:dev": "yarn test:e2e --watchAll --debug"
   },
   "dependencies": {
     "@golevelup/nestjs-modules": "^0.4.1",
     "@nestjs/common": "^7.0.0",
     "@nestjs/core": "^7.0.0",
-    "@nestjs/platform-express": "^7.0.0",
     "md5": "^2.2.1",
     "path-to-regexp": "^6.1.0",
-    "reflect-metadata": "^0.1.13",
-    "rimraf": "^3.0.2",
-    "rxjs": "^6.5.4"
+    "reflect-metadata": "^0.1.13"
   },
   "devDependencies": {
     "@nestjs/cli": "^7.0.0",
+    "@nestjs/platform-express": "^7.0.0",
+    "@nestjs/platform-fastify": "^7.1.1",
     "@nestjs/schematics": "^7.0.0",
     "@nestjs/testing": "^7.0.0",
     "@types/express": "^4.17.3",
@@ -50,6 +50,8 @@
     "jest": "^25.1.0",
     "nodemon": "^2.0.4",
     "prettier": "^1.19.1",
+    "rimraf": "^3.0.2",
+    "rxjs": "^6.5.4",
     "supertest": "^4.0.2",
     "ts-jest": "25.2.1",
     "ts-loader": "^6.2.1",
