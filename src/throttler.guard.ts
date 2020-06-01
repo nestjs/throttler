@@ -43,8 +43,8 @@ export class ThrottlerGuard implements CanActivate {
     // Return early if the current route should be excluded.
     const req = context.switchToHttp().getRequest();
     const routes = this.normalizeRoutes(this.options.excludeRoutes);
-    const originalUrl = req.originalUrl.replace(/^\/+/, '');
-    const reqMethod = req.method;
+    const originalUrl = (req.raw ? req.raw : req).originalUrl.replace(/^\/+/, '');
+    const reqMethod = (req.raw ? req.raw : req).method;
     const queryParamsIndex = originalUrl && originalUrl.indexOf('?');
     const pathname = queryParamsIndex >= 0 ? originalUrl.slice(0, queryParamsIndex) : originalUrl;
 
@@ -54,7 +54,10 @@ export class ThrottlerGuard implements CanActivate {
       }
       return false;
     });
-    if (isExcluded) return true;
+    if (isExcluded) {
+      return true;
+    }
+    
 
     // Here we start to check the amount of requests being done against the ttl.
     const res = context.switchToHttp().getResponse();

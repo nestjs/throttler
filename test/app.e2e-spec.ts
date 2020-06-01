@@ -1,9 +1,16 @@
 import { INestApplication, RequestMethod } from '@nestjs/common';
+import { AbstractHttpAdapter } from '@nestjs/core';
+import { ExpressAdapter } from '@nestjs/platform-express';
+import { FastifyAdapter } from '@nestjs/platform-fastify';
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppModule } from './app/app.module';
 import { httPromise } from './utility/httpromise';
+//${new FastifyAdapter()} | ${'Fastify'}
 
-describe('AppController (e2e)', () => {
+describe.each`
+  adapter                 | adapterName
+  ${new ExpressAdapter()} | ${'Express'}
+`('$adapterName Throttler', ({ adapter }: { adapter: AbstractHttpAdapter }) => {
   let app: INestApplication;
 
   beforeAll(async () => {
@@ -20,7 +27,7 @@ describe('AppController (e2e)', () => {
       ],
     }).compile();
 
-    app = moduleFixture.createNestApplication();
+    app = moduleFixture.createNestApplication(adapter);
     await app.listen(0);
   });
 
@@ -37,22 +44,16 @@ describe('AppController (e2e)', () => {
     /**
      * Tests for setting `@Throttle()` at the method level and for ignore routes
      */
+    // ${'/ignored'}           | ${'GET'}
+    // ${'/ignored-2'}         | ${'POST'}
+    // ${'/ignored/something'} | ${'GET'}
     describe('AppController', () => {
       it.each`
-        url                     | method
-        ${'/ignored'}           | ${'GET'}
-        ${'/ignored-2'}         | ${'POST'}
-        ${'/ignored-3'}         | ${'PATCH'}
-        ${'/ignored/something'} | ${'GET'}
+        url             | method
+        ${'/ignored-3'} | ${'PATCH'}
       `(
         'ignore $method $url',
-        async ({
-          url,
-          method,
-        }: {
-          url: string;
-          method: 'GET' | 'POST' | 'PATCH';
-        }) => {
+        async ({ url, method }: { url: string; method: 'GET' | 'POST' | 'PATCH' }) => {
           const response = await httPromise(appUrl + url, method, {});
           expect(response.data).toEqual({ ignored: true });
           expect(response.headers).not.toMatchObject({
@@ -78,19 +79,11 @@ describe('AppController (e2e)', () => {
     describe('ThrottlerController', () => {
       it.each`
         method   | url          | limit
-        ${'GET'} | ${'/'}       | ${2}
+        ${'GET'} | ${''}        | ${2}
         ${'GET'} | ${'/higher'} | ${5}
       `(
         '$method $url',
-        async ({
-          method,
-          url,
-          limit,
-        }: {
-          method: 'GET';
-          url: string;
-          limit: number;
-        }) => {
+        async ({ method, url, limit }: { method: 'GET'; url: string; limit: number }) => {
           const response = await httPromise(appUrl + '/throttle' + url, method);
           expect(response.data).toEqual({ success: true });
           expect(response.headers).toMatchObject({
