@@ -57,7 +57,6 @@ export class ThrottlerGuard implements CanActivate {
     if (isExcluded) {
       return true;
     }
-    
 
     // Here we start to check the amount of requests being done against the ttl.
     const res = context.switchToHttp().getResponse();

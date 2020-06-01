@@ -1,7 +1,6 @@
 import { INestApplication, RequestMethod } from '@nestjs/common';
 import { AbstractHttpAdapter } from '@nestjs/core';
 import { ExpressAdapter } from '@nestjs/platform-express';
-import { FastifyAdapter } from '@nestjs/platform-fastify';
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppModule } from './app/app.module';
 import { httPromise } from './utility/httpromise';

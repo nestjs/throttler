@@ -37,10 +37,7 @@ export function httPromise(
       case 'PUT':
       case 'PATCH':
         req.setHeader('Content-Type', 'application/json');
-        req.setHeader(
-          'Content-Length',
-          Buffer.byteLength(Buffer.from(JSON.stringify(body))),
-        );
+        req.setHeader('Content-Length', Buffer.byteLength(Buffer.from(JSON.stringify(body))));
         req.write(Buffer.from(JSON.stringify(body)));
         break;
       case 'DELETE':

@@ -18,7 +18,7 @@ export class ThrottlerCoreModule extends createConfigurableDynamicRootModule<
       inject: [THROTTLER_OPTIONS],
       useFactory: (options: ThrottlerOptions) => {
         return options.storage ? options.storage : new ThrottlerStorageService();
-      }
+      },
     },
     {
       provide: APP_GUARD,
