@@ -12,7 +12,7 @@ export class AppModule {
   static forRoot(options?: ThrottlerOptions): DynamicModule {
     return {
       module: AppModule,
-      imports: [ThrottlerModule.forRoot(options)],
+      imports: [ThrottlerModule.forRoot(options || {})],
     };
   }
 }

@@ -20,17 +20,17 @@ export const Throttle = (limit = 20, ttl = 60): MethodDecorator & ClassDecorator
   };
 };
 
-export const SkipThrottle = (): MethodDecorator & ClassDecorator => {
+export const SkipThrottle = (skip = true): MethodDecorator & ClassDecorator => {
   return (
     target: any,
     propertyKey?: string | symbol,
     descriptor?: TypedPropertyDescriptor<any>,
   ) => {
     if (descriptor) {
-      Reflect.defineMetadata(THROTTLER_SKIP, true, descriptor.value);
+      Reflect.defineMetadata(THROTTLER_SKIP, skip, descriptor.value);
       return descriptor;
     }
-    Reflect.defineMetadata(THROTTLER_SKIP, true, target);
+    Reflect.defineMetadata(THROTTLER_SKIP, skip, target);
     return target;
   };
 };
