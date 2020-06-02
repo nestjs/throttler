@@ -42,9 +42,6 @@ export class ThrottlerGuard implements CanActivate {
     // Check if specific limits are set at class or route level, otherwise use global options.
     const limit = routeOrClassLimit || this.options.limit;
     const ttl = routeOrClassTtl || this.options.ttl;
-    /* if (typeof limit === 'undefined' || typeof ttl === 'undefined') {
-      return true;
-    } */
 
     // Here we start to check the amount of requests being done against the ttl.
     const req = context.switchToHttp().getRequest();
