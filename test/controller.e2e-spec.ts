@@ -3,7 +3,7 @@ import { AbstractHttpAdapter } from '@nestjs/core';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import { FastifyAdapter } from '@nestjs/platform-fastify';
 import { Test, TestingModule } from '@nestjs/testing';
-import { AppModule } from './app/app.module';
+import { ControllerModule } from './app/controllers/controller.module';
 import { httPromise } from './utility/httpromise';
 
 describe.each`
@@ -15,7 +15,7 @@ describe.each`
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule.forRoot()],
+      imports: [ControllerModule],
     }).compile();
 
     app = moduleFixture.createNestApplication(adapter);
@@ -58,7 +58,7 @@ describe.each`
     /**
      * Tests for setting `@Throttle()` at the class level and overriding at the method level
      */
-    describe('ThrottlerController', () => {
+    describe('LimitController', () => {
       it.each`
         method   | url          | limit
         ${'GET'} | ${''}        | ${2}
@@ -66,13 +66,21 @@ describe.each`
       `(
         '$method $url',
         async ({ method, url, limit }: { method: 'GET'; url: string; limit: number }) => {
-          const response = await httPromise(appUrl + '/throttle' + url, method);
-          expect(response.data).toEqual({ success: true });
-          expect(response.headers).toMatchObject({
-            'x-ratelimit-limit': limit.toString(),
-            'x-ratelimit-remaining': (limit - 1).toString(),
-            'x-ratelimit-reset': /\d+/,
+          for (let i = 0; i < limit; i++) {
+            const response = await httPromise(appUrl + '/limit' + url, method);
+            expect(response.data).toEqual({ success: true });
+            expect(response.headers).toMatchObject({
+              'x-ratelimit-limit': limit.toString(),
+              'x-ratelimit-remaining': (limit - (i + 1)).toString(),
+              'x-ratelimit-reset': /\d+/,
+            });
+          }
+          const errRes = await httPromise(appUrl + '/limit' + url, method);
+          expect(errRes.data).toMatchObject({ statusCode: 429, message: /ThrottlerException/ });
+          expect(errRes.headers).toMatchObject({
+            'retry-after': /\d+/,
           });
+          expect(errRes.status).toBe(429);
         },
       );
     });
@@ -80,13 +88,15 @@ describe.each`
      * Tests for setting throttle values at the `forRoot` level
      */
     describe('DefaultController', () => {
-      it.todo('Implement tests for the DefaultController');
-    });
-    /**
-     * Tests for getting a 429 back when we've hit the limit
-     */
-    describe('LimitController', () => {
-      it.todo('Implement tests for the LimitController');
+      it('GET /default', async () => {
+        const response = await httPromise(appUrl + '/default');
+        expect(response.data).toEqual({ success: true });
+        expect(response.headers).toMatchObject({
+          'x-ratelimit-limit': '5',
+          'x-ratelimit-remaining': '4',
+          'x-ratelimit-reset': /\d+/,
+        });
+      });
     });
   });
 });
