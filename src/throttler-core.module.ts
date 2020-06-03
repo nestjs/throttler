@@ -25,5 +25,5 @@ export class ThrottlerCoreModule extends createConfigurableDynamicRootModule<
       useClass: ThrottlerGuard,
     },
   ],
-  exports: [ThrottlerStorage, THROTTLER_OPTIONS]
+  exports: [ThrottlerStorage, THROTTLER_OPTIONS],
 }) {}
