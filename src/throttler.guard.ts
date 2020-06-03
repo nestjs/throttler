@@ -6,9 +6,9 @@ import {
   THROTTLER_LIMIT,
   THROTTLER_OPTIONS,
   THROTTLER_SKIP,
-  THROTTLER_TTL,
+  THROTTLER_TTL
 } from './throttler.constants';
-import { ThrottlerException } from './throttler.exception';
+import { ThrottlerException, ThrottlerWsException } from './throttler.exception';
 import { ThrottlerOptions } from './throttler.interface';
 
 @Injectable()
@@ -23,7 +23,6 @@ export class ThrottlerGuard implements CanActivate {
     const req = context.switchToHttp().getRequest();
     const handler = context.getHandler();
     const classRef = context.getClass();
-    const headerPrefix = 'X-RateLimit';
 
     // Return early if the current route should be skipped.
     if (this.reflector.getAllAndOverride<boolean>(THROTTLER_SKIP, [handler, classRef])) {
@@ -53,11 +52,21 @@ export class ThrottlerGuard implements CanActivate {
     const limit = routeOrClassLimit || this.options.limit;
     const ttl = routeOrClassTtl || this.options.ttl;
 
+    switch (context.getType()) {
+      case 'http': return this.httpHandler(context, limit, ttl);
+      case 'ws': return this.websocketHandler(context, limit, ttl);
+    }
+  }
+
+  private httpHandler(context: ExecutionContext, limit: number, ttl: number): boolean {
+    const headerPrefix = 'X-RateLimit';
+
     // Here we start to check the amount of requests being done against the ttl.
     const res = context.switchToHttp().getResponse();
-    const key = md5(`${req.ip}-${classRef.name}-${handler.name}`);
+    const key = this.generateKey(context, req.ip);
     const ttls = await this.storageService.getRecord(key);
-    const nearestExpiryTime = ttls.length > 0 ? Math.ceil((ttls[0] - Date.now()) / 1000) : 0;
+    const nearestExpiryTime =
+      ttls.length > 0 ? Math.ceil((ttls[0].getTime() - new Date().getTime()) / 1000) : 0;
 
     // Throw an error when the user reached their limit.
     if (ttls.length >= limit) {
@@ -73,5 +82,23 @@ export class ThrottlerGuard implements CanActivate {
 
     await this.storageService.addRecord(key, ttl);
     return true;
+  }
+
+  private websocketHandler(context: ExecutionContext, limit: number, ttl: number): boolean {
+    const client = context.switchToWs().getClient();
+    const key = this.generateKey(context, client.conn.remoteAddress);
+    const ttls = this.storageService.getRecord(key);
+
+    if (ttls.length >= limit) {
+      throw new ThrottlerWsException();
+    }
+
+    this.storageService.addRecord(key, ttl);
+    return true;
+  }
+
+  private generateKey(context: ExecutionContext, prefix: string): string {
+    const suffix = `${context.getClass().name}-${context.getHandler().name}`;
+    return md5(`${prefix}-${suffix}`)
   }
 }
