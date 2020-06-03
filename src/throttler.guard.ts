@@ -6,7 +6,7 @@ import {
   THROTTLER_LIMIT,
   THROTTLER_OPTIONS,
   THROTTLER_SKIP,
-  THROTTLER_TTL
+  THROTTLER_TTL,
 } from './throttler.constants';
 import { ThrottlerException, ThrottlerWsException } from './throttler.exception';
 import { ThrottlerOptions } from './throttler.interface';
@@ -53,8 +53,10 @@ export class ThrottlerGuard implements CanActivate {
     const ttl = routeOrClassTtl || this.options.ttl;
 
     switch (context.getType()) {
-      case 'http': return this.httpHandler(context, limit, ttl);
-      case 'ws': return this.websocketHandler(context, limit, ttl);
+      case 'http':
+        return this.httpHandler(context, limit, ttl);
+      case 'ws':
+        return this.websocketHandler(context, limit, ttl);
     }
   }
 
@@ -99,6 +101,6 @@ export class ThrottlerGuard implements CanActivate {
 
   private generateKey(context: ExecutionContext, prefix: string): string {
     const suffix = `${context.getClass().name}-${context.getHandler().name}`;
-    return md5(`${prefix}-${suffix}`)
+    return md5(`${prefix}-${suffix}`);
   }
 }

@@ -1,11 +1,9 @@
-import { WebSocketAdapter, INestApplication, Type } from '@nestjs/common';
+import { INestApplication, Type, WebSocketAdapter } from '@nestjs/common';
 import { IoAdapter } from '@nestjs/platform-socket.io';
 import { WsAdapter } from '@nestjs/platform-ws';
 import { Test } from '@nestjs/testing';
 import * as Io from 'socket.io-client';
-import { createConnection, wsClose, wsPromise } from './utility/ws-promise';
 import { GatewayModule } from './app/gateways/gateway.module';
-
 describe.each`
   adapter      | server         | client                                 | protocol  | sendMethod | serializer                                                 | deserializer
   ${IoAdapter} | ${'Socket.io'} | ${(url: string) => Io(url)}            | ${'http'} | ${'emit'}  | ${(message: string) => message}                            | ${(message: string) => JSON.parse(message)}
