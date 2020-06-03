@@ -1,14 +1,16 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { WsException } from '@nestjs/websockets';
 
+const message = 'Too Many Requests';
+
 export class ThrottlerException extends HttpException {
   constructor() {
-    super('ThrottlerException: Too Many Requests', HttpStatus.TOO_MANY_REQUESTS);
+    super(`ThrottlerException: ${message}`, HttpStatus.TOO_MANY_REQUESTS);
   }
 }
 
 export class ThrottlerWsException extends WsException {
   constructor() {
-    super('ThrottlerWsException: Too Many Requests');
+    super(`ThrottlerWsException: ${message}`);
   }
 }
