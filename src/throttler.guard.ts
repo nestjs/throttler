@@ -6,7 +6,7 @@ import {
   THROTTLER_LIMIT,
   THROTTLER_OPTIONS,
   THROTTLER_SKIP,
-  THROTTLER_TTL,
+  THROTTLER_TTL
 } from './throttler.constants';
 import { ThrottlerException, ThrottlerWsException } from './throttler.exception';
 import { ThrottlerOptions } from './throttler.interface';
@@ -47,6 +47,8 @@ export class ThrottlerGuard implements CanActivate {
         return this.httpHandler(context, limit, ttl);
       case 'ws':
         return this.websocketHandler(context, limit, ttl);
+      default:
+        return true;
     }
   }
 
