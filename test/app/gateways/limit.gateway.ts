@@ -1,11 +1,12 @@
-import { WebSocketGateway, SubscribeMessage } from '@nestjs/websockets';
-import { AppService } from '../app.service';
+import { SubscribeMessage, WebSocketGateway } from '@nestjs/websockets';
 import { Throttle } from '../../../src';
+import { AppService } from '../app.service';
 
 @Throttle(2, 10)
 @WebSocketGateway({ path: 'limit' })
 export class LimitGateway {
   constructor(private readonly appService: AppService) {}
+
   @SubscribeMessage('throttle-regular')
   pass() {
     return this.appService.success();
