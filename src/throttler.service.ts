@@ -3,9 +3,9 @@ import { ThrottlerStorage } from './throttler-storage.interface';
 
 @Injectable()
 export class ThrottlerStorageService implements ThrottlerStorage {
-  storage: Record<string, Date[]> = {};
+  storage: Record<string, number[]> = {};
 
-  getRecord(key: string): Date[] {
+  getRecord(key: string): number[] {
     return this.storage[key] || [];
   }
 
@@ -15,7 +15,7 @@ export class ThrottlerStorageService implements ThrottlerStorage {
       this.storage[key] = [];
     }
 
-    this.storage[key].push(new Date(new Date().getTime() + ttlMilliseconds));
+    this.storage[key].push(Date.now() + ttlMilliseconds);
 
     const timeoutId = setTimeout(() => {
       this.storage[key].shift();

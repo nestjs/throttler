@@ -71,8 +71,7 @@ export class ThrottlerGuard implements CanActivate {
     const res = context.switchToHttp().getResponse();
     const key = this.generateKey(context, req.ip);
     const ttls = this.storageService.getRecord(key);
-    const nearestExpiryTime =
-      ttls.length > 0 ? Math.ceil((ttls[0].getTime() - new Date().getTime()) / 1000) : 0;
+    const nearestExpiryTime = ttls.length > 0 ? Math.ceil((ttls[0] - Date.now()) / 1000) : 0;
 
     // Throw an error when the user reached their limit.
     if (ttls.length >= limit) {
