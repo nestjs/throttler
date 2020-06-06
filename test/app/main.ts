@@ -1,6 +1,5 @@
 import { NestFactory } from '@nestjs/core';
 import { ExpressAdapter } from '@nestjs/platform-express';
-import { WsAdapter } from '@nestjs/platform-ws';
 // import { FastifyAdapter } from '@nestjs/platform-fastify';
 import { WsAdapter } from '@nestjs/platform-ws';
 import { AppModule } from './app.module';
