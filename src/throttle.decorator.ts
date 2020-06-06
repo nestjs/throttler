@@ -1,10 +1,10 @@
 import { THROTTLER_LIMIT, THROTTLER_SKIP, THROTTLER_TTL } from './throttler.constants';
 
-function setThrottlerMetadata(target: Function, limit: number, ttl: number): void {
-  Reflect.defineMetadata(THROTTLER_LIMIT, limit, target);
-  Reflect.defineMetadata(THROTTLER_TTL, ttl, target);
-}
-
+/**
+ * Adds metadata to the target which will be handled by the ThrottlerGuard to
+ * handle incoming requests based on the given metadata.
+ * @usage @Throttle(2, 10)
+ */
 export const Throttle = (limit = 20, ttl = 60): MethodDecorator & ClassDecorator => {
   return (
     target: any,
@@ -12,14 +12,22 @@ export const Throttle = (limit = 20, ttl = 60): MethodDecorator & ClassDecorator
     descriptor?: TypedPropertyDescriptor<any>,
   ) => {
     if (descriptor) {
-      setThrottlerMetadata(descriptor.value, limit, ttl);
+      Reflect.defineMetadata(THROTTLER_LIMIT, limit, descriptor.value);
+      Reflect.defineMetadata(THROTTLER_TTL, ttl, descriptor.value);
       return descriptor;
     }
-    setThrottlerMetadata(target, limit, ttl);
+    Reflect.defineMetadata(THROTTLER_LIMIT, limit, target);
+    Reflect.defineMetadata(THROTTLER_TTL, ttl, target);
     return target;
   };
 };
 
+/**
+ * Adds metadata to the target which will be handled by the ThrottlerGuard
+ * whether or not to skip throttling for this context.
+ * @usage @SkipThrottle()
+ * @usage @SkipThrottle(false)
+ */
 export const SkipThrottle = (skip = true): MethodDecorator & ClassDecorator => {
   return (
     target: any,

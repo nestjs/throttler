@@ -19,6 +19,11 @@ export class ThrottlerGuard implements CanActivate {
     private readonly reflector: Reflector,
   ) {}
 
+  /**
+   * Throttle requests against their TTL limit and whether to allow or deny it.
+   * Based on the context type different handlers will be called.
+   * @throws ThrottlerException
+   */
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const handler = context.getHandler();
     const classRef = context.getClass();
@@ -52,6 +57,12 @@ export class ThrottlerGuard implements CanActivate {
     }
   }
 
+  /**
+   * Throttles incoming HTTP requests.
+   * All the outgoing requests will contain RFC-compatible RateLimit headers.
+   * @see https://tools.ietf.org/id/draft-polli-ratelimit-headers-00.html#header-specifications
+   * @throws ThrottlerException
+   */
   private httpHandler(context: ExecutionContext, limit: number, ttl: number): boolean {
     const headerPrefix = 'X-RateLimit';
 
@@ -79,6 +90,10 @@ export class ThrottlerGuard implements CanActivate {
     return true;
   }
 
+  /**
+   * Throttles websocket requests. Both socket.io and websockets are supported.
+   * @throws ThrottlerException
+   */
   private websocketHandler(context: ExecutionContext, limit: number, ttl: number): boolean {
     const client = context.switchToWs().getClient();
     const ip = ['conn', '_socket']
@@ -96,8 +111,12 @@ export class ThrottlerGuard implements CanActivate {
     return true;
   }
 
-  private generateKey(context: ExecutionContext, prefix: string): string {
-    const suffix = `${context.getClass().name}-${context.getHandler().name}`;
+  /**
+   * Generate a hashed key that will be used as a storage key.
+   * The key will always be a combination of the current context and IP.
+   */
+  private generateKey(context: ExecutionContext, suffix: string): string {
+    const prefix = `${context.getClass().name}-${context.getHandler().name}`;
     return md5(`${prefix}-${suffix}`);
   }
 }
