@@ -8,10 +8,10 @@ export function httPromise(
   body?: Record<string, any>,
 ): Promise<{ data: any; headers: Record<string, any>; status: number }> {
   return new Promise((resolve, reject) => {
-    const req = request(url, res => {
+    const req = request(url, (res) => {
       res.setEncoding('utf-8');
       let data = '';
-      res.on('data', chunk => {
+      res.on('data', (chunk) => {
         data += chunk;
       });
       res.on('end', () => {
@@ -21,13 +21,13 @@ export function httPromise(
           status: res.statusCode,
         });
       });
-      res.on('error', err =>
-        reject({
+      res.on('error', (err) => {
+        return reject({
           data: err,
           headers: res.headers,
           status: res.statusCode,
-        }),
-      );
+        });
+      });
     });
     req.method = method;
     switch (method) {

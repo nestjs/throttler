@@ -27,7 +27,7 @@ describe.each`
     protocol: 'http' | 'ws';
     sendMethod: 'send' | 'emit';
     serializer: (message: string) => string;
-    deserializer: (message: string) => string | object;
+    deserializer: (message: string) => string | Record<string, any>;
   }) => {
     let app: INestApplication;
 
