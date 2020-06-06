@@ -6,7 +6,7 @@ import {
   THROTTLER_LIMIT,
   THROTTLER_OPTIONS,
   THROTTLER_SKIP,
-  THROTTLER_TTL
+  THROTTLER_TTL,
 } from './throttler.constants';
 import { ThrottlerException } from './throttler.exception';
 import { ThrottlerOptions } from './throttler.interface';
