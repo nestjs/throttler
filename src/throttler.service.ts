@@ -5,7 +5,7 @@ import { ThrottlerStorage } from './throttler-storage.interface';
 export class ThrottlerStorageService implements ThrottlerStorage {
   storage: Record<string, number[]> = {};
 
-  async getRecord(key: string): Promise<number[]> {
+  getRecord(key: string): number[] {
     return this.storage[key] || [];
   }
 
