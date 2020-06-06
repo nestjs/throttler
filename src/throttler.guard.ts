@@ -13,11 +13,15 @@ import { ThrottlerOptions } from './throttler.interface';
 
 @Injectable()
 export class ThrottlerGuard implements CanActivate {
+  storageService: ThrottlerStorage;
+
   constructor(
     @Inject(THROTTLER_OPTIONS) private readonly options: ThrottlerOptions,
-    @Inject(ThrottlerStorage) private readonly storageService: ThrottlerStorage,
+    @Inject(ThrottlerStorage) storageService: ThrottlerStorage,
     private readonly reflector: Reflector,
-  ) {}
+  ) {
+    this.storageService = options.storage || storageService;
+  }
 
   /**
    * Throttle requests against their TTL limit and whether to allow or deny it.
@@ -73,13 +77,17 @@ export class ThrottlerGuard implements CanActivate {
    * @see https://tools.ietf.org/id/draft-polli-ratelimit-headers-00.html#header-specifications
    * @throws ThrottlerException
    */
-  private httpHandler(context: ExecutionContext, limit: number, ttl: number): boolean {
+  private async httpHandler(
+    context: ExecutionContext,
+    limit: number,
+    ttl: number,
+  ): Promise<boolean> {
     const headerPrefix = 'X-RateLimit';
 
     // Here we start to check the amount of requests being done against the ttl.
     const res = context.switchToHttp().getResponse();
     const key = this.generateKey(context, req.ip);
-    const ttls = this.storageService.getRecord(key);
+    const ttls = await this.storageService.getRecord(key);
     const nearestExpiryTime = ttls.length > 0 ? Math.ceil((ttls[0] - Date.now()) / 1000) : 0;
 
     // Throw an error when the user reached their limit.
@@ -99,23 +107,28 @@ export class ThrottlerGuard implements CanActivate {
   }
 
   /**
-   * Throttles websocket requests. Both socket.io and websockets are supported.
+   * Throttles websocket requests.
+   * Both socket.io and websockets are supported.
    * @throws ThrottlerException
    */
-  private websocketHandler(context: ExecutionContext, limit: number, ttl: number): boolean {
+  private async websocketHandler(
+    context: ExecutionContext,
+    limit: number,
+    ttl: number,
+  ): Promise<boolean> {
     const client = context.switchToWs().getClient();
     const ip = ['conn', '_socket']
       .map(key => client[key])
       .filter(obj => obj)
       .shift().remoteAddress;
     const key = this.generateKey(context, ip);
-    const ttls = this.storageService.getRecord(key);
+    const ttls = await this.storageService.getRecord(key);
 
     if (ttls.length >= limit) {
       throw new ThrottlerException();
     }
 
-    this.storageService.addRecord(key, ttl);
+    await this.storageService.addRecord(key, ttl);
     return true;
   }
 
