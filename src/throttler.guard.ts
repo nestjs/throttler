@@ -8,7 +8,7 @@ import {
   THROTTLER_SKIP,
   THROTTLER_TTL
 } from './throttler.constants';
-import { ThrottlerException, ThrottlerWsException } from './throttler.exception';
+import { ThrottlerException } from './throttler.exception';
 import { ThrottlerOptions } from './throttler.interface';
 
 @Injectable()
@@ -90,11 +90,15 @@ export class ThrottlerGuard implements CanActivate {
 
   private websocketHandler(context: ExecutionContext, limit: number, ttl: number): boolean {
     const client = context.switchToWs().getClient();
-    const key = this.generateKey(context, client.conn.remoteAddress);
+    const ip = ['conn', '_socket']
+      .map(key => client[key])
+      .filter(obj => obj)
+      .shift().remoteAddress;
+    const key = this.generateKey(context, ip);
     const ttls = this.storageService.getRecord(key);
 
     if (ttls.length >= limit) {
-      throw new ThrottlerWsException();
+      throw new ThrottlerException();
     }
 
     this.storageService.addRecord(key, ttl);
