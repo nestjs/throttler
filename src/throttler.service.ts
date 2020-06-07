@@ -5,11 +5,11 @@ import { ThrottlerStorage } from './throttler-storage.interface';
 export class ThrottlerStorageService implements ThrottlerStorage {
   storage: Record<string, number[]> = {};
 
-  getRecord(key: string): number[] {
+  async getRecord(key: string): Promise<number[]> {
     return this.storage[key] || [];
   }
 
-  addRecord(key: string, ttl: number): void {
+  async addRecord(key: string, ttl: number): Promise<void> {
     const ttlMilliseconds = ttl * 1000;
     if (!this.storage[key]) {
       this.storage[key] = [];
