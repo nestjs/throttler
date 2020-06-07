@@ -29,8 +29,8 @@ The above would mean that 10 requests from the same IP can be made to a single e
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
-        ttl: config.get('RATE_LIMIT_TTL'),
-        limit: config.get('RATE_LIMIT_LIMIT'),
+        ttl: config.get('THROTTLE_TTL'),
+        limit: config.get('THROTTLE_LIMIT'),
       }),
     }),
   ],
@@ -57,7 +57,7 @@ and routes.
 ### @SkipThrottle()
 
 ```ts
-@SkipThrottler(skip = true)
+@SkipThrottle(skip = true)
 ```
 
 This decorator can be used to skip a route or a class **or** to negate the skipping of a route in a class that is skipped.
@@ -74,16 +74,6 @@ export class AppController {
 ```
 
 In the above controller, `dontSkip` would be counted against and rate-limited while `doSkip` would not be limited in any way.
-
-## ThrottleGuard
-
-Global guard. Check if metadata exists for guard. If not, check if route has
-`skip` metadata. If so, return `true`. If not, apply defaults from package
-(configured via module). If metadata does exist, use metadata instead of
-defaults (easy overriding) Pull throttlerStorage from `ThrottlerStorage` class
-via `getRecord()` method. Will return a number, if number is gte max, return
-`false`. If value is less than max, add value to `ThrottlerStorage` with
-`addRecord()` and return `true`
 
 ## ThrottlerStorage
 
