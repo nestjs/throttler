@@ -88,8 +88,8 @@ export class ThrottlerGuard implements CanActivate {
     }
 
     res.header(`${headerPrefix}-Limit`, limit);
-    // We're about to add a record so we need to take that into account here, otherwise
-    // the header says we have a request left when there are none
+    // We're about to add a record so we need to take that into account here.
+    // Otherwise the header says we have a request left when there are none.
     res.header(`${headerPrefix}-Remaining`, Math.max(0, limit - (ttls.length + 1)));
     res.header(`${headerPrefix}-Reset`, nearestExpiryTime);
 

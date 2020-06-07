@@ -1,8 +1,8 @@
 import { THROTTLER_LIMIT, THROTTLER_SKIP, THROTTLER_TTL } from './throttler.constants';
 
-function setThrottlerMetadata(target: any, limit: number, ttl: number): void {
-  Reflect.defineMetadata(THROTTLER_TTL, ttl, target);
+function setThrottlerMetadata(target: () => any, limit: number, ttl: number): void {
   Reflect.defineMetadata(THROTTLER_LIMIT, limit, target);
+  Reflect.defineMetadata(THROTTLER_TTL, ttl, target);
 }
 
 /**

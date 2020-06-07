@@ -12,7 +12,7 @@ export const createConnection = (
     socket.on('open', () => {
       resolve(socket);
     });
-    socket.on('error', err => {
+    socket.on('error', (err) => {
       reject(err);
     });
   });
@@ -28,11 +28,11 @@ export const wsPromise = (
         resolve(data);
       }
     });
-    ws.on('message', data => {
+    ws.on('message', (data) => {
       resolve(data);
       return false;
     });
-    ws.on('error', err => {
+    ws.on('error', (err) => {
       console.error(err);
       reject(err);
     });
@@ -49,5 +49,5 @@ export const wsClose = (ws: WebSocket | SocketIOClient.Socket): Promise<void> =>
     ws.on('close', () => {
       resolve();
     });
-    ws.on('error', err => reject(err));
+    ws.on('error', (err) => reject(err));
   });
