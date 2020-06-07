@@ -1,5 +1,10 @@
 import { THROTTLER_LIMIT, THROTTLER_SKIP, THROTTLER_TTL } from './throttler.constants';
 
+function setThrottlerMetadata(target: any, limit: number, ttl: number): void {
+  Reflect.defineMetadata(THROTTLER_TTL, ttl, target);
+  Reflect.defineMetadata(THROTTLER_LIMIT, limit, target);
+}
+
 /**
  * Adds metadata to the target which will be handled by the ThrottlerGuard to
  * handle incoming requests based on the given metadata.
@@ -12,12 +17,10 @@ export const Throttle = (limit = 20, ttl = 60): MethodDecorator & ClassDecorator
     descriptor?: TypedPropertyDescriptor<any>,
   ) => {
     if (descriptor) {
-      Reflect.defineMetadata(THROTTLER_LIMIT, limit, descriptor.value);
-      Reflect.defineMetadata(THROTTLER_TTL, ttl, descriptor.value);
+      setThrottlerMetadata(descriptor.value, limit, ttl);
       return descriptor;
     }
-    Reflect.defineMetadata(THROTTLER_LIMIT, limit, target);
-    Reflect.defineMetadata(THROTTLER_TTL, ttl, target);
+    setThrottlerMetadata(target, limit, ttl);
     return target;
   };
 };
