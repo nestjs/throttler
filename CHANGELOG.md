@@ -1,3 +1,9 @@
+## [0.1.1](https://github.com/jmcdo29/nestjs-throttler/compare/0.1.0...0.1.1) (2020-06-07)
+
+### Bug Fixes
+
+- **interface:** fixes the storage interface to be async ([f7565d9](https://github.com/jmcdo29/nestjs-throttler/commit/f7565d9029baf4d7687f0913046f555d17cde44b))
+
 # 0.1.0 (2020-06-07)
 
 ### Bug Fixes
