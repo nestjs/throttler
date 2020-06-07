@@ -47,12 +47,11 @@ export class ThrottlerGuard implements CanActivate {
     const req = context.switchToHttp().getRequest();
     const res = context.switchToHttp().getResponse();
     const key = md5(`${req.ip}-${classRef.name}-${handler.name}`);
-    const record = this.storageService.getRecord(key);
-    const nearestExpiryTime =
-      record.length > 0 ? Math.ceil((record[0].getTime() - new Date().getTime()) / 1000) : 0;
+    const ttls = this.storageService.getRecord(key);
+    const nearestExpiryTime = ttls.length > 0 ? Math.ceil((ttls[0] - Date.now()) / 1000) : 0;
 
     // Throw an error when the user reached their limit.
-    if (record.length >= limit) {
+    if (ttls.length >= limit) {
       res.header('Retry-After', nearestExpiryTime);
       throw new ThrottlerException();
     }
@@ -60,7 +59,7 @@ export class ThrottlerGuard implements CanActivate {
     res.header(`${headerPrefix}-Limit`, limit);
     // We're about to add a record so we need to take that into account here.
     // Otherwise the header says we have a request left when there are none.
-    res.header(`${headerPrefix}-Remaining`, Math.max(0, limit - (record.length + 1)));
+    res.header(`${headerPrefix}-Remaining`, Math.max(0, limit - (ttls.length + 1)));
     res.header(`${headerPrefix}-Reset`, nearestExpiryTime);
 
     this.storageService.addRecord(key, ttl);

@@ -1,5 +1,5 @@
 export interface ThrottlerStorage {
-  getRecord(key: string): Date[];
+  getRecord(key: string): number[];
   addRecord(key: string, ttl: number): void;
 }
 

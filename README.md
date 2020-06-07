@@ -85,7 +85,7 @@ The interface looks like this:
 
 ```ts
 export interface ThrottlerStorage {
-  getRecord(key: string): Date[];
+  getRecord(key: string): number[];
   addRecord(key: string, ttl: number): void;
 }
 ```
