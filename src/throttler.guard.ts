@@ -118,8 +118,8 @@ export class ThrottlerGuard implements CanActivate {
   ): Promise<boolean> {
     const client = context.switchToWs().getClient();
     const ip = ['conn', '_socket']
-      .map(key => client[key])
-      .filter(obj => obj)
+      .map((key) => client[key])
+      .filter((obj) => obj)
       .shift().remoteAddress;
     const key = this.generateKey(context, ip);
     const ttls = await this.storageService.getRecord(key);
