@@ -96,6 +96,6 @@ So long as the Storage service implements this interface, it should be usable by
 
 # Community Storage Providers
 
-- [redis](https://github.com/kkoomen/nestjs-throttler-storage-redis)
+- [Redis](https://github.com/kkoomen/nestjs-throttler-storage-redis)
 
 Feel free to submit a PR with your custom storage provider being added to this list.
