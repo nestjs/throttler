@@ -2,6 +2,8 @@
 
 A Rate-Limiter for NestJS, regardless of the context.
 
+For an overview of the community storage providers, see [Community storage providers](#community-storage-providers)
+
 This package comes with a couple of goodies that should be mentioned, first is the `ThrottlerModule`.
 
 ## ThrottlerModule
@@ -92,7 +94,8 @@ export interface ThrottlerStorage {
 
 So long as the Storage service implements this interface, it should be usable by the `ThrottlerGuard`.
 
-For more information regarding the RFC specifications:
+# Community storage providers
 
-- https://tools.ietf.org/html/rfc6585#section-4
-- https://tools.ietf.org/id/draft-polli-ratelimit-headers-00.html#header-specifications
+- [redis](https://github.com/kkoomen/nestjs-throttler-storage-redis)
+
+Feel free to submit a PR with your custom storage provider being added to this list.
