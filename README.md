@@ -8,15 +8,27 @@ This package comes with a couple of goodies that should be mentioned, first is t
 
 ## ThrottlerModule
 
-The `ThrottleModule` is the main entry point for this package, and can be used in a synchronous or asynchronous manner. All the needs to be passed is the `ttl`, the time to live in seconds for the request tracker, and the `limit`, or how many times an endpoint can be hit before returning a 429.
+The `ThrottleModule` is the main entry point for this package, and can be used
+in a synchronous or asynchronous manner. All the needs to be passed is the
+`ttl`, the time to live in seconds for the request tracker, and the `limit`, or
+how many times an endpoint can be hit before returning a 429.
 
 ```ts
+import { APP_GUARD } from '@nestjs/core';
+import { ThrottlerGuard, ThrottlerModule } from 'nestjs-throttler';
+
 @Module({
   imports: [
     ThrottlerModule.forRoot({
       ttl: 60,
       limit: 10,
     }),
+  ],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
   ],
 })
 export class AppModule {}
@@ -36,13 +48,47 @@ The above would mean that 10 requests from the same IP can be made to a single e
       }),
     }),
   ],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
+  ],
 })
 export class AppModule {}
 ```
 
 The above is also a valid configuration for asynchronous registration of the module.
 
-**NOTE** An important thing to take note of is that the `ThrottlerModule` does register a global guard for taking care of checking the rate limits. This guard check can be skipped using the `@SkipThrottle()` decorator mentioned later.
+**NOTE:** If you add the `ThrottlerGuard` to your `AppModule` as a global guard
+then all the incoming requests will be throttled by default. This can also be
+omitted in favor of `@UseGuards(ThrottlerGuard)`. The global guard check can be
+skipped using the `@SkipThrottle()` decorator mentioned later.
+
+Example with `@UseGuards(ThrottlerGuard)`:
+
+```ts
+// app.module.ts
+@Module({
+  imports: [
+    ThrottlerModule.forRoot({
+      ttl: 60,
+      limit: 10,
+    }),
+  ],
+})
+export class AppModule {}
+
+// app.controller.ts
+@Controller()
+export class AppController {
+  @UseGuards(ThrottlerGuard)
+  @Throttle(5, 30)
+  normal() {}
+}
+```
+
+
 
 ## Decorators
 
