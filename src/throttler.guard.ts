@@ -30,7 +30,7 @@ export class ThrottlerGuard implements CanActivate {
       return true;
     }
 
-    // Return early if the current route should be ignored.
+    // Return early if the current user agent should be ignored.
     if (Array.isArray(this.options.ignoreUserAgents)) {
       for (const pattern of this.options.ignoreUserAgents) {
         if (pattern.test(req.headers['user-agent'])) {
