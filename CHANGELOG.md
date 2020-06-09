@@ -1,3 +1,9 @@
+## [0.2.1](https://github.com/jmcdo29/nestjs-throttler/compare/0.2.0...0.2.1) (2020-06-09)
+
+### Features
+
+- add support for ignoreUserAgents option ([1ab5e17](https://github.com/jmcdo29/nestjs-throttler/commit/1ab5e17a25a95ec14910e199726eac07f66f4475))
+
 # [0.2.0](https://github.com/jmcdo29/nestjs-throttler/compare/0.1.1...0.2.0) (2020-06-09)
 
 ### Bug Fixes
