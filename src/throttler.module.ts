@@ -3,7 +3,9 @@ import { Module } from '@nestjs/common';
 import { ThrottlerCoreModule } from './throttler-core.module';
 import { ThrottlerOptions } from './throttler.interface';
 
-@Module({})
+@Module({
+  exports: [ThrottlerCoreModule],
+})
 export class ThrottlerModule {
   static forRoot(options?: ThrottlerOptions) {
     return ThrottlerCoreModule.forRoot(ThrottlerCoreModule, options);
