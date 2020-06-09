@@ -1,3 +1,14 @@
+# [0.2.0](https://github.com/jmcdo29/nestjs-throttler/compare/0.1.1...0.2.0) (2020-06-09)
+
+### Bug Fixes
+
+- make core module global and export core module inside ThrottlerModule ([1f4df42](https://github.com/jmcdo29/nestjs-throttler/commit/1f4df42a5fc9a6f75c398bbb6a3f9ebaec6bc80f))
+
+### Features
+
+- makes options required in forRoot and forRootAsync ([14e272a](https://github.com/jmcdo29/nestjs-throttler/commit/14e272a842a90db93dd9e8c60c936fbcf0bcd3b7))
+- remove global guard and require user to implement it manually ([840eae4](https://github.com/jmcdo29/nestjs-throttler/commit/840eae4643867390bc598937b20e132257e9b018))
+
 ## [0.1.1](https://github.com/jmcdo29/nestjs-throttler/compare/0.1.0...0.1.1) (2020-06-07)
 
 ### Bug Fixes
