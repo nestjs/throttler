@@ -3,9 +3,9 @@ import { AbstractHttpAdapter, APP_GUARD } from '@nestjs/core';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import { FastifyAdapter } from '@nestjs/platform-fastify';
 import { Test, TestingModule } from '@nestjs/testing';
+import { ThrottlerGuard } from '../src';
 import { ControllerModule } from './app/controllers/controller.module';
 import { httPromise } from './utility/httpromise';
-import { ThrottlerGuard } from '../src';
 
 describe.each`
   adapter                 | adapterName
@@ -45,6 +45,17 @@ describe.each`
     describe('AppController', () => {
       it('GET /ignored', async () => {
         const response = await httPromise(appUrl + '/ignored');
+        expect(response.data).toEqual({ ignored: true });
+        expect(response.headers).not.toMatchObject({
+          'x-ratelimit-limit': '2',
+          'x-ratelimit-remaining': '1',
+          'x-ratelimit-reset': /\d+/,
+        });
+      });
+      it('GET /ignore-user-agents', async () => {
+        const response = await httPromise(appUrl + '/ignore-user-agents', 'GET', {
+          'user-agent': 'throttler-test/0.0.0',
+        });
         expect(response.data).toEqual({ ignored: true });
         expect(response.headers).not.toMatchObject({
           'x-ratelimit-limit': '2',
