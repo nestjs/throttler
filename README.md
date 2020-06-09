@@ -155,7 +155,7 @@ You can use the `ignoreUserAgents` key to ignore specific user agents.
 
         // Don't throttle request that have 'bingbot' defined in them.
         // Example user agent: Mozilla/5.0 (compatible; Bingbot/2.0; +http://www.bing.com/bingbot.htm)
-        new RegExp('Bingbot', 'gi'),
+        new RegExp('bingbot', 'gi'),
       ],
     }),
   ],
