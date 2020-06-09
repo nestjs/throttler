@@ -1,10 +1,11 @@
 import { INestApplication } from '@nestjs/common';
-import { AbstractHttpAdapter } from '@nestjs/core';
+import { AbstractHttpAdapter, APP_GUARD } from '@nestjs/core';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import { FastifyAdapter } from '@nestjs/platform-fastify';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ControllerModule } from './app/controllers/controller.module';
 import { httPromise } from './utility/httpromise';
+import { ThrottlerGuard } from '../src';
 
 describe.each`
   adapter                 | adapterName
@@ -16,6 +17,12 @@ describe.each`
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [ControllerModule],
+      providers: [
+        {
+          provide: APP_GUARD,
+          useClass: ThrottlerGuard,
+        },
+      ],
     }).compile();
 
     app = moduleFixture.createNestApplication(adapter);
