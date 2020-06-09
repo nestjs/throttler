@@ -4,7 +4,7 @@ import { SkipThrottle, Throttle, ThrottlerGuard } from '../../../src';
 import { AppService } from '../app.service';
 
 @Throttle(2, 10)
-@WebSocketGateway({ path: '/' })
+@WebSocketGateway()
 export class AppGateway {
   constructor(private readonly appService: AppService) {}
 

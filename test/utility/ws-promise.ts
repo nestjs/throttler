@@ -28,6 +28,9 @@ export const wsPromise = (
         resolve(data);
       }
     });
+    ws.addEventListener('exception' as any, (...args) => {
+      resolve(args);
+    });
     ws.on('message', (data) => {
       resolve(data);
       return false;
@@ -36,9 +39,7 @@ export const wsPromise = (
       console.error(err);
       reject(err);
     });
-    ws.on('exception' as any, (...args) => {
-      resolve(args);
-    });
+
     ws.on('unexpected-response', () => {
       reject('Unexpected-response');
     });

@@ -1,11 +1,11 @@
 import { WebSocketGateway, SubscribeMessage } from '@nestjs/websockets';
 import { AppService } from '../app.service';
 
-@WebSocketGateway({ path: 'default' })
+@WebSocketGateway()
 export class DefaultGateway {
   constructor(private readonly appService: AppService) {}
 
-  @SubscribeMessage('throttle-regular')
+  @SubscribeMessage('default-regular')
   pass() {
     return this.appService.success();
   }
