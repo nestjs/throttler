@@ -10,6 +10,7 @@ import { LimitController } from './limit.controller';
     ThrottlerModule.forRoot({
       limit: 5,
       ttl: 60,
+      ignoreUserAgents: [/throttler-test/g],
     }),
   ],
   controllers: [AppController, DefaultController, LimitController],

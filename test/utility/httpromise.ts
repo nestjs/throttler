@@ -5,6 +5,7 @@ type HttpMethods = 'GET' | 'POST' | 'PATCH' | 'DELETE' | 'PUT';
 export function httPromise(
   url: string,
   method: HttpMethods = 'GET',
+  headers: Record<string, any> = {},
   body?: Record<string, any>,
 ): Promise<{ data: any; headers: Record<string, any>; status: number }> {
   return new Promise((resolve, reject) => {
@@ -30,6 +31,11 @@ export function httPromise(
       });
     });
     req.method = method;
+
+    Object.keys(headers).forEach((key) => {
+      req.setHeader(key, headers[key]);
+    });
+
     switch (method) {
       case 'GET':
         break;

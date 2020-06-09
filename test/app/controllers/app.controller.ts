@@ -17,4 +17,9 @@ export class AppController {
   async ignored() {
     return this.appService.ignored();
   }
+
+  @Get('ignore-user-agents')
+  async ignoreUserAgents() {
+    return this.appService.ignored();
+  }
 }
