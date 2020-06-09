@@ -8,7 +8,7 @@ import {
   THROTTLER_SKIP,
   THROTTLER_TTL,
 } from './throttler.constants';
-import { ThrottlerException } from './throttler.exception';
+import { ThrottlerException, ThrottlerWsException } from './throttler.exception';
 import { ThrottlerOptions } from './throttler.interface';
 
 @Injectable()
@@ -125,7 +125,7 @@ export class ThrottlerGuard implements CanActivate {
     const ttls = await this.storageService.getRecord(key);
 
     if (ttls.length >= limit) {
-      throw new ThrottlerException();
+      throw new ThrottlerWsException();
     }
 
     await this.storageService.addRecord(key, ttl);

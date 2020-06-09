@@ -3,17 +3,17 @@ import { Throttle } from '../../../src';
 import { AppService } from '../app.service';
 
 @Throttle(2, 10)
-@WebSocketGateway({ path: 'limit' })
+@WebSocketGateway()
 export class LimitGateway {
   constructor(private readonly appService: AppService) {}
 
-  @SubscribeMessage('throttle-regular')
+  @SubscribeMessage('limit-regular')
   pass() {
     return this.appService.success();
   }
 
   @Throttle(5, 20)
-  @SubscribeMessage('throttle-override')
+  @SubscribeMessage('limit-override')
   throttleOverride() {
     return this.appService.success();
   }
