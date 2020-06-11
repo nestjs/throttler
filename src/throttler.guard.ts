@@ -1,4 +1,4 @@
-import { CanActivate, ExecutionContext, Inject, Injectable } from '@nestjs/common';
+import { CanActivate, ExecutionContext, Inject, Injectable, ContextType } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import * as md5 from 'md5';
 import { ThrottlerStorage } from './throttler-storage.interface';
@@ -51,11 +51,13 @@ export class ThrottlerGuard implements CanActivate {
     const limit = routeOrClassLimit || this.options.limit;
     const ttl = routeOrClassTtl || this.options.ttl;
 
-    switch (context.getType()) {
+    switch (context.getType<ContextType | 'graphql'>()) {
       case 'http':
         return this.httpHandler(context, limit, ttl);
       case 'ws':
         return this.websocketHandler(context, limit, ttl);
+      case 'graphql':
+        return this.graphqlHandler(context, limit, ttl);
       default:
         return true;
     }
@@ -131,6 +133,25 @@ export class ThrottlerGuard implements CanActivate {
 
     await this.storageService.addRecord(key, ttl);
     return true;
+  }
+
+  private async graphqlHandler(
+    context: ExecutionContext,
+    limit: number,
+    ttl: number,
+  ): Promise<boolean> {
+    const { req, res } = context.getArgByIndex(2);
+    const httpContext: ExecutionContext = {
+      ...context,
+      switchToHttp: () => ({
+        getRequest: () => req,
+        getResponse: () => res,
+        getNext: context.switchToHttp().getNext,
+      }),
+      getClass: context.getClass,
+      getHandler: context.getHandler,
+    };
+    return this.httpHandler(httpContext, limit, ttl);
   }
 
   /**
