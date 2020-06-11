@@ -2,6 +2,6 @@ import { Field, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
 export class ResolveType {
-  @Field()
+  @Field((type) => Boolean)
   success = true;
 }
