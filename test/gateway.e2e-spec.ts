@@ -115,7 +115,7 @@ describe.each`
               const res = await wsPromise(ws, serializer(message), sendMethod);
               expect(res).toEqual(deserializer(JSON.stringify(expectation)));
             }
-            // only using Socket.IO for the error test due to a problem ith catching exceptions in WS
+            // only using Socket.IO for the error test due to a problem w/ catching exceptions in WS
             if (server === 'Socket.io') {
               const errorRes = await wsPromise(ws, serializer(message), sendMethod);
               expect(errorRes).toEqual({

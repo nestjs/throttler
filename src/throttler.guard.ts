@@ -85,6 +85,7 @@ export class ThrottlerGuard implements CanActivate {
     const headerPrefix = 'X-RateLimit';
 
     // Here we start to check the amount of requests being done against the ttl.
+    const req = context.switchToHttp().getRequest();
     const res = context.switchToHttp().getResponse();
     const key = this.generateKey(context, req.ip);
     const ttls = await this.storageService.getRecord(key);
