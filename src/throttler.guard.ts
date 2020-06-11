@@ -29,22 +29,12 @@ export class ThrottlerGuard implements CanActivate {
    * @throws ThrottlerException
    */
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const req = context.switchToHttp().getRequest();
     const handler = context.getHandler();
     const classRef = context.getClass();
 
     // Return early if the current route should be skipped.
     if (this.reflector.getAllAndOverride<boolean>(THROTTLER_SKIP, [handler, classRef])) {
       return true;
-    }
-
-    // Return early if the current user agent should be ignored.
-    if (Array.isArray(this.options.ignoreUserAgents)) {
-      for (const pattern of this.options.ignoreUserAgents) {
-        if (pattern.test(req.headers['user-agent'])) {
-          return true;
-        }
-      }
     }
 
     // Return early when we have no limit or ttl data.
@@ -87,6 +77,16 @@ export class ThrottlerGuard implements CanActivate {
     // Here we start to check the amount of requests being done against the ttl.
     const req = context.switchToHttp().getRequest();
     const res = context.switchToHttp().getResponse();
+
+    // Return early if the current user agent should be ignored.
+    if (Array.isArray(this.options.ignoreUserAgents)) {
+      for (const pattern of this.options.ignoreUserAgents) {
+        if (pattern.test(req.headers['user-agent'])) {
+          return true;
+        }
+      }
+    }
+
     const key = this.generateKey(context, req.ip);
     const ttls = await this.storageService.getRecord(key);
     const nearestExpiryTime = ttls.length > 0 ? Math.ceil((ttls[0] - Date.now()) / 1000) : 0;
