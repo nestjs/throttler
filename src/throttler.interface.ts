@@ -10,6 +10,11 @@ export interface ThrottlerOptions {
   ttl?: number;
 
   /**
+   * The user agents that should be ignored. Checked against the `User-Agent` header
+   */
+  ignoreUserAgents?: RegExp[];
+
+  /**
    * The storage class to use where all the record will be stored in.
    */
   storage?: any;
