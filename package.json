@@ -89,15 +89,7 @@
     "ts-node": "^8.6.2",
     "tsconfig-paths": "^3.9.0",
     "typescript": "^3.7.4",
-    "ws": "^7.3.0",
-    "reflect-metadata": "^0.1.13",
-    "@nestjs/common": "^7.0.0",
-    "@nestjs/core": "^7.0.0"
-  },
-  "peerDependencies": {
-    "@nestjs/common": "^7.0.0",
-    "@nestjs/core": "^7.0.0",
-    "reflect-metadata": "^0.1.13"
+    "ws": "^7.3.0"
   },
   "peerDependencies": {
     "@nestjs/common": "^7.0.0",
