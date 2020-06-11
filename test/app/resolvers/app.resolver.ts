@@ -1,7 +1,9 @@
-import { Resolver, Query, Mutation } from '@nestjs/graphql';
-import { ResolveType } from './resolve.model';
+import { Mutation, Query, Resolver } from '@nestjs/graphql';
 import { AppService } from '../app.service';
+import { ResolveType } from './resolve.model';
+import { Throttle } from '../../../src';
 
+@Throttle(2, 10)
 @Resolver(ResolveType)
 export class AppResolver {
   constructor(private readonly appService: AppService) {}
