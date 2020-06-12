@@ -141,6 +141,11 @@ export class ThrottlerGuard implements CanActivate {
     ttl: number,
   ): Promise<boolean> {
     const { req, res } = context.getArgByIndex(2);
+    // add in escape route for GQL Fastify
+    // and for if res is not added to the context.
+    if (!res) {
+      return true;
+    }
     const httpContext: ExecutionContext = {
       ...context,
       switchToHttp: () => ({
