@@ -1,3 +1,20 @@
+## [0.2.2](https://github.com/jmcdo29/nestjs-throttler/compare/0.2.1...0.2.2) (2020-06-12)
+
+### Bug Fixes
+
+- moves userAgent check to http handler ([87183af](https://github.com/jmcdo29/nestjs-throttler/commit/87183af8fc189d7d5c8237832089138a0b40589b))
+
+### Features
+
+- **decorator:** add setThrottlerMetadata() function back ([ea31a9c](https://github.com/jmcdo29/nestjs-throttler/commit/ea31a9c86b82550e2d43f3433ec618785cf2b34a))
+- **graphql:** implements graphql limiter ([40eaff1](https://github.com/jmcdo29/nestjs-throttler/commit/40eaff16dae5c0279001e56ff64a2b540d82a3c7))
+- Add support for ws (websockets) ([a745295](https://github.com/jmcdo29/nestjs-throttler/commit/a74529517f989c43d77c9a63712e82244ebeefcd))
+- Add support for ws (websockets) ([8103a5a](https://github.com/jmcdo29/nestjs-throttler/commit/8103a5a11c1916f05f8c44e302ba93a98d7cb77d))
+- Make storage methods async ([92cd4eb](https://github.com/jmcdo29/nestjs-throttler/commit/92cd4ebf507b3bed4efbaeb7bb47bd1738a62dc3))
+- **exception:** Use const instead of duplicated string ([f95da2c](https://github.com/jmcdo29/nestjs-throttler/commit/f95da2c4fc787c7c5e525672d668745bc1f2301d))
+- **guard:** Add default case for context.getType() switch ([ff46d57](https://github.com/jmcdo29/nestjs-throttler/commit/ff46d57508c4b446918ccd75f704d0eed1ae352f))
+- Implement basic support for websocket ([3a0cf2e](https://github.com/jmcdo29/nestjs-throttler/commit/3a0cf2ed70c7abbe02e9d96f26ab2c81b3c7bb2f))
+
 ## [0.2.1](https://github.com/jmcdo29/nestjs-throttler/compare/0.2.0...0.2.1) (2020-06-09)
 
 ### Features
