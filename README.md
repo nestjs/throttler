@@ -187,22 +187,20 @@ So long as the Storage service implements this interface, it should be usable by
 
 ## Working with Websockets
 
-To get the `ThrottlerModule` working with websockets, not much is needed besides regular
-configuration. The things to make note of are that 1) you cannot bind the guard with
-`APP_GUARD` or `app.useGlobalGuards()` due to how Nest binds global guards and 2) when a limit is
-reached, Nest will emit an `exception` event, so make sure there is a listener ready for this.
-Other than that, no extra configuration is needed.
+There are some things to take keep in mind when working with websockets:
+
+- You cannot bind the guard with `APP_GUARD` or `app.useGlobalGuards()` due to how Nest binds global guards.
+- When a limit is reached, Nest will emit an `exception` event, so make sure there is a listener ready for this.
 
 ## Working with GraphQL
 
 To get the `ThrottlerModule` to work with the GraphQL context, a couple of things must happen.
-First, you must use `Express` and `apollo-server-express` as your GraphQL server engine. This is
-the default for Nest, but the [`apollo-server-fastify`](https://github.com/apollographql/apollo-server/tree/master/packages/apollo-server-fastify) package
-does not currently support passing `res` to the `context`, meaning headers cannot be properly set.
-Second, when configuring your `GraphQLModule`, you need to pass an option for `context` in the form
-of `({ req, res}) => ({ req, res })`. This will allow access to the Express Request and Response
-objects, allowing for the reading and writing of headers. Other than that, no other actions are
-needed, just bind the guard and you'll be good to go.
+
+- You must use `Express` and `apollo-server-express` as your GraphQL server engine. This is
+  the default for Nest, but the [`apollo-server-fastify`](https://github.com/apollographql/apollo-server/tree/master/packages/apollo-server-fastify) package does not currently support passing `res` to the `context`, meaning headers cannot be properly set.
+- When configuring your `GraphQLModule`, you need to pass an option for `context` in the form
+  of `({ req, res}) => ({ req, res })`. This will allow access to the Express Request and Response
+  objects, allowing for the reading and writing of headers.
 
 # Community Storage Providers
 
