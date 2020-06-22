@@ -10,7 +10,7 @@ export interface ThrottlerOptions {
   ttl?: number;
 
   /**
-   * The user agents that should be ignored. Checked against the `User-Agent` header
+   * The user agents that should be ignored (checked against the User-Agent header).
    */
   ignoreUserAgents?: RegExp[];
 
