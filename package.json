@@ -28,7 +28,7 @@
     "commit": "git-cz",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start:dev": "nodemon --watch '{src,test/app}/**/*.ts' --ignore '**/*.spec.ts' --exec 'ts-node' test/app/main.ts",
-    "lint": "eslint \"{src,apps,dist,test}/**/*.ts\" --fix",
+    "lint": "eslint \"{src,test}/**/*.ts\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
