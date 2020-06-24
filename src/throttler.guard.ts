@@ -1,6 +1,7 @@
 import { CanActivate, ExecutionContext, Inject, Injectable, ContextType } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import * as md5 from 'md5';
+import { ThrottlerModuleOptions } from './throttler-module-options.interface';
 import { ThrottlerStorage } from './throttler-storage.interface';
 import {
   THROTTLER_LIMIT,
@@ -9,19 +10,17 @@ import {
   THROTTLER_TTL,
 } from './throttler.constants';
 import { ThrottlerException, ThrottlerWsException } from './throttler.exception';
-import { ThrottlerOptions } from './throttler.interface';
 
+/**
+ * @publicApi
+ */
 @Injectable()
 export class ThrottlerGuard implements CanActivate {
-  storageService: ThrottlerStorage;
-
   constructor(
-    @Inject(THROTTLER_OPTIONS) private readonly options: ThrottlerOptions,
-    @Inject(ThrottlerStorage) storageService: ThrottlerStorage,
+    @Inject(THROTTLER_OPTIONS) private readonly options: ThrottlerModuleOptions,
+    @Inject(ThrottlerStorage) private readonly storageService: ThrottlerStorage,
     private readonly reflector: Reflector,
-  ) {
-    this.storageService = options.storage || storageService;
-  }
+  ) {}
 
   /**
    * Throttle requests against their TTL limit and whether to allow or deny it.

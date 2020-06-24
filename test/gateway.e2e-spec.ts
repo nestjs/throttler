@@ -118,10 +118,12 @@ describe.each`
             // only using Socket.IO for the error test due to a problem w/ catching exceptions in WS
             if (server === 'Socket.io') {
               const errorRes = await wsPromise(ws, serializer(message), sendMethod);
-              expect(errorRes).toEqual({
-                status: 'error',
-                message: 'ThrottlerWsException: Too Many Requests',
-              });
+              expect(errorRes).toEqual([
+                {
+                  status: 'error',
+                  message: 'ThrottlerWsException: Too Many Requests',
+                },
+              ]);
             }
           },
         );

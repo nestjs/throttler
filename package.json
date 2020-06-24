@@ -39,7 +39,6 @@
     "version": "conventional-changelog -p angular -i CHANGELOG.md -s && git add CHANGELOG.md"
   },
   "dependencies": {
-    "@golevelup/nestjs-modules": "^0.4.1",
     "md5": "^2.2.1"
   },
   "devDependencies": {

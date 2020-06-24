@@ -1,9 +1,14 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, OnApplicationShutdown } from '@nestjs/common';
 import { ThrottlerStorage } from './throttler-storage.interface';
 
 @Injectable()
-export class ThrottlerStorageService implements ThrottlerStorage {
-  storage: Record<string, number[]> = {};
+export class ThrottlerStorageService implements ThrottlerStorage, OnApplicationShutdown {
+  private _storage: Record<string, number[]> = {};
+  private timeoutIds: NodeJS.Timeout[] = [];
+
+  get storage(): Record<string, number[]> {
+    return this._storage;
+  }
 
   async getRecord(key: string): Promise<number[]> {
     return this.storage[key] || [];
@@ -21,5 +26,10 @@ export class ThrottlerStorageService implements ThrottlerStorage {
       this.storage[key].shift();
       clearTimeout(timeoutId);
     }, ttlMilliseconds);
+    this.timeoutIds.push(timeoutId);
+  }
+
+  onApplicationShutdown() {
+    this.timeoutIds.forEach(clearTimeout);
   }
 }
