@@ -1945,9 +1945,9 @@
   integrity sha512-m4LnxkljsI9fMsjwpW5QhRpMixo2BeeLpFmg0AE+sS4H1pzAd/cs/ftTiL60FLZgfFa8PFRPx5KsHu8O0bADKQ==
 
 "@types/socket.io@^2.1.8":
-  version "2.1.8"
-  resolved "https://registry.yarnpkg.com/@types/socket.io/-/socket.io-2.1.8.tgz#ffc3aac0163a58bf50a463d50b1baabed91638cc"
-  integrity sha512-NIQfh9WwJuJKlgmby4NgwMpoBOmNPCDgaRNPiLYZBtkbHkszK/9R52B5yGkd5a34rbVdAADuo8FhOS/5AZDemw==
+  version "2.1.9"
+  resolved "https://registry.yarnpkg.com/@types/socket.io/-/socket.io-2.1.9.tgz#9446e83df9f7a5764531aeb2c0ea78839a0caaeb"
+  integrity sha512-tnzPZztUGIXvowSEEJ/m5BwnQ7Dw7Y7yMjjckP+Ru5xx1LT9H+cAEc5eegPnMRNi76gS5N9Txi1SqjjFr3Kfpw==
   dependencies:
     "@types/engine.io" "*"
     "@types/node" "*"
