@@ -1390,9 +1390,9 @@
     uuid "8.3.0"
 
 "@nestjs/core@^7.0.0":
-  version "7.3.2"
-  resolved "https://registry.yarnpkg.com/@nestjs/core/-/core-7.3.2.tgz#64b4eebcfcf7beb909504b1a74fc89fc6ecc7e26"
-  integrity sha512-oL1iDfkJyM/0L+LKS+/Yo7GUJkiEcYsZY/ndONdiv1XqiBC5t76DDXry9CuJmcRH36FJ+QbI5jwpKXjRa9D5dQ==
+  version "7.4.0"
+  resolved "https://registry.yarnpkg.com/@nestjs/core/-/core-7.4.0.tgz#bd621cf70799b8f2753108537c19b44a81202021"
+  integrity sha512-2LHWaujtwm/otOmk9flxpKXsGWYB1Fm7HY/vwLNE+GY6tRkCP2hfsDQu0zElzNxU1zRoIGo1ky1J3C+QEUSd4Q==
   dependencies:
     "@nuxtjs/opencollective" "0.2.2"
     fast-safe-stringify "2.0.7"
@@ -1400,7 +1400,7 @@
     object-hash "2.0.3"
     path-to-regexp "3.2.0"
     tslib "2.0.0"
-    uuid "8.2.0"
+    uuid "8.3.0"
 
 "@nestjs/graphql@^7.4.1":
   version "7.6.0"
