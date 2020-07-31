@@ -1491,9 +1491,9 @@
     fs-extra "9.0.0"
 
 "@nestjs/testing@^7.0.0":
-  version "7.4.1"
-  resolved "https://registry.yarnpkg.com/@nestjs/testing/-/testing-7.4.1.tgz#5c2956faabca31e73f3aa400ff6b9c27e9d97232"
-  integrity sha512-jOp6OvVs5/MxmDvWww5Wb91eq+DAdq3K+E731WC6VJS7cVGgjDgvL1wZ0kYahqHfwn4qa5iHwcWmbTga7uzeqQ==
+  version "7.4.2"
+  resolved "https://registry.yarnpkg.com/@nestjs/testing/-/testing-7.4.2.tgz#6acba60c89aa4306244159d30477f943404deac9"
+  integrity sha512-wnb0ApdTrJ03sg/1YiNNjjDIdf/f0izOea/5Bx9goKEJQPf8IW5AlV4yK9FB1uotED0mcjzp0awqzbfHfipP7w==
   dependencies:
     optional "0.1.4"
     tslib "2.0.0"
