@@ -1,5 +1,6 @@
 import { CanActivate, ExecutionContext, Inject, Injectable, ContextType } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
+import { optionalRequire } from '@nestjs/core/helpers/optional-require';
 import * as md5 from 'md5';
 import { ThrottlerModuleOptions } from './throttler-module-options.interface';
 import { ThrottlerStorage } from './throttler-storage.interface';
@@ -9,7 +10,7 @@ import {
   THROTTLER_SKIP,
   THROTTLER_TTL,
 } from './throttler.constants';
-import { ThrottlerException, ThrottlerWsException } from './throttler.exception';
+import { ThrottlerException } from './throttler.exception';
 
 /**
  * @publicApi
@@ -74,7 +75,6 @@ export class ThrottlerGuard implements CanActivate {
     ttl: number,
   ): Promise<boolean> {
     const headerPrefix = 'X-RateLimit';
-
     // Here we start to check the amount of requests being done against the ttl.
     const req = context.switchToHttp().getRequest();
     const res = context.switchToHttp().getResponse();
@@ -118,6 +118,9 @@ export class ThrottlerGuard implements CanActivate {
     limit: number,
     ttl: number,
   ): Promise<boolean> {
+    const { ThrottlerWsException } = optionalRequire('./throttler-ws.exception', () =>
+      require('./throttler-ws.exception'),
+    );
     const client = context.switchToWs().getClient();
     const ip = ['conn', '_socket']
       .map((key) => client[key])
@@ -127,7 +130,11 @@ export class ThrottlerGuard implements CanActivate {
     const ttls = await this.storageService.getRecord(key);
 
     if (ttls.length >= limit) {
-      throw new ThrottlerWsException();
+      if (ThrottlerWsException) {
+        throw new ThrottlerWsException();
+      } else {
+        throw new ThrottlerException();
+      }
     }
 
     await this.storageService.addRecord(key, ttl);
