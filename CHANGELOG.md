@@ -1,3 +1,9 @@
+## [0.2.3](https://github.com/jmcdo29/nestjs-throttler/compare/0.2.2...0.2.3) (2020-08-06)
+
+### Features
+
+- **ws:** allows for optional use of @nestjs/websocket ([f437614](https://github.com/jmcdo29/nestjs-throttler/commit/f437614cab5aebfdfdb4d5884f45b58b16d5a140))
+
 ## [0.2.2](https://github.com/jmcdo29/nestjs-throttler/compare/0.2.1...0.2.2) (2020-06-12)
 
 ### Bug Fixes
