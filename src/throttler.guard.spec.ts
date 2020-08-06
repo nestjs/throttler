@@ -1,10 +1,11 @@
+import { ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Test } from '@nestjs/testing';
 import { ThrottlerStorage } from './throttler-storage.interface';
+import { ThrottlerWsException } from './throttler-ws.exception';
 import { THROTTLER_OPTIONS } from './throttler.constants';
+import { ThrottlerException } from './throttler.exception';
 import { ThrottlerGuard } from './throttler.guard';
-import { ExecutionContext } from '@nestjs/common';
-import { ThrottlerException, ThrottlerWsException } from './throttler.exception';
 
 class ThrottlerStorageServiceMock implements ThrottlerStorage {
   private _storage: Record<string, number[]> = {};
