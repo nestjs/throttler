@@ -1503,9 +1503,9 @@
     pluralize "8.0.0"
 
 "@nestjs/testing@^7.0.0":
-  version "7.4.3"
-  resolved "https://registry.yarnpkg.com/@nestjs/testing/-/testing-7.4.3.tgz#2c612bb5ff9c2f93903977cb54a65814c734dcdf"
-  integrity sha512-RWV9ILA5wFQmnrV4PWdtddFC59s/qVGYnHiWoBgfICllmgW6TNnfzM0QSvn+geI45NmB8CNkmYT61ESrwdbBFA==
+  version "7.4.4"
+  resolved "https://registry.yarnpkg.com/@nestjs/testing/-/testing-7.4.4.tgz#7a64b22e043b0f9db993c1c22467d20d3331f380"
+  integrity sha512-ZRIZcfql9Xc5M74jR05TvJ86z3VUUfsEYzHoEwunGnZLhcYXLT1Z3xSNE5T/MuSrJb5hPqp4DqaHmKdeuvgedw==
   dependencies:
     optional "0.1.4"
     tslib "2.0.1"
