@@ -42,7 +42,7 @@
     "md5": "^2.2.1"
   },
   "devDependencies": {
-    "@commitlint/cli": "^9.1.1",
+    "@commitlint/cli": "^11.0.0",
     "@commitlint/config-conventional": "^9.1.1",
     "@nestjs/cli": "^7.0.0",
     "@nestjs/common": "^7.0.0",
