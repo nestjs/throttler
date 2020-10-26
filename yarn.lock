@@ -961,10 +961,10 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
-"@graphql-tools/batch-delegate@^6.2.5":
-  version "6.2.5"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/batch-delegate/-/batch-delegate-6.2.5.tgz#c23f25fdb0e5deb6d6964e7b5ea26cfb628c2143"
-  integrity sha512-Txh2m9Fjmv1eEvR9eSyKPJuLJQEXTPUVy6JVDisIR16e8DWCE9h9TiI/OK9YB+ZCXrGs6qsnMgFKCoLAlhf9yQ==
+"@graphql-tools/batch-delegate@^7.0.0":
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/batch-delegate/-/batch-delegate-7.0.0.tgz#860f03d8ded5e9e7e9b14e2205dfd64da8e3e6c0"
+  integrity sha512-ndEkkgmnEtTrW9sHYmuhrBqHxvo/zFPDU8I3XqhiuciihehB4gsaGdmn2PW+939atUYL1o8r0+Xd5LlwNCQIFg==
   dependencies:
     "@graphql-tools/delegate" "^7.0.0"
     dataloader "2.0.0"
@@ -1170,12 +1170,12 @@
     "@graphql-tools/utils" "^7.0.0"
     tslib "~2.0.1"
 
-"@graphql-tools/stitch@^7.0.0":
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/stitch/-/stitch-7.0.0.tgz#48b578f0fa14db1f6b20d19a74af1029af2652c8"
-  integrity sha512-6gESTUUXPkRYyUMw+6eU/cPgZPQJC5Fbld9Km06DBm/kL94KR6Z979rE6MH1Ip5H1W5lUVCiwrigTaCbJu2e0A==
+"@graphql-tools/stitch@^7.0.1":
+  version "7.0.1"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/stitch/-/stitch-7.0.1.tgz#8381cfc75cb220519a919564fd2bb485cb9a2743"
+  integrity sha512-Mt9S4r4JcpTmPpdZl66BrheTXTCACq9LIiPn0yZ43UZJvwKj1z6wS3hlDecKPXI9auhNY651O7H3RmwWg0ZzyA==
   dependencies:
-    "@graphql-tools/batch-delegate" "^6.2.5"
+    "@graphql-tools/batch-delegate" "^7.0.0"
     "@graphql-tools/delegate" "^7.0.0"
     "@graphql-tools/merge" "^6.2.5"
     "@graphql-tools/schema" "^7.0.0"
@@ -6222,12 +6222,12 @@ graphql-tools@^4.0.0:
     iterall "^1.1.3"
     uuid "^3.1.0"
 
-graphql-tools@^6.0.5:
-  version "6.2.5"
-  resolved "https://registry.yarnpkg.com/graphql-tools/-/graphql-tools-6.2.5.tgz#53c0b5e39189a70a1aae242474af800b865c9839"
-  integrity sha512-pKwJ9rN6uFZp+3Jfapxw3FqWNbaPyYzS3wtv9CkdOS5HHT4uixI2+k+J5YVMINESqbTRMYNuGsbFs4ZuNDLPjg==
+graphql-tools@^7.0.0:
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/graphql-tools/-/graphql-tools-7.0.0.tgz#f075319f8c8defcf01f6337de447453a400e6e88"
+  integrity sha512-MNXyY4niUISzbSqE3OdZHELBn1Wh+uV3i2g7DP/snQGdFQ3SrN8bgqWhPhy0oaIoaVH6/wCcamtgrHQmUF2DoQ==
   dependencies:
-    "@graphql-tools/batch-delegate" "^6.2.5"
+    "@graphql-tools/batch-delegate" "^7.0.0"
     "@graphql-tools/batch-execute" "^7.0.0"
     "@graphql-tools/code-file-loader" "^6.2.5"
     "@graphql-tools/delegate" "^7.0.0"
@@ -6246,7 +6246,7 @@ graphql-tools@^6.0.5:
     "@graphql-tools/relay-operation-optimizer" "^6.2.5"
     "@graphql-tools/resolvers-composition" "^6.2.5"
     "@graphql-tools/schema" "^7.0.0"
-    "@graphql-tools/stitch" "^7.0.0"
+    "@graphql-tools/stitch" "^7.0.1"
     "@graphql-tools/url-loader" "^6.3.1"
     "@graphql-tools/utils" "^7.0.0"
     "@graphql-tools/wrap" "^7.0.0"
