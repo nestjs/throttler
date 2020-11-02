@@ -1539,17 +1539,17 @@
     tslib "2.0.3"
 
 "@nestjs/platform-fastify@^7.1.1":
-  version "7.4.4"
-  resolved "https://registry.yarnpkg.com/@nestjs/platform-fastify/-/platform-fastify-7.4.4.tgz#b5b24576d17a04c9845890f21d9827161e9dd7e0"
-  integrity sha512-R350qpat4aQY1KV27yWWgMa0UZV/5vsPlp/LoNERZjKYjTkhDCbsVhfFxmTJhXRpEbU69P+XW/EDlLa7kiQj0Q==
+  version "7.5.1"
+  resolved "https://registry.yarnpkg.com/@nestjs/platform-fastify/-/platform-fastify-7.5.1.tgz#4a98e59a657548310e8019369f831c16194d7330"
+  integrity sha512-THawS+ncLj8+kZtirf8n1G0qPVnggWTSfWt5KEiPX/oe1j9H1R30LuajfxyI+5R3Ss6Jv6FmwNIrflMptyFq1g==
   dependencies:
-    fastify "3.3.0"
+    fastify "3.7.0"
     fastify-cors "4.1.0"
     fastify-formbody "5.0.0"
-    light-my-request "4.0.2"
+    light-my-request "4.2.1"
     middie "5.1.0"
     path-to-regexp "3.2.0"
-    tslib "2.0.1"
+    tslib "2.0.3"
 
 "@nestjs/platform-socket.io@^7.1.2":
   version "7.5.1"
@@ -5546,10 +5546,10 @@ fastify-warning@^0.2.0:
   resolved "https://registry.yarnpkg.com/fastify-warning/-/fastify-warning-0.2.0.tgz#e717776026a4493dc9a2befa44db6d17f618008f"
   integrity sha512-s1EQguBw/9qtc1p/WTY4eq9WMRIACkj+HTcOIK1in4MV5aFaQC9ZCIt0dJ7pr5bIf4lPpHvAtP2ywpTNgs7hqw==
 
-fastify@3.3.0:
-  version "3.3.0"
-  resolved "https://registry.yarnpkg.com/fastify/-/fastify-3.3.0.tgz#2649a23a13da6c40c47f24cb7ab3e2f22fbe2646"
-  integrity sha512-dAlGT7MoekQ2w5nmoxq1zFL+vFPcgRNBtMaopQIITLeUwesvfso4bX0bXwYO3vPFLoKgGc/p8GwSDyq6t5O3nA==
+fastify@3.7.0:
+  version "3.7.0"
+  resolved "https://registry.yarnpkg.com/fastify/-/fastify-3.7.0.tgz#b177cbb50efe4d38a3758427432f46eb873843b1"
+  integrity sha512-xmiR1TOSNXXNHfEvBwhWlyj158q59vZkPLIKQ71f7qJG5QMPqCbeYUUFRaDKTaLFhRqmLLFprBpJsO5nbSMiPQ==
   dependencies:
     abstract-logging "^2.0.0"
     ajv "^6.12.2"
@@ -5559,12 +5559,13 @@ fastify@3.3.0:
     fastify-warning "^0.2.0"
     find-my-way "^3.0.0"
     flatstr "^1.0.12"
-    light-my-request "^4.0.0"
+    light-my-request "^4.2.0"
     pino "^6.2.1"
     proxy-addr "^2.0.5"
     readable-stream "^3.4.0"
     rfdc "^1.1.4"
     secure-json-parse "^2.0.0"
+    semver "^7.3.2"
     tiny-lru "^7.0.0"
 
 fastq@^1.6.0, fastq@^1.6.1:
@@ -7752,13 +7753,14 @@ levn@~0.3.0:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
 
-light-my-request@4.0.2, light-my-request@^4.0.0:
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/light-my-request/-/light-my-request-4.0.2.tgz#e80ebbbac512f0f45b9e54cb274b8f121248b924"
-  integrity sha512-VaiiqR2NtdgYL8zQENPr7FBBVKCGioqa06HYnidj/GC+6jibyZrNCrk6FU8fqe9WWQDqwOtt0UCWLGe0GjyjgA==
+light-my-request@4.2.1, light-my-request@^4.2.0:
+  version "4.2.1"
+  resolved "https://registry.yarnpkg.com/light-my-request/-/light-my-request-4.2.1.tgz#c5a613af6a0cbb91eff06f83844ceac85ed03b10"
+  integrity sha512-33FZvX/418IEy0sXldsLiJifbS/ruttcVveTbbZ8sQVR2VSFPA39hBu/iF/hVkt/1V0N7CdTQg4jiiVPdGgW8A==
   dependencies:
     ajv "^6.12.2"
     cookie "^0.4.0"
+    fastify-warning "^0.2.0"
     readable-stream "^3.6.0"
     set-cookie-parser "^2.4.1"
 
