@@ -28,7 +28,7 @@ export class ThrottlerModule {
   /**
    * Register the module asynchronously.
    */
-  static registerAsync(options: ThrottlerAsyncOptions): DynamicModule {
+  static forRootAsync(options: ThrottlerAsyncOptions): DynamicModule {
     const providers = [...this.createAsyncProviders(options), ThrottlerStorageProvider];
     return {
       module: ThrottlerModule,
