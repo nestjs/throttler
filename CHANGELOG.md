@@ -1,3 +1,9 @@
+# [0.3.0](https://github.com/jmcdo29/nestjs-throttler/compare/0.2.3...0.3.0) (2020-11-10)
+
+### Bug Fixes
+
+- **module:** async register is now `forRootAsync` ([a1c6ace](https://github.com/jmcdo29/nestjs-throttler/commit/a1c6acef472e9d2368f2139e6b789ef184a7d952))
+
 ## [0.2.3](https://github.com/jmcdo29/nestjs-throttler/compare/0.2.2...0.2.3) (2020-08-06)
 
 ### Features
