@@ -33,3 +33,15 @@ jobs:
       run: yarn test:cov
     - name: E2E test
       run: yarn test:e2e
+
+  auto-merge:
+    needs: test
+    if: contains(github.event.pull_request.user.login, 'dependabot')
+    runs-on: ubuntu-latest
+    steps:
+    - name: automerge
+      uses: "pascalgn/automerge-action@v0.12.0"
+      env:
+        GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+        MERGE_LABELS: ""
+        MERGE_METHOD: rebase 
