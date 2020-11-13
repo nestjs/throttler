@@ -1515,9 +1515,9 @@
     tslib "2.0.3"
 
 "@nestjs/platform-ws@^7.1.3":
-  version "7.5.1"
-  resolved "https://registry.yarnpkg.com/@nestjs/platform-ws/-/platform-ws-7.5.1.tgz#17037e1c89802bb611020fb9b113dd5a3cec998d"
-  integrity sha512-ky86iLgin0AkgTIzT/ywtXYYePU2VY7CkaEqZm+sfHhVNK0f557I7t+QKnp/Vj4DSsAxM2XrgLsKkNxRVB+/DA==
+  version "7.5.2"
+  resolved "https://registry.yarnpkg.com/@nestjs/platform-ws/-/platform-ws-7.5.2.tgz#9a488669ff227783327614e98c4c78dae21649b1"
+  integrity sha512-ejHX8PEWuLfbiM1LE3J9PP/ptkiychKddbMJKnI5n9/bqiyq4UsrlSgn17ewBLPG4bCT5w7uLAnNFG1pekXiVw==
   dependencies:
     tslib "2.0.3"
     ws "7.3.1"
