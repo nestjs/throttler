@@ -9760,9 +9760,9 @@ socket.io@2.3.0:
     socket.io-parser "~3.4.0"
 
 socket.io@^3.0.0:
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/socket.io/-/socket.io-3.0.2.tgz#8a749c82520beb3b0b58bd2f577cf1d164607156"
-  integrity sha512-CFnVFhzOy6eHOnZhElG5dtacsEC3jO45KfIWwDSoKavBuWmuK4k4j1eSMj0RymrTA9WuXG5+yD+sxxtMK8rCIA==
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/socket.io/-/socket.io-3.0.3.tgz#f296e95b14077d30e77e695849621514191a59f5"
+  integrity sha512-TC1GnSXhDVmd3bHji5aG7AgWB8UL7E6quACbKra8uFXBqlMwEDbrJFK+tjuIY5Pe9N0L+MAPPDv3pycnn0000A==
   dependencies:
     "@types/cookie" "^0.4.0"
     "@types/cors" "^2.8.8"
