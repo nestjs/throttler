@@ -1,4 +1,29 @@
-# NestJS Throttler Package
+<p align="center">
+  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
+</p>
+
+[travis-image]: https://api.travis-ci.org/nestjs/nest.svg?branch=master
+[travis-url]: https://travis-ci.org/nestjs/nest
+[linux-image]: https://img.shields.io/travis/nestjs/nest/master.svg?label=linux
+[linux-url]: https://travis-ci.org/nestjs/nest
+
+  <p align="center">A progressive <a href="http://nodejs.org" target="blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
+    <p align="center">
+<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
+<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
+<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/dm/@nestjs/core.svg" alt="NPM Downloads" /></a>
+<a href="https://travis-ci.org/nestjs/nest"><img src="https://api.travis-ci.org/nestjs/nest.svg?branch=master" alt="Travis" /></a>
+<a href="https://travis-ci.org/nestjs/nest"><img src="https://img.shields.io/travis/nestjs/nest/master.svg?label=linux" alt="Linux" /></a>
+<a href="https://coveralls.io/github/nestjs/nest?branch=master"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#5" alt="Coverage" /></a>
+<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
+<a href="https://opencollective.com/nest#backer"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
+<a href="https://opencollective.com/nest#sponsor"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
+  <a href="https://twitter.com/nestframework"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
+</p>
+  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
+  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+
+## Description
 
 A Rate-Limiter for NestJS, regardless of the context.
 
@@ -6,7 +31,7 @@ For an overview of the community storage providers, see [Community Storage Provi
 
 This package comes with a couple of goodies that should be mentioned, first is the `ThrottlerModule`.
 
-# Table of Contents
+## Table of Contents
 
 - [NestJS Throttler Package](#nestjs-throttler-package)
 - [Table of Contents](#table-of-contents)
@@ -21,9 +46,9 @@ This package comes with a couple of goodies that should be mentioned, first is t
   - [Working with GraphQL](#working-with-graphql)
 - [Community Storage Providers](#community-storage-providers)
 
-# Usage
+## Usage
 
-## ThrottlerModule
+### ThrottlerModule
 
 The `ThrottleModule` is the main entry point for this package, and can be used
 in a synchronous or asynchronous manner. All the needs to be passed is the
@@ -105,9 +130,9 @@ export class AppController {
 }
 ```
 
-## Decorators
+### Decorators
 
-### @Throttle()
+#### @Throttle()
 
 ```ts
 @Throttle(limit: number = 20, ttl: number = 60)
@@ -117,7 +142,7 @@ This decorator will set THROTTLER_LIMIT and THROTTLER_TTL metadatas on the
 route, for retrieval from the `Reflector` class. Can be applied to controllers
 and routes.
 
-### @SkipThrottle()
+#### @SkipThrottle()
 
 ```ts
 @SkipThrottle(skip = true)
@@ -140,7 +165,7 @@ export class AppController {
 In the above controller, `dontSkip` would be counted against and rate-limited
 while `doSkip` would not be limited in any way.
 
-## Ignoring specific user agents
+### Ignoring specific user agents
 
 You can use the `ignoreUserAgents` key to ignore specific user agents.
 
@@ -165,7 +190,7 @@ You can use the `ignoreUserAgents` key to ignore specific user agents.
 export class AppModule {}
 ```
 
-## ThrottlerStorage
+### ThrottlerStorage
 
 Interface to define the methods to handle the details when it comes to keeping track of the requests.
 
@@ -185,14 +210,14 @@ export interface ThrottlerStorage {
 
 So long as the Storage service implements this interface, it should be usable by the `ThrottlerGuard`.
 
-## Working with Websockets
+### Working with Websockets
 
 There are some things to take keep in mind when working with websockets:
 
 - You cannot bind the guard with `APP_GUARD` or `app.useGlobalGuards()` due to how Nest binds global guards.
 - When a limit is reached, Nest will emit an `exception` event, so make sure there is a listener ready for this.
 
-## Working with GraphQL
+### Working with GraphQL
 
 To get the `ThrottlerModule` to work with the GraphQL context, a couple of things must happen.
 
@@ -202,7 +227,7 @@ To get the `ThrottlerModule` to work with the GraphQL context, a couple of thing
   of `({ req, res}) => ({ req, res })`. This will allow access to the Express Request and Response
   objects, allowing for the reading and writing of headers.
 
-# Community Storage Providers
+## Community Storage Providers
 
 - [Redis](https://github.com/kkoomen/nestjs-throttler-storage-redis)
 
