@@ -88,7 +88,10 @@ export class ThrottlerGuard implements CanActivate {
       }
     }
 
-    const key = this.generateKey(context, req.ip);
+    const ip = this.options.extractIPFromHeaders
+      ? this.options.extractIPFromHeaders(req.headers)
+      : req.ip;
+    const key = this.generateKey(context, ip);
     const ttls = await this.storageService.getRecord(key);
     const nearestExpiryTime = ttls.length > 0 ? Math.ceil((ttls[0] - Date.now()) / 1000) : 0;
 
@@ -122,10 +125,12 @@ export class ThrottlerGuard implements CanActivate {
       require('./throttler-ws.exception'),
     );
     const client = context.switchToWs().getClient();
-    const ip = ['conn', '_socket']
-      .map((key) => client[key])
-      .filter((obj) => obj)
-      .shift().remoteAddress;
+    const ip = this.options.extractIPFromHeaders
+      ? this.options.extractIPFromHeaders(client.handshake.headers)
+      : ['conn', '_socket']
+          .map((key) => client[key])
+          .filter((obj) => obj)
+          .shift().remoteAddress;
     const key = this.generateKey(context, ip);
     const ttls = await this.storageService.getRecord(key);
 
