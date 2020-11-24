@@ -81,6 +81,7 @@
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^6.5.4",
+    "semantic-release": "^17.3.0",
     "socket.io": "^3.0.0",
     "supertest": "^6.0.0",
     "ts-jest": "26.4.4",
