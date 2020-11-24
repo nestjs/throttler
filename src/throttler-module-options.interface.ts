@@ -20,6 +20,12 @@ export interface ThrottlerModuleOptions {
    * The storage class to use where all the record will be stored in.
    */
   storage?: any;
+
+  extractIPFromHeaders?: (headers: Headers) => string;
+}
+
+export interface Headers {
+  [key: string]: string;
 }
 
 export interface ThrottlerOptionsFactory {
