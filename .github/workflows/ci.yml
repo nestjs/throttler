@@ -36,7 +36,7 @@ jobs:
 
   auto-merge:
     needs: test
-    if: contains(github.event.pull_request.user.login, 'dependabot')
+    if: contains(github.event.pull_request.user.login, 'dependabot') || contains(github.event.pull_request.user.login, 'renovate')
     runs-on: ubuntu-latest
     steps:
     - name: automerge
