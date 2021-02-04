@@ -33,7 +33,7 @@ This package comes with a couple of goodies that should be mentioned, first is t
 
 ## Table of Contents
 
-- [NestJS Throttler Package](#nestjs-throttler-package)
+- [Description](#description)
 - [Table of Contents](#table-of-contents)
 - [Usage](#usage)
   - [ThrottlerModule](#throttlermodule)
@@ -212,6 +212,31 @@ So long as the Storage service implements this interface, it should be usable by
 
 ### Working with Websockets
 
+To work with Websockets you can extend the `ThrottlerGuard` and override the `handleRequest` method with something like the following method
+
+```ts
+@Injectable()
+export class WsThrottlerGuard extends ThrottlerGuard {
+  async handleRequest(context: ExecutionContext, limit: number, ttl: number): Promise<boolean> {
+    const client = context.switchToWs().getClient();
+    // this is a generic method to switch between `ws` and `socket.io`. You can choose what is appropriate for you
+    const ip = ['conn', '_socket']
+      .map((key) => client[key])
+      .filter((obj) => obj)
+      .shift().remoteAddress;
+    const key = this.generateKey(context, ip);
+    const ttls = await this.storageService.getRecord(key);
+
+    if (ttls.length >= limit) {
+      throw new ThrottlerException();
+    }
+
+    await this.storageService.addRecord(key, ttl);
+    return true;
+  }
+}
+```
+
 There are some things to take keep in mind when working with websockets:
 
 - You cannot bind the guard with `APP_GUARD` or `app.useGlobalGuards()` due to how Nest binds global guards.
@@ -226,6 +251,31 @@ To get the `ThrottlerModule` to work with the GraphQL context, a couple of thing
 - When configuring your `GraphQLModule`, you need to pass an option for `context` in the form
   of `({ req, res}) => ({ req, res })`. This will allow access to the Express Request and Response
   objects, allowing for the reading and writing of headers.
+- You must add in some additional context switching to get the `ExecutionContext` to pass back values correctly (or you can override the method entirely)
+
+```ts
+@Injectable()
+export class GqlThrottlerGuard extends ThrottlerGuard {
+  async handleRequest(context: ExecutionContext, limit: number, ttl: number): Promise<boolean> {
+    // apollo-express uses req,res apollo-fastify uses request,reply
+    const { req, res, request, reply } = context.getArgByIndex(2);
+    if (!res && !reply) {
+      return true;
+    }
+    const httpContext: ExecutionContext = {
+      ...context,
+      switchToHttp: () => ({
+        getRequest: () => req || request,
+        getResponse: () => res || reply,
+        getNext: context.switchToHttp().getNext,
+      }),
+      getClass: context.getClass,
+      getHandler: context.getHandler,
+    };
+    return super.handleRequest(httpContext, limit, ttl);
+  }
+}
+```
 
 ## Community Storage Providers
 

@@ -2,7 +2,6 @@ import { ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Test } from '@nestjs/testing';
 import { ThrottlerStorage } from './throttler-storage.interface';
-import { ThrottlerWsException } from './throttler-ws.exception';
 import { THROTTLER_OPTIONS } from './throttler.constants';
 import { ThrottlerException } from './throttler.exception';
 import { ThrottlerGuard } from './throttler.guard';
@@ -181,104 +180,6 @@ describe('ThrottlerGuard', () => {
       const canActivate = await guard.canActivate(ctxMock);
       expect(canActivate).toBe(true);
       expect(headerSettingMock).toBeCalledTimes(0);
-    });
-  });
-  describe('WS Context', () => {
-    it('should allow the ws request to pass through', async () => {
-      handler = function wsHandler() {
-        return 'string';
-      };
-      const ctxMock = contextMockFactory('ws', handler, {
-        getClient: () => ({
-          conn: {
-            remoteAddress: '127.0.0.1',
-          },
-        }),
-      });
-      const canActivate = await guard.canActivate(ctxMock);
-      expect(canActivate).toBe(true);
-    });
-    it('should throw an error at too many requests', async () => {
-      handler = function wsHandler() {
-        return 'string';
-      };
-      const ctxMock = contextMockFactory('ws', handler, {
-        getClient: () => ({
-          conn: {
-            remoteAddress: '127.0.0.1',
-          },
-        }),
-      });
-      for (let i = 0; i < 5; i++) {
-        const canActivate = await guard.canActivate(ctxMock);
-        expect(canActivate).toBe(true);
-      }
-      await expect(guard.canActivate(ctxMock)).rejects.toThrowError(ThrottlerWsException);
-    });
-  });
-  describe('Graphql Context', () => {
-    it('should run the gql context successfully', async () => {
-      handler = function graphQLHandler() {
-        return 'string';
-      };
-      const headerSettingMock = jest.fn();
-      const resMock = {
-        header: headerSettingMock,
-      };
-      const reqMock = {
-        headers: {},
-      };
-      const ctxMock = contextMockFactory('graphql', handler, { req: reqMock, res: resMock });
-      const canActivate = await guard.canActivate(ctxMock);
-      expect(canActivate).toBe(true);
-      expect(headerSettingMock).toBeCalledTimes(3);
-    });
-    it('should return early due to missing res from context', async () => {
-      handler = function graphQLHandler() {
-        return 'string';
-      };
-      const reqMock = {
-        headers: {},
-      };
-      const ctxMock = contextMockFactory('graphql', handler, { req: reqMock, res: undefined });
-      const canActivate = await guard.canActivate(ctxMock);
-      expect(canActivate).toBe(true);
-    });
-  });
-  describe('Throttler Skip present', () => {
-    it('should skip the route', async () => {
-      handler = function throttlerSkip() {
-        return 'string';
-      };
-      reflector.getAllAndOverride = () => true as any;
-      const headerSettingMock = jest.fn();
-      const resMock = {
-        header: headerSettingMock,
-      };
-      const reqMock = {
-        headers: {},
-      };
-      const ctxMock = contextMockFactory('http', handler, {
-        getResponse: () => resMock,
-        getRequest: () => reqMock,
-      });
-      const canActivate = await guard.canActivate(ctxMock);
-      expect(canActivate).toBe(true);
-      expect(headerSettingMock).toBeCalledTimes(0);
-    });
-  });
-  describe('RPC Context (WHY???)', () => {
-    it('should return due to default context tye', async () => {
-      handler = function rpcHandler() {
-        return 'string';
-      };
-      const ctxMock = {
-        getType: () => 'rpc',
-        getHandler: () => handler,
-        getClass: () => ThrottlerStorageServiceMock,
-      };
-      const canActivate = await guard.canActivate(ctxMock as any);
-      expect(canActivate).toBe(true);
     });
   });
 });
