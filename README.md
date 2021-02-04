@@ -256,23 +256,10 @@ To get the `ThrottlerModule` to work with the GraphQL context, a couple of thing
 ```ts
 @Injectable()
 export class GqlThrottlerGuard extends ThrottlerGuard {
-  async handleRequest(context: ExecutionContext, limit: number, ttl: number): Promise<boolean> {
-    // apollo-express uses req,res apollo-fastify uses request,reply
-    const { req, res, request, reply } = context.getArgByIndex(2);
-    if (!res && !reply) {
-      return true;
-    }
-    const httpContext: ExecutionContext = {
-      ...context,
-      switchToHttp: () => ({
-        getRequest: () => req || request,
-        getResponse: () => res || reply,
-        getNext: context.switchToHttp().getNext,
-      }),
-      getClass: context.getClass,
-      getHandler: context.getHandler,
-    };
-    return super.handleRequest(httpContext, limit, ttl);
+  getRequestResponse(context: ExecutionContext) {
+    const gqlCtx = GqlExecutionContext.create(context);
+    const ctx = gql.getContext();
+    return { req, ctx.req, res: ctx.res }; // ctx.request and ctx.reply for fastify
   }
 }
 ```

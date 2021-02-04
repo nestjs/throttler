@@ -65,8 +65,7 @@ export class ThrottlerGuard implements CanActivate {
     ttl: number,
   ): Promise<boolean> {
     // Here we start to check the amount of requests being done against the ttl.
-    const req = context.switchToHttp().getRequest();
-    const res = context.switchToHttp().getResponse();
+    const { req, res } = this.getRequestResponse(context);
 
     // Return early if the current user agent should be ignored.
     if (Array.isArray(this.options.ignoreUserAgents)) {
@@ -95,6 +94,13 @@ export class ThrottlerGuard implements CanActivate {
 
     await this.storageService.addRecord(key, ttl);
     return true;
+  }
+
+  protected getRequestResponse(
+    context: ExecutionContext,
+  ): { req: Record<string, any>; res: Record<string, any> } {
+    const http = context.switchToHttp();
+    return { req: http.getRequest(), res: http.getResponse() };
   }
 
   /**
