@@ -9,7 +9,7 @@ import {
   THROTTLER_SKIP,
   THROTTLER_TTL,
 } from './throttler.constants';
-import { ThrottlerException } from './throttler.exception';
+import { ThrottlerException, throttlerMessage } from './throttler.exception';
 
 /**
  * @publicApi
@@ -17,6 +17,7 @@ import { ThrottlerException } from './throttler.exception';
 @Injectable()
 export class ThrottlerGuard implements CanActivate {
   protected headerPrefix = 'X-RateLimit';
+  protected errorMessage = throttlerMessage;
   constructor(
     @Inject(THROTTLER_OPTIONS) private readonly options: ThrottlerModuleOptions,
     @Inject(ThrottlerStorage) private readonly storageService: ThrottlerStorage,
@@ -83,7 +84,7 @@ export class ThrottlerGuard implements CanActivate {
     // Throw an error when the user reached their limit.
     if (ttls.length >= limit) {
       res.header('Retry-After', nearestExpiryTime);
-      throw new ThrottlerException();
+      throw new ThrottlerException(this.errorMessage);
     }
 
     res.header(`${this.headerPrefix}-Limit`, limit);

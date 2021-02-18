@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
 
-export const message = 'Too Many Requests';
+export const throttlerMessage = 'ThrottlerException: Too Many Requests';
 
 /**
  * Throws a HttpException with a 429 status code, indicating that too many
@@ -8,7 +8,7 @@ export const message = 'Too Many Requests';
  * @publicApi
  */
 export class ThrottlerException extends HttpException {
-  constructor() {
-    super(`ThrottlerException: ${message}`, HttpStatus.TOO_MANY_REQUESTS);
+  constructor(message?: string) {
+    super(`${message || throttlerMessage}`, HttpStatus.TOO_MANY_REQUESTS);
   }
 }
