@@ -1409,10 +1409,10 @@
     tslib "2.1.0"
     uuid "8.3.2"
 
-"@nestjs/graphql@7.9.9":
-  version "7.9.9"
-  resolved "https://registry.yarnpkg.com/@nestjs/graphql/-/graphql-7.9.9.tgz#b145f45d627fc036364f9132db922c62447c6f12"
-  integrity sha512-an8RyW8jO+gvP0dLvJmYTuKkOTIBU3QJSwaIURfpLK8ADR3jGbiuxwJGo0xv+4lzQ3MF8ywPdkPRNrmZikZGWw==
+"@nestjs/graphql@7.9.10":
+  version "7.9.10"
+  resolved "https://registry.yarnpkg.com/@nestjs/graphql/-/graphql-7.9.10.tgz#04b2e0bb48941ea83ccade90ec2299dd3af3958f"
+  integrity sha512-whKkgT7DRoIiFWPG/iCsy0acJQdjsWYGvY7lgOBuHG75pEni01EImCZeaqVVCxLCddaWQW9oZfpStoQOvSTrOw==
   dependencies:
     "@graphql-tools/merge" "6.2.7"
     "@graphql-tools/schema" "6.2.4"
