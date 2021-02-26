@@ -16,7 +16,7 @@
   ],
   "publishConfig": {
     "access": "public"
-  }
+  },
   "private": false,
   "license": "MIT",
   "main": "dist/index.js",
