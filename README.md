@@ -135,7 +135,7 @@ export class AppController {
 #### @Throttle()
 
 ```ts
-@Throttle(limit: number = 20, ttl: number = 60)
+@Throttle(limit: number = 30, ttl: number = 60)
 ```
 
 This decorator will set THROTTLER_LIMIT and THROTTLER_TTL metadatas on the
