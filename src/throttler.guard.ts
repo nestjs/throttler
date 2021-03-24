@@ -19,9 +19,9 @@ export class ThrottlerGuard implements CanActivate {
   protected headerPrefix = 'X-RateLimit';
   protected errorMessage = throttlerMessage;
   constructor(
-    @Inject(THROTTLER_OPTIONS) private readonly options: ThrottlerModuleOptions,
-    @Inject(ThrottlerStorage) private readonly storageService: ThrottlerStorage,
-    private readonly reflector: Reflector,
+    @Inject(THROTTLER_OPTIONS) protected readonly options: ThrottlerModuleOptions,
+    @Inject(ThrottlerStorage) protected readonly storageService: ThrottlerStorage,
+    protected readonly reflector: Reflector,
   ) {}
 
   /**
