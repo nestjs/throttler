@@ -258,7 +258,7 @@ To get the `ThrottlerModule` to work with the GraphQL context, a couple of thing
 export class GqlThrottlerGuard extends ThrottlerGuard {
   getRequestResponse(context: ExecutionContext) {
     const gqlCtx = GqlExecutionContext.create(context);
-    const ctx = gql.getContext();
+    const ctx = gqlCtx.getContext();
     return { req, ctx.req, res: ctx.res }; // ctx.request and ctx.reply for fastify
   }
 }
