@@ -77,7 +77,15 @@ export class ThrottlerGuard implements CanActivate {
       }
     }
 
-    const key = this.generateKey(context, req.ip);
+    let key;
+
+    // Generate custom storage key if appropriate option provided.
+    if (typeof this.options.keyGenerator === 'function') {
+      key = this.options.keyGenerator(req);
+    } else {
+      key = req.ip;
+    }
+
     const ttls = await this.storageService.getRecord(key);
     const nearestExpiryTime = ttls.length > 0 ? Math.ceil((ttls[0] - Date.now()) / 1000) : 0;
 

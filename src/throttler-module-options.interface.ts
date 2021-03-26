@@ -17,6 +17,11 @@ export interface ThrottlerModuleOptions {
   ignoreUserAgents?: RegExp[];
 
   /**
+   * A function to generate a unique identifier for each incoming request. Defaults to ip.
+   */
+  keyGenerator?: (req: Record<string, any>) => string;
+
+  /**
    * The storage class to use where all the record will be stored in.
    */
   storage?: any;
