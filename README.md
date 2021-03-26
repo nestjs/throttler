@@ -41,6 +41,7 @@ This package comes with a couple of goodies that should be mentioned, first is t
     - [@Throttle()](#throttle)
     - [@SkipThrottle()](#skipthrottle)
   - [Ignoring specific user agents](#ignoring-specific-user-agents)
+  - [Configuring package under proxy](#configuring-package-under-proxy)
   - [ThrottlerStorage](#throttlerstorage)
   - [Working with Websockets](#working-with-websockets)
   - [Working with GraphQL](#working-with-graphql)
@@ -184,6 +185,24 @@ You can use the `ignoreUserAgents` key to ignore specific user agents.
         // Example user agent: Mozilla/5.0 (compatible; Bingbot/2.0; +http://www.bing.com/bingbot.htm)
         new RegExp('bingbot', 'gi'),
       ],
+    }),
+  ],
+})
+export class AppModule {}
+```
+
+### Configuring package under proxy
+
+You can use the `keyGenerator` key to setup a function to generate a unique identifier for each incoming request if you use a proxy.
+
+```ts
+@Module({
+  imports: [
+    ThrottlerModule.forRoot({
+      ttl: 60,
+      limit: 10,
+      // Will generate keys using 'cf-connecting-ip' header.
+      keyGenerator: (req: Record<string, any>) => req.headers['cf-connecting-ip'] || req.ip,
     }),
   ],
 })
