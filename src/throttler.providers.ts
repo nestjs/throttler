@@ -20,3 +20,15 @@ export const ThrottlerStorageProvider = {
   },
   inject: [THROTTLER_OPTIONS],
 };
+
+/**
+ * A utility function for getting the options injection token
+ * @publicApi
+ */
+export const getOptionsToken = () => THROTTLER_OPTIONS;
+
+/**
+ * A utility function for getting the storage injection token
+ * @publicApi
+ */
+export const getStorageToken = () => ThrottlerStorage;

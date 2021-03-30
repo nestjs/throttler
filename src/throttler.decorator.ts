@@ -1,4 +1,6 @@
+import { Inject } from '@nestjs/common';
 import { THROTTLER_LIMIT, THROTTLER_SKIP, THROTTLER_TTL } from './throttler.constants';
+import { getOptionsToken, getStorageToken } from './throttler.providers';
 
 function setThrottlerMetadata(target: any, limit: number, ttl: number): void {
   Reflect.defineMetadata(THROTTLER_TTL, ttl, target);
@@ -47,3 +49,17 @@ export const SkipThrottle = (skip = true): MethodDecorator & ClassDecorator => {
     return target;
   };
 };
+
+/**
+ * Sets the proper injection token for the `THROTTLER_OPTIONS`
+ * @usage @InjectThrottlerOptions()
+ * @publicApi
+ */
+export const InjectThrottlerOptions = () => Inject(getOptionsToken());
+
+/**
+ * Sets the proper injection token for the `ThrottlerStorage`
+ * @usage @InjectThrottlerStorage()
+ * @publicApi
+ */
+export const InjectThrottlerStorage = () => Inject(getStorageToken());
