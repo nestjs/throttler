@@ -1,14 +1,10 @@
-import { CanActivate, ExecutionContext, Inject, Injectable } from '@nestjs/common';
+import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import * as md5 from 'md5';
 import { ThrottlerModuleOptions } from './throttler-module-options.interface';
 import { ThrottlerStorage } from './throttler-storage.interface';
-import {
-  THROTTLER_LIMIT,
-  THROTTLER_OPTIONS,
-  THROTTLER_SKIP,
-  THROTTLER_TTL,
-} from './throttler.constants';
+import { THROTTLER_LIMIT, THROTTLER_SKIP, THROTTLER_TTL } from './throttler.constants';
+import { InjectThrottlerOptions, InjectThrottlerStorage } from './throttler.decorator';
 import { ThrottlerException, throttlerMessage } from './throttler.exception';
 
 /**
@@ -19,8 +15,8 @@ export class ThrottlerGuard implements CanActivate {
   protected headerPrefix = 'X-RateLimit';
   protected errorMessage = throttlerMessage;
   constructor(
-    @Inject(THROTTLER_OPTIONS) protected readonly options: ThrottlerModuleOptions,
-    @Inject(ThrottlerStorage) protected readonly storageService: ThrottlerStorage,
+    @InjectThrottlerOptions() protected readonly options: ThrottlerModuleOptions,
+    @InjectThrottlerStorage() protected readonly storageService: ThrottlerStorage,
     protected readonly reflector: Reflector,
   ) {}
 
@@ -76,8 +72,8 @@ export class ThrottlerGuard implements CanActivate {
         }
       }
     }
-
-    const key = this.generateKey(context, req.ip);
+    const tracker = this.getTracker(req);
+    const key = this.generateKey(context, tracker);
     const ttls = await this.storageService.getRecord(key);
     const nearestExpiryTime = ttls.length > 0 ? Math.ceil((ttls[0] - Date.now()) / 1000) : 0;
 
@@ -95,6 +91,10 @@ export class ThrottlerGuard implements CanActivate {
 
     await this.storageService.addRecord(key, ttl);
     return true;
+  }
+
+  protected getTracker(req: Record<string, any>): string {
+    return req.ip;
   }
 
   protected getRequestResponse(

@@ -42,6 +42,7 @@ This package comes with a couple of goodies that should be mentioned, first is t
     - [@SkipThrottle()](#skipthrottle)
   - [Ignoring specific user agents](#ignoring-specific-user-agents)
   - [ThrottlerStorage](#throttlerstorage)
+  - [Proxies](#proxies)
   - [Working with Websockets](#working-with-websockets)
   - [Working with GraphQL](#working-with-graphql)
 - [Community Storage Providers](#community-storage-providers)
@@ -209,6 +210,10 @@ export interface ThrottlerStorage {
 ```
 
 So long as the Storage service implements this interface, it should be usable by the `ThrottlerGuard`.
+
+### Proxies
+
+If you are working behind a proxy, check the specific HTTP adapter options ([express](http://expressjs.com/en/guide/behind-proxies.html) and [fastify](https://www.fastify.io/docs/latest/Server/#trustproxy)) for the `trust proxy` option and enable it. Doing so will allow you to get the original IP address from the `X-Forward-For` header, and you can override the `getTracker()` method to pull the value from the header rather than from `req.ip`
 
 ### Working with Websockets
 
