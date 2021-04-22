@@ -53,7 +53,7 @@
     "@nestjs/cli": "7.6.0",
     "@nestjs/common": "7.6.15",
     "@nestjs/core": "7.6.15",
-    "@nestjs/graphql": "7.10.3",
+    "@nestjs/graphql": "7.10.6",
     "@nestjs/platform-express": "7.6.15",
     "@nestjs/platform-fastify": "7.6.15",
     "@nestjs/platform-socket.io": "7.6.15",
