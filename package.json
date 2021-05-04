@@ -69,7 +69,7 @@
     "@types/socket.io": "2.1.13",
     "@types/socket.io-client": "1.4.36",
     "@types/supertest": "2.0.11",
-    "@typescript-eslint/eslint-plugin": "4.22.0",
+    "@typescript-eslint/eslint-plugin": "4.22.1",
     "@typescript-eslint/parser": "4.22.1",
     "apollo-server-express": "2.24.0",
     "apollo-server-fastify": "2.24.0",
