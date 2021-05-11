@@ -11553,10 +11553,10 @@ socket.io@2.4.1:
     socket.io-client "2.4.0"
     socket.io-parser "~3.4.0"
 
-socket.io@4.1.0:
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/socket.io/-/socket.io-4.1.0.tgz#ad0067eb90a69fb7c5926188fcf3b62a375a8601"
-  integrity sha512-f6+1m0Y32ThoUOMa8ZUojq3vEkCXl33GXFnye6OXjFG3QtOl59AAp5IhDr0SR3bMedKkfqo6IdxAXCmgiYB4Ug==
+socket.io@4.1.1:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/socket.io/-/socket.io-4.1.1.tgz#aa3e4d93142fec6ba2053091601b55c835864b54"
+  integrity sha512-YKPdhaYRGEXjP+VqoKlfOEPgDjm0aMq1YWonjHg4rBU1xJCmgceNh2XL1vO4czWupH+WX1+d9Wqb768h7BC5kw==
   dependencies:
     "@types/cookie" "^0.4.0"
     "@types/cors" "^2.8.8"
