@@ -88,7 +88,7 @@
     "prettier": "2.3.0",
     "reflect-metadata": "0.1.13",
     "rimraf": "3.0.2",
-    "rxjs": "7.0.0",
+    "rxjs": "7.0.1",
     "semantic-release": "17.4.2",
     "socket.io": "4.1.1",
     "supertest": "6.1.3",
