@@ -77,8 +77,8 @@ export class ThrottlerGuard implements CanActivate {
     const ttls = await this.storageService.getRecord(key);
     const nearestExpiryTime = ttls.length > 0 ? Math.ceil((ttls[0] - Date.now()) / 1000) : 0;
 
-    // The response might be `undefined` in some cases. For example, not having
-    // bodyParser to be `true` and using a rawBody parser will result in this.
+    // The response might be `undefined` in some cases. For example, having
+    // bodyParser to be `false` and using a rawBody parser.
     if (res) {
       // Throw an error when the user reached their limit.
       if (ttls.length >= limit) {
