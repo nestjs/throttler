@@ -65,9 +65,9 @@ export class ThrottlerGuard implements CanActivate {
     const { req, res } = this.getRequestResponse(context);
 
     // Return early if the current user agent should be ignored.
-    if (Array.isArray(this.options.ignoreUserAgents)) {
+    if (Array.isArray(this.options.ignoreUserAgents) && req.headers) {
       for (const pattern of this.options.ignoreUserAgents) {
-        if (req.headers && pattern.test(req.headers['user-agent'])) {
+        if (pattern.test(req.headers['user-agent'])) {
           return true;
         }
       }
