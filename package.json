@@ -62,7 +62,7 @@
     "@nestjs/testing": "7.6.17",
     "@nestjs/websockets": "7.6.17",
     "@types/express": "4.17.12",
-    "@types/express-serve-static-core": "4.17.20",
+    "@types/express-serve-static-core": "4.17.21",
     "@types/jest": "26.0.23",
     "@types/md5": "2.3.0",
     "@types/node": "14.17.2",
