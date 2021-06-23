@@ -80,7 +80,7 @@ export class ThrottlerGuard implements CanActivate {
     // Throw an error when the user reached their limit.
     if (ttls.length >= limit) {
       res.header('Retry-After', nearestExpiryTime);
-      throw new ThrottlerException(this.errorMessage);
+      this.throwThrottlingException(context);
     }
 
     res.header(`${this.headerPrefix}-Limit`, limit);
@@ -97,9 +97,10 @@ export class ThrottlerGuard implements CanActivate {
     return req.ip;
   }
 
-  protected getRequestResponse(
-    context: ExecutionContext,
-  ): { req: Record<string, any>; res: Record<string, any> } {
+  protected getRequestResponse(context: ExecutionContext): {
+    req: Record<string, any>;
+    res: Record<string, any>;
+  } {
     const http = context.switchToHttp();
     return { req: http.getRequest(), res: http.getResponse() };
   }
@@ -111,5 +112,17 @@ export class ThrottlerGuard implements CanActivate {
   protected generateKey(context: ExecutionContext, suffix: string): string {
     const prefix = `${context.getClass().name}-${context.getHandler().name}`;
     return md5(`${prefix}-${suffix}`);
+  }
+
+  /**
+   * Throws an exception for the event that the rate limit has been exceeded.
+   *
+   * The context parameter allows to access the context when overwriting
+   * the method.
+   * @throws ThrottlerException
+   */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  protected throwThrottlingException(context: ExecutionContext): void {
+    throw new ThrottlerException(this.errorMessage);
   }
 }
