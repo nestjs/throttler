@@ -12909,10 +12909,10 @@ tsconfig-paths-webpack-plugin@3.5.1:
     enhanced-resolve "^5.7.0"
     tsconfig-paths "^3.9.0"
 
-tsconfig-paths@3.10.0:
-  version "3.10.0"
-  resolved "https://registry.yarnpkg.com/tsconfig-paths/-/tsconfig-paths-3.10.0.tgz#3b61d8ab208d953d488906d8ed592e367157d16b"
-  integrity sha512-gNtNjSOOaEPPXvomTEvLj65Ke8IUCYmmTCBTsdKu+cZWGrOlIZcorKfnb9PKkj9WT/M0qjiOo+22b7KD+n0NLw==
+tsconfig-paths@3.10.1:
+  version "3.10.1"
+  resolved "https://registry.yarnpkg.com/tsconfig-paths/-/tsconfig-paths-3.10.1.tgz#79ae67a68c15289fdf5c51cb74f397522d795ed7"
+  integrity sha512-rETidPDgCpltxF7MjBZlAFPUHv5aHH2MymyPvh+vEyWAED4Eb/WeMbsnD/JDr4OKPOA1TssDHgIcpTN5Kh0p6Q==
   dependencies:
     json5 "^2.2.0"
     minimist "^1.2.0"
