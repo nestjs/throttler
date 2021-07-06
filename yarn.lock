@@ -2236,10 +2236,10 @@
   resolved "https://registry.yarnpkg.com/@types/estree/-/estree-0.0.46.tgz#0fb6bfbbeabd7a30880504993369c4bf1deab1fe"
   integrity sha512-laIjwTQaD+5DukBZaygQ79K1Z0jb1bPEMRrkXSLjtCcZm+abyp5YbrqpSLzD42FwWW6gK/aS4NYpJ804nG2brg==
 
-"@types/express-serve-static-core@4.17.22":
-  version "4.17.22"
-  resolved "https://registry.yarnpkg.com/@types/express-serve-static-core/-/express-serve-static-core-4.17.22.tgz#e011c55de3f17ddf1161f790042a15c5a218744d"
-  integrity sha512-WdqmrUsRS4ootGha6tVwk/IVHM1iorU8tGehftQD2NWiPniw/sm7xdJOIlXLwqdInL9wBw/p7oO8vaYEF3NDmA==
+"@types/express-serve-static-core@4.17.23":
+  version "4.17.23"
+  resolved "https://registry.yarnpkg.com/@types/express-serve-static-core/-/express-serve-static-core-4.17.23.tgz#721c371fc53fe7b3ea40d8977b209b90cb275f58"
+  integrity sha512-WYqTtTPTJn9kXMdnAH5HPPb7ctXvBpP4PfuOb8MV4OHPQWHhDZixGlhgR159lJPpKm23WOdoCkt2//cCEaOJkw==
   dependencies:
     "@types/node" "*"
     "@types/qs" "*"
