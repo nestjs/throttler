@@ -83,7 +83,7 @@
     "husky": "6.0.0",
     "jest": "27.0.6",
     "lint-staged": "11.0.0",
-    "nodemon": "2.0.9",
+    "nodemon": "2.0.10",
     "pinst": "2.1.6",
     "prettier": "2.3.2",
     "reflect-metadata": "0.1.13",
