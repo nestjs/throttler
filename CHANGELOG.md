@@ -1,3 +1,15 @@
+# [2.0.0](https://github.com/nestjs/throttler/compare/v1.2.1...v2.0.0) (2021-07-09)
+
+### Features
+
+- adding in a comment about version ([b13bf53](https://github.com/nestjs/throttler/commit/b13bf53542236ba6b05ac537b7a677e1644a0407))
+
+### BREAKING CHANGES
+
+- v2 and above is now being developed specificially for
+  nest v8 and could have some unforseen side effects with Nest v7. use with
+  v7 at your own risk.
+
 ## [1.2.1](https://github.com/nestjs/throttler/compare/v1.2.0...v1.2.1) (2021-07-09)
 
 ### Performance Improvements
