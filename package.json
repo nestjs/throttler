@@ -1,6 +1,6 @@
 {
   "name": "@nestjs/throttler",
-  "version": "1.0.0",
+  "version": "1.2.1",
   "description": "A Rate-Limiting module for NestJS to work on Express, Fastify, Websockets, Socket.IO, and GraphQL, all rolled up into a simple package.",
   "author": "Jay McDoniel <me@jaymcdoniel.dev>",
   "contributors": [],

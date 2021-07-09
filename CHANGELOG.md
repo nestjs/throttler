@@ -1,3 +1,9 @@
+## [1.2.1](https://github.com/nestjs/throttler/compare/v1.2.0...v1.2.1) (2021-07-09)
+
+### Performance Improvements
+
+- upgrade to nest v8 ([cb5dd91](https://github.com/nestjs/throttler/commit/cb5dd913e9fcc482cd74f2d49085b98dac630215))
+
 # [0.3.0](https://github.com/jmcdo29/nestjs-throttler/compare/0.2.3...0.3.0) (2020-11-10)
 
 ### Bug Fixes
