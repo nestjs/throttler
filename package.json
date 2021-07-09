@@ -50,7 +50,7 @@
   "devDependencies": {
     "@commitlint/cli": "12.1.4",
     "@commitlint/config-angular": "12.1.4",
-    "@nestjs/cli": "7.6.0",
+    "@nestjs/cli": "8.0.2",
     "@nestjs/common": "8.0.1",
     "@nestjs/core": "8.0.1",
     "@nestjs/graphql": "7.10.6",
