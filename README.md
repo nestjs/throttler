@@ -31,9 +31,14 @@ For an overview of the community storage providers, see [Community Storage Provi
 
 This package comes with a couple of goodies that should be mentioned, first is the `ThrottlerModule`.
 
+## Versions
+
+`@nestjs/throttler@^1` is compatible with Nest v7 while `@nestjs/throttler@^2` is compatible with Nest v7 and Nest v8, but it is suggested to be used with only v8 in case of breaking changes against v7 that are unseen.
+
 ## Table of Contents
 
 - [Description](#description)
+- [Versions](#versions)
 - [Table of Contents](#table-of-contents)
 - [Usage](#usage)
   - [ThrottlerModule](#throttlermodule)
