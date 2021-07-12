@@ -1441,7 +1441,18 @@
     tslib "2.3.0"
     ws "7.5.2"
 
-"@nestjs/schematics@8.0.0", "@nestjs/schematics@^8.0.0":
+"@nestjs/schematics@8.0.1":
+  version "8.0.1"
+  resolved "https://registry.yarnpkg.com/@nestjs/schematics/-/schematics-8.0.1.tgz#773e6e76cd23a971f43862c41a5f26994b0c38e0"
+  integrity sha512-rD/eqpguJpjOVI4uK1MOpqC1vPz+XvC/xT1IYiWDFU9rdJMVhHC5maTKVs/RjkwYRmPzNRTWAoMV3yOD/jC+gw==
+  dependencies:
+    "@angular-devkit/core" "12.0.5"
+    "@angular-devkit/schematics" "12.0.5"
+    fs-extra "10.0.0"
+    jsonc-parser "3.0.0"
+    pluralize "8.0.0"
+
+"@nestjs/schematics@^8.0.0":
   version "8.0.0"
   resolved "https://registry.yarnpkg.com/@nestjs/schematics/-/schematics-8.0.0.tgz#3479a5e433a40f0fc42098ffe1b64ddcf21cea39"
   integrity sha512-TldaYlm40CDANGzAugcqkN9N2O4pAA67EMy7qREym8W2o57co7AiEsYUl1CD3zPhBfhVcFRWfnQHs06IbXxPFw==
