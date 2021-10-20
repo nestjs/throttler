@@ -91,7 +91,7 @@
     "rimraf": "3.0.2",
     "rxjs": "7.4.0",
     "semantic-release": "17.4.7",
-    "socket.io": "4.1.3",
+    "socket.io": "4.3.1",
     "supertest": "6.1.6",
     "ts-jest": "27.0.7",
     "ts-loader": "9.2.6",
