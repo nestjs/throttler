@@ -6055,10 +6055,10 @@ lines-and-columns@^1.1.6:
   resolved "https://registry.yarnpkg.com/lines-and-columns/-/lines-and-columns-1.1.6.tgz#1c00c743b433cd0a4e80758f7b64a57440d9ff00"
   integrity sha1-HADHQ7QzzQpOgHWPe2SldEDZ/wA=
 
-lint-staged@12.0.0:
-  version "12.0.0"
-  resolved "https://registry.yarnpkg.com/lint-staged/-/lint-staged-12.0.0.tgz#3d19fd7d68d43a29d3af1bccfc8bb72e8ed7f3b5"
-  integrity sha512-ALga9ZhMZ4MpBbRQybBRqDRyauGSgskuhxN6PB9V12uoukWFhmlau75wTxJgomaTgZpEcnn4FKQghgddDcOLvA==
+lint-staged@12.0.1:
+  version "12.0.1"
+  resolved "https://registry.yarnpkg.com/lint-staged/-/lint-staged-12.0.1.tgz#796bdfce87c5557bfea1497f7c6c4a7da3ffc338"
+  integrity sha512-4sqWnR+uhhRzqtOmkMPr0EWogeYMg9JwGxNErlxA8NzMTFv8dI93Be5htXMODfr/Sj9WVwCtjJntq9sJ6wpwvQ==
   dependencies:
     cli-truncate "3.1.0"
     colorette "^2.0.16"
