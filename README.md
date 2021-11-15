@@ -31,6 +31,13 @@ For an overview of the community storage providers, see [Community Storage Provi
 
 This package comes with a couple of goodies that should be mentioned, first is the `ThrottlerModule`.
 
+
+## Installation
+
+```bash
+$ npm i --save @nestjs/throttler
+```
+
 ## Versions
 
 `@nestjs/throttler@^1` is compatible with Nest v7 while `@nestjs/throttler@^2` is compatible with Nest v7 and Nest v8, but it is suggested to be used with only v8 in case of breaking changes against v7 that are unseen.
@@ -144,7 +151,7 @@ export class AppController {
 @Throttle(limit: number = 30, ttl: number = 60)
 ```
 
-This decorator will set THROTTLER_LIMIT and THROTTLER_TTL metadatas on the
+This decorator will set `THROTTLER_LIMIT` and `THROTTLER_TTL` metadatas on the
 route, for retrieval from the `Reflector` class. Can be applied to controllers
 and routes.
 
@@ -296,3 +303,7 @@ export class GqlThrottlerGuard extends ThrottlerGuard {
 - [Redis](https://github.com/kkoomen/nestjs-throttler-storage-redis)
 
 Feel free to submit a PR with your custom storage provider being added to this list.
+
+## License
+
+Nest is [MIT licensed](LICENSE).
