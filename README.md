@@ -137,7 +137,6 @@ export class AppModule {}
 // app.controller.ts
 @Controller()
 export class AppController {
-  @UseGuards(ThrottlerGuard)
   @Throttle(5, 30)
   normal() {}
 }
