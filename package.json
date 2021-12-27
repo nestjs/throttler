@@ -72,7 +72,7 @@
     "@types/socket.io-client": "3.0.0",
     "@types/supertest": "2.0.11",
     "@typescript-eslint/eslint-plugin": "5.8.1",
-    "@typescript-eslint/parser": "5.8.0",
+    "@typescript-eslint/parser": "5.8.1",
     "apollo-server-express": "3.5.0",
     "apollo-server-fastify": "3.5.0",
     "conventional-changelog-cli": "2.2.2",
