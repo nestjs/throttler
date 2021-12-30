@@ -65,7 +65,7 @@
     "@semantic-release/git": "10.0.1",
     "@types/express": "4.17.13",
     "@types/express-serve-static-core": "4.17.27",
-    "@types/jest": "27.0.3",
+    "@types/jest": "27.4.0",
     "@types/md5": "2.3.1",
     "@types/node": "16.11.17",
     "@types/socket.io": "3.0.2",
