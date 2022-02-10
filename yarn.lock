@@ -1050,10 +1050,10 @@
     "@graphql-tools/utils" "^8.0.0"
     tslib "~2.3.0"
 
-"@graphql-tools/merge@8.2.1":
-  version "8.2.1"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/merge/-/merge-8.2.1.tgz#bf83aa06a0cfc6a839e52a58057a84498d0d51ff"
-  integrity sha512-Q240kcUszhXiAYudjuJgNuLgy9CryDP3wp83NOZQezfA6h3ByYKU7xI6DiKrdjyVaGpYN3ppUmdj0uf5GaXzMA==
+"@graphql-tools/merge@8.2.2", "@graphql-tools/merge@^8.2.1":
+  version "8.2.2"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/merge/-/merge-8.2.2.tgz#433566c662a33f5a9c3cc5f3ce3753fb0019477a"
+  integrity sha512-2DyqhIOMUMKbCPqo8p6xSdll2OBcBxGdOrxlJJlFQvinsSaYqp/ct3dhAxNtzaIcvSVgXvttQqfD7O2ziFtE7Q==
   dependencies:
     "@graphql-tools/utils" "^8.5.1"
     tslib "~2.3.0"
@@ -1064,14 +1064,6 @@
   integrity sha512-nfMLYF7zczjnIbChZtqbvozRfuRweMD1Fe9HHd4RXd3Tcsj6E17srW0QJfxUoIIWh4pitj+XwZAwhj1PWBDU7g==
   dependencies:
     "@graphql-tools/utils" "^8.4.0"
-    tslib "~2.3.0"
-
-"@graphql-tools/merge@^8.2.1":
-  version "8.2.2"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/merge/-/merge-8.2.2.tgz#433566c662a33f5a9c3cc5f3ce3753fb0019477a"
-  integrity sha512-2DyqhIOMUMKbCPqo8p6xSdll2OBcBxGdOrxlJJlFQvinsSaYqp/ct3dhAxNtzaIcvSVgXvttQqfD7O2ziFtE7Q==
-  dependencies:
-    "@graphql-tools/utils" "^8.5.1"
     tslib "~2.3.0"
 
 "@graphql-tools/mock@^8.1.2":
@@ -1463,12 +1455,12 @@
     tslib "2.3.1"
     uuid "8.3.2"
 
-"@nestjs/graphql@9.2.7":
-  version "9.2.7"
-  resolved "https://registry.yarnpkg.com/@nestjs/graphql/-/graphql-9.2.7.tgz#37fdf9f220af137557508fe434767a12ea871dbd"
-  integrity sha512-/d/eFUlSpBE6UpHxDSF8t042eCTnn7XepS5Xg3TAwrU74Yg90lRW0mBam3Oh0Gu+8TLQFyYaAb2c1P7xZwDqGg==
+"@nestjs/graphql@10.0.0":
+  version "10.0.0"
+  resolved "https://registry.yarnpkg.com/@nestjs/graphql/-/graphql-10.0.0.tgz#c3956d6994d53135b0bf08a49a375f750192c644"
+  integrity sha512-fsOsoK2nMqmnBisrno+S+Yj/Qr/GLh2b3QCDEx4eooOEGM0+/NjCwmJ19iQ6nBLW6n4K8ZUvuCDMjg9ecaTZ+Q==
   dependencies:
-    "@graphql-tools/merge" "8.2.1"
+    "@graphql-tools/merge" "8.2.2"
     "@graphql-tools/schema" "8.3.1"
     "@graphql-tools/utils" "8.6.1"
     "@nestjs/mapped-types" "1.0.1"
@@ -1482,7 +1474,7 @@
     subscriptions-transport-ws "0.11.0"
     tslib "2.3.1"
     uuid "8.3.2"
-    ws "8.4.2"
+    ws "8.5.0"
 
 "@nestjs/mapped-types@1.0.1":
   version "1.0.1"
@@ -9442,11 +9434,6 @@ ws@7.5.6:
   version "7.5.6"
   resolved "https://registry.yarnpkg.com/ws/-/ws-7.5.6.tgz#e59fc509fb15ddfb65487ee9765c5a51dec5fe7b"
   integrity sha512-6GLgCqo2cy2A2rjCNFlxQS6ZljG/coZfZXclldI8FB/1G3CCI36Zd8xy2HrFVACi8tfk5XrgLQEk+P0Tnz9UcA==
-
-ws@8.4.2:
-  version "8.4.2"
-  resolved "https://registry.yarnpkg.com/ws/-/ws-8.4.2.tgz#18e749868d8439f2268368829042894b6907aa0b"
-  integrity sha512-Kbk4Nxyq7/ZWqr/tarI9yIt/+iNNFOjBXEWgTb4ydaNHBNGgvf2QHbS9fdfsndfjFlFwEd4Al+mw83YkaD10ZA==
 
 ws@8.5.0:
   version "8.5.0"
