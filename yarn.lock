@@ -14,10 +14,10 @@
     rxjs "6.6.7"
     source-map "0.7.3"
 
-"@angular-devkit/core@13.2.2":
-  version "13.2.2"
-  resolved "https://registry.yarnpkg.com/@angular-devkit/core/-/core-13.2.2.tgz#643a97991e25584cc7c54574c2aa4eee45cf40a0"
-  integrity sha512-qH0Vu8qwGD5uhmE8PtePA1lm7xL3JtbBCcrQICmLqD6njLDVb2N5pbdDXeiXDlWGUoIRHUhu6Uw4AsY8zXP/FA==
+"@angular-devkit/core@13.2.3":
+  version "13.2.3"
+  resolved "https://registry.yarnpkg.com/@angular-devkit/core/-/core-13.2.3.tgz#a5770c7a5e50d1b09e5a41ccb7cf0af140a9e168"
+  integrity sha512-/47RA8qmWzeS60xSdaprIn1MiSv0Iw83t0M9/ENH7irFS5vMAq62NCcwiWXH59pZmvvLbF+7xy/RgYUZLr4nHQ==
   dependencies:
     ajv "8.9.0"
     ajv-formats "2.1.1"
@@ -26,10 +26,10 @@
     rxjs "6.6.7"
     source-map "0.7.3"
 
-"@angular-devkit/core@13.2.3":
-  version "13.2.3"
-  resolved "https://registry.yarnpkg.com/@angular-devkit/core/-/core-13.2.3.tgz#a5770c7a5e50d1b09e5a41ccb7cf0af140a9e168"
-  integrity sha512-/47RA8qmWzeS60xSdaprIn1MiSv0Iw83t0M9/ENH7irFS5vMAq62NCcwiWXH59pZmvvLbF+7xy/RgYUZLr4nHQ==
+"@angular-devkit/core@13.2.4":
+  version "13.2.4"
+  resolved "https://registry.yarnpkg.com/@angular-devkit/core/-/core-13.2.4.tgz#3de82f14434db168093d8d6b4df84a10594612b8"
+  integrity sha512-hSw1JWA/6dDAF/xleQRXGtzHphfU49TMUhvAoAmsmmz3NAn03xLy1dtqdIXIf+TkFXVvZDaAB2mW8KfRV67GFg==
   dependencies:
     ajv "8.9.0"
     ajv-formats "2.1.1"
@@ -59,23 +59,23 @@
     ora "5.4.1"
     rxjs "6.6.7"
 
-"@angular-devkit/schematics@13.2.2":
-  version "13.2.2"
-  resolved "https://registry.yarnpkg.com/@angular-devkit/schematics/-/schematics-13.2.2.tgz#034aa816a16cc372586c0c153c24dc4569b90f1e"
-  integrity sha512-kXPLTkSzRCeBX+SYUkC6MIrWCkH90Y8hVegR9R5n2YqhCJyE+dZlcx4d/8d3VHtZlzAs0LL8BU+liC3wMIagjA==
-  dependencies:
-    "@angular-devkit/core" "13.2.2"
-    jsonc-parser "3.0.0"
-    magic-string "0.25.7"
-    ora "5.4.1"
-    rxjs "6.6.7"
-
 "@angular-devkit/schematics@13.2.3":
   version "13.2.3"
   resolved "https://registry.yarnpkg.com/@angular-devkit/schematics/-/schematics-13.2.3.tgz#c2acb68ba798f4ab115bee73f078d98f5b20d21c"
   integrity sha512-+dyC4iKV0huvpjiuz4uyjLNK3FsCIp/Ghv5lXvhG6yok/dCAubsJItJOxi6G16aVCzG/E9zbsDfm9fNMyVOkgQ==
   dependencies:
     "@angular-devkit/core" "13.2.3"
+    jsonc-parser "3.0.0"
+    magic-string "0.25.7"
+    ora "5.4.1"
+    rxjs "6.6.7"
+
+"@angular-devkit/schematics@13.2.4":
+  version "13.2.4"
+  resolved "https://registry.yarnpkg.com/@angular-devkit/schematics/-/schematics-13.2.4.tgz#dc22c94f52e1123cad8e03a09a5e80663cda6c9d"
+  integrity sha512-VMhYa4cDu5yE31OvHncAd15Rmlchih/Sr6sxFsIwkg4xzRNIIZCtwqxVXgf0TiTN9zrvlvzK7nhPqTGNqqYb2A==
+  dependencies:
+    "@angular-devkit/core" "13.2.4"
     jsonc-parser "3.0.0"
     magic-string "0.25.7"
     ora "5.4.1"
@@ -1529,14 +1529,14 @@
     tslib "2.3.1"
     ws "7.5.6"
 
-"@nestjs/schematics@8.0.6":
-  version "8.0.6"
-  resolved "https://registry.yarnpkg.com/@nestjs/schematics/-/schematics-8.0.6.tgz#925369ffc51e0d6d0284ad656cc0491e9f1e1cfd"
-  integrity sha512-IgWuplXg3I+2lzQqy5jR45C+EpBiOuPQwh8zWCjlQDYU9/X/2a8B8byJXw3nuguZS/huuuXx3ZhfHJKQYk6uIA==
+"@nestjs/schematics@8.0.7":
+  version "8.0.7"
+  resolved "https://registry.yarnpkg.com/@nestjs/schematics/-/schematics-8.0.7.tgz#bd721f678e8eb975b0ee72b8ee0b4a48196e955d"
+  integrity sha512-7k+eMMBUwvXFp6vwZ5byiLBEQKzjMyIJwO46ginoFugt2AXrOt0iUhR3BKFuWDBZaYQ1l4az86UGw5ohgH3wow==
   dependencies:
-    "@angular-devkit/core" "13.2.2"
-    "@angular-devkit/schematics" "13.2.2"
-    fs-extra "10.0.0"
+    "@angular-devkit/core" "13.2.4"
+    "@angular-devkit/schematics" "13.2.4"
+    fs-extra "10.0.1"
     jsonc-parser "3.0.0"
     pluralize "8.0.0"
 
@@ -4804,6 +4804,15 @@ fs-extra@10.0.0, fs-extra@^10.0.0:
   version "10.0.0"
   resolved "https://registry.yarnpkg.com/fs-extra/-/fs-extra-10.0.0.tgz#9ff61b655dde53fb34a82df84bb214ce802e17c1"
   integrity sha512-C5owb14u9eJwizKGdchcDUQeFtlSHHthBk8pbX9Vc1PFZrLombudjDnNns88aYslCyF6IY5SUw3Roz6xShcEIQ==
+  dependencies:
+    graceful-fs "^4.2.0"
+    jsonfile "^6.0.1"
+    universalify "^2.0.0"
+
+fs-extra@10.0.1:
+  version "10.0.1"
+  resolved "https://registry.yarnpkg.com/fs-extra/-/fs-extra-10.0.1.tgz#27de43b4320e833f6867cc044bfce29fdf0ef3b8"
+  integrity sha512-NbdoVMZso2Lsrn/QwLXOy6rm0ufY2zEOKCDzJR/0kBsb0E6qed0P3iYK+Ath3BfvXEeu4JhEtXLgILx5psUfag==
   dependencies:
     graceful-fs "^4.2.0"
     jsonfile "^6.0.1"
