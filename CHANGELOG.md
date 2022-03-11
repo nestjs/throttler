@@ -1,5 +1,11 @@
 # [2.0.0](https://github.com/nestjs/throttler/compare/v1.2.1...v2.0.0) (2021-07-09)
 
+## 2.0.1
+
+### Patch Changes
+
+- cf50808: fix memory leak for timeoutIds array. Before this, the timeoutIds array would not be trimmed and would grow until out of memory. Now ids are properly removed on timeout.
+
 ### Features
 
 - adding in a comment about version ([b13bf53](https://github.com/nestjs/throttler/commit/b13bf53542236ba6b05ac537b7a677e1644a0407))
