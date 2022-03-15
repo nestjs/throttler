@@ -51,7 +51,7 @@
     "@changesets/cli": "2.21.1",
     "@commitlint/cli": "16.2.1",
     "@commitlint/config-angular": "16.2.1",
-    "@nestjs/cli": "8.2.2",
+    "@nestjs/cli": "8.2.3",
     "@nestjs/common": "8.4.1",
     "@nestjs/core": "8.4.1",
     "@nestjs/graphql": "10.0.7",
