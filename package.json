@@ -79,7 +79,7 @@
     "cz-conventional-changelog": "3.3.0",
     "eslint": "8.12.0",
     "eslint-config-prettier": "8.5.0",
-    "eslint-plugin-import": "2.25.4",
+    "eslint-plugin-import": "2.26.0",
     "graphql": "16.3.0",
     "graphql-tools": "8.2.4",
     "husky": "7.0.4",
