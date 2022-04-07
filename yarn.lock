@@ -1530,13 +1530,13 @@
     tslib "2.3.1"
     ws "7.5.6"
 
-"@nestjs/schematics@8.0.9":
-  version "8.0.9"
-  resolved "https://registry.yarnpkg.com/@nestjs/schematics/-/schematics-8.0.9.tgz#796e06c14ba43930abb12cde0e0144b16925a6a3"
-  integrity sha512-2YNRFWyQCxKaK7XTKBRKecERKQj2cg9FLxsHwAf9beryXxVmciTmHV0gHCW7Pfatj38R50QFGPN71wuyyZIC5g==
+"@nestjs/schematics@8.0.10":
+  version "8.0.10"
+  resolved "https://registry.yarnpkg.com/@nestjs/schematics/-/schematics-8.0.10.tgz#4f951ea1ac94721ba6a6ccfae6461f8b22949573"
+  integrity sha512-gQq/8TYjtgum+5+QuPfHHKgKxDgNLGh8mH+EJ1skOKX+GTxgt5jmg1GFmwEfiOXZUcF9thT6GsOVNKWrdO3YMg==
   dependencies:
-    "@angular-devkit/core" "13.3.1"
-    "@angular-devkit/schematics" "13.3.1"
+    "@angular-devkit/core" "13.3.2"
+    "@angular-devkit/schematics" "13.3.2"
     fs-extra "10.0.1"
     jsonc-parser "3.0.0"
     pluralize "8.0.0"
