@@ -31,7 +31,6 @@ For an overview of the community storage providers, see [Community Storage Provi
 
 This package comes with a couple of goodies that should be mentioned, first is the `ThrottlerModule`.
 
-
 ## Installation
 
 ```bash
@@ -145,15 +144,58 @@ export class AppController {
 
 ### Decorators
 
+#### @Throttles()
+
+```ts
+@Throttles(
+  {
+    limit: number = 30,
+    ttl: number = 60,
+    ignoreUserAgents: RegExp[] = [],
+    ignore: (context, req, res) => boolean,
+  }
+)
+```
+
+##### Multiple throttles
+
+```ts
+@Throttles([
+  {
+    limit: number = 30,
+    ttl: number = 60,
+    ignoreUserAgents: RegExp[] = [],
+    ignore: (context, req, res) => boolean,
+  },
+  {
+    limit: number = 1,
+    ttl: number = 7,
+    ignoreUserAgents: RegExp[] = [],
+    ignore: (context, req, res) => boolean,
+  },
+])
+```
+
+This decorator will set `THROTTLES_OPTIONS` metadatas on the
+route, for retrieval from the `Reflector` class. Can be applied to controllers
+and routes.
+
 #### @Throttle()
 
 ```ts
 @Throttle(limit: number = 30, ttl: number = 60)
 ```
 
-This decorator will set `THROTTLER_LIMIT` and `THROTTLER_TTL` metadatas on the
-route, for retrieval from the `Reflector` class. Can be applied to controllers
-and routes.
+This equals to
+
+```ts
+@Throttles([
+  {
+    limit: number = 30,
+    ttl: number = 60
+  }
+])
+```
 
 #### @SkipThrottle()
 
@@ -201,6 +243,71 @@ You can use the `ignoreUserAgents` key to ignore specific user agents.
   ],
 })
 export class AppModule {}
+```
+
+You can use the option `throttles`:
+
+```ts
+@Module({
+  imports: [
+    ThrottlerModule.forRoot({
+      throttles: [
+        {
+          ttl: 60,
+          limit: 10,
+        },
+      ],
+      ignoreUserAgents: [
+        // Don't throttle request that have 'googlebot' defined in them.
+        // Example user agent: Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)
+        /googlebot/gi,
+
+        // Don't throttle request that have 'bingbot' defined in them.
+        // Example user agent: Mozilla/5.0 (compatible; Bingbot/2.0; +http://www.bing.com/bingbot.htm)
+        new RegExp('bingbot', 'gi'),
+      ],
+    }),
+  ],
+})
+export class AppModule {}
+```
+
+### Ignoring by logic
+
+#### For root
+
+```ts
+@Module({
+  imports: [
+    ThrottlerModule.forRoot({
+      throttles: [
+        {
+          limit: 60,
+          ttl: 10,
+        },
+      ],
+      ignore(context, req, res) {
+        return req.ip === "google bot's IP";
+      },
+    }),
+  ],
+})
+export class AppModule {}
+```
+
+#### For class or method
+
+```ts
+@Throttles([
+  {
+    limit: 60,
+    ttl: 10,
+    ignore(context, req, res) {
+      return req.ip === 'google bot\'s IP';
+    }
+  }
+])
+
 ```
 
 ### ThrottlerStorage
@@ -251,7 +358,11 @@ To work with Websockets you can extend the `ThrottlerGuard` and override the `ha
 ```ts
 @Injectable()
 export class WsThrottlerGuard extends ThrottlerGuard {
-  async handleRequest(context: ExecutionContext, limit: number, ttl: number): Promise<boolean> {
+  async handleRequest(
+    context: ExecutionContext,
+    { limit, ttl, ignore, ignoreUserAgents },
+    index,
+  ): Promise<boolean> {
     const client = context.switchToWs().getClient();
     // this is a generic method to switch between `ws` and `socket.io`. You can choose what is appropriate for you
     const ip = ['conn', '_socket']
