@@ -301,5 +301,38 @@ describe('ThrottlerGuard-Multiple throttles', () => {
         expect.any(Number),
       );
     });
+
+    it('should return an error after passing the limit of the second throttle', async () => {
+      handler = function returnError() {
+        return 'string';
+      };
+      const ctxMock = contextMockFactory('http', handler, {
+        getResponse: () => resMock,
+        getRequest: () => reqMock,
+      });
+      for (let i = 0; i < 3; i++) {
+        await guard.canActivate(ctxMock);
+      }
+      await expect(guard.canActivate(ctxMock)).rejects.toThrowError(ThrottlerException);
+      expect(headerSettingMock).toBeCalledTimes(10);
+      expect(headerSettingMock).toHaveBeenLastCalledWith('Retry-After', expect.any(Number));
+    });
+
+    it('should return an error after passing the limit of the first throttle', async () => {
+      handler = function returnError() {
+        return 'string';
+      };
+      const ctxMock = contextMockFactory('http', handler, {
+        getResponse: () => resMock,
+        getRequest: () => reqMock,
+      });
+      for (let i = 0; i < 5; i++) {
+        await guard.canActivate(ctxMock);
+        await new Promise((r) => setTimeout(r, 2000));
+      }
+      await expect(guard.canActivate(ctxMock)).rejects.toThrowError(ThrottlerException);
+      expect(headerSettingMock).toBeCalledTimes(16);
+      expect(headerSettingMock).toHaveBeenLastCalledWith('Retry-After', expect.any(Number));
+    });
   });
 });
