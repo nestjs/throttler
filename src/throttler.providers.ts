@@ -1,14 +1,32 @@
 import { Provider } from '@nestjs/common';
-import { ThrottlerModuleOptions } from './throttler-module-options.interface';
+import {
+  Throttler1ThrottleModuleOptions,
+  ThrottlerModuleOptions,
+  ThrottlerMultipleThrottlesModuleOptions,
+} from './throttler-module-options.interface';
 import { ThrottlerStorage } from './throttler-storage.interface';
 import { THROTTLER_OPTIONS } from './throttler.constants';
 import { ThrottlerStorageService } from './throttler.service';
 
 export function createThrottlerProviders(options: ThrottlerModuleOptions): Provider[] {
+  const _options: ThrottlerMultipleThrottlesModuleOptions = Array.isArray(
+    (<ThrottlerMultipleThrottlesModuleOptions>options).throttles,
+  )
+    ? options
+    : {
+        ignoreUserAgents: options.ignoreUserAgents,
+        storage: options.storage,
+        throttles: [
+          {
+            limit: (<Throttler1ThrottleModuleOptions>options).limit,
+            ttl: (<Throttler1ThrottleModuleOptions>options).ttl,
+          },
+        ],
+      };
   return [
     {
       provide: THROTTLER_OPTIONS,
-      useValue: options,
+      useValue: _options,
     },
   ];
 }

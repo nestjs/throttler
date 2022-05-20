@@ -1,11 +1,20 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import * as md5 from 'md5';
-import { ThrottlerModuleOptions } from './throttler-module-options.interface';
+import {
+  ThrottleOptions,
+  ThrottlerMultipleThrottlesModuleOptions,
+} from './throttler-module-options.interface';
 import { ThrottlerStorage } from './throttler-storage.interface';
-import { THROTTLER_LIMIT, THROTTLER_SKIP, THROTTLER_TTL } from './throttler.constants';
+import { THROTTLER_THROTTLES_OPTIONS, THROTTLER_SKIP } from './throttler.constants';
 import { InjectThrottlerOptions, InjectThrottlerStorage } from './throttler.decorator';
 import { ThrottlerException, throttlerMessage } from './throttler.exception';
+
+type RateLimit = {
+  limit: number;
+  remaining: number;
+  reset: number;
+};
 
 /**
  * @publicApi
@@ -15,7 +24,7 @@ export class ThrottlerGuard implements CanActivate {
   protected headerPrefix = 'X-RateLimit';
   protected errorMessage = throttlerMessage;
   constructor(
-    @InjectThrottlerOptions() protected readonly options: ThrottlerModuleOptions,
+    @InjectThrottlerOptions() protected readonly options: ThrottlerMultipleThrottlesModuleOptions,
     @InjectThrottlerStorage() protected readonly storageService: ThrottlerStorage,
     protected readonly reflector: Reflector,
   ) {}
@@ -34,20 +43,36 @@ export class ThrottlerGuard implements CanActivate {
       return true;
     }
 
-    // Return early when we have no limit or ttl data.
-    const routeOrClassLimit = this.reflector.getAllAndOverride<number>(THROTTLER_LIMIT, [
-      handler,
-      classRef,
-    ]);
-    const routeOrClassTtl = this.reflector.getAllAndOverride<number>(THROTTLER_TTL, [
-      handler,
-      classRef,
-    ]);
+    const routeThrotlesOptions =
+      this.reflector.getAllAndOverride<ThrottleOptions[]>(THROTTLER_THROTTLES_OPTIONS, [
+        handler,
+        classRef,
+      ]) || this.options.throttles;
 
-    // Check if specific limits are set at class or route level, otherwise use global options.
-    const limit = routeOrClassLimit || this.options.limit;
-    const ttl = routeOrClassTtl || this.options.ttl;
-    return this.handleRequest(context, limit, ttl);
+    let minRateLimit: RateLimit = null;
+    for (let i = 0; i < routeThrotlesOptions.length; i++) {
+      const rateLimit = await this.handleRequest(context, routeThrotlesOptions[i], i);
+      if (rateLimit) {
+        // use RateLimit which is most likely to be blocked
+        if (!minRateLimit) {
+          minRateLimit = rateLimit;
+        } else if (
+          minRateLimit.remaining > rateLimit.remaining ||
+          (minRateLimit.remaining === rateLimit.remaining && minRateLimit.reset < rateLimit.reset)
+        ) {
+          minRateLimit = rateLimit;
+        }
+      }
+    }
+    if (minRateLimit) {
+      const { res } = this.getRequestResponse(context);
+      res.header(`${this.headerPrefix}-Limit`, minRateLimit.limit);
+      // We're about to add a record so we need to take that into account here.
+      // Otherwise the header says we have a request left when there are none.
+      res.header(`${this.headerPrefix}-Remaining`, minRateLimit.remaining);
+      res.header(`${this.headerPrefix}-Reset`, minRateLimit.reset);
+    }
+    return true;
   }
 
   /**
@@ -58,22 +83,26 @@ export class ThrottlerGuard implements CanActivate {
    */
   protected async handleRequest(
     context: ExecutionContext,
-    limit: number,
-    ttl: number,
-  ): Promise<boolean> {
+    routeThrotleOptions: ThrottleOptions,
+    throtleIndex: number,
+  ): Promise<RateLimit> {
     // Here we start to check the amount of requests being done against the ttl.
     const { req, res } = this.getRequestResponse(context);
+    const { limit, ttl, ignoreUserAgents } = routeThrotleOptions;
 
-    // Return early if the current user agent should be ignored.
-    if (Array.isArray(this.options.ignoreUserAgents)) {
-      for (const pattern of this.options.ignoreUserAgents) {
+    const _ignoreUserAgents = ignoreUserAgents || this.options.ignoreUserAgents;
+
+    if (Array.isArray(_ignoreUserAgents)) {
+      // Return early if the current user agent should be ignored.
+      for (const pattern of _ignoreUserAgents) {
         if (pattern.test(req.headers['user-agent'])) {
-          return true;
+          return;
         }
       }
     }
+
     const tracker = this.getTracker(req);
-    const key = this.generateKey(context, tracker);
+    const key = this.generateKey(context, throtleIndex, tracker);
     const ttls = await this.storageService.getRecord(key);
     const nearestExpiryTime = ttls.length > 0 ? Math.ceil((ttls[0] - Date.now()) / 1000) : 0;
 
@@ -83,14 +112,14 @@ export class ThrottlerGuard implements CanActivate {
       this.throwThrottlingException(context);
     }
 
-    res.header(`${this.headerPrefix}-Limit`, limit);
-    // We're about to add a record so we need to take that into account here.
-    // Otherwise the header says we have a request left when there are none.
-    res.header(`${this.headerPrefix}-Remaining`, Math.max(0, limit - (ttls.length + 1)));
-    res.header(`${this.headerPrefix}-Reset`, nearestExpiryTime);
+    const rateLimit = {
+      limit,
+      remaining: Math.max(0, limit - (ttls.length + 1)),
+      reset: nearestExpiryTime,
+    };
 
     await this.storageService.addRecord(key, ttl);
-    return true;
+    return rateLimit;
   }
 
   protected getTracker(req: Record<string, any>): string {
@@ -109,8 +138,8 @@ export class ThrottlerGuard implements CanActivate {
    * Generate a hashed key that will be used as a storage key.
    * The key will always be a combination of the current context and IP.
    */
-  protected generateKey(context: ExecutionContext, suffix: string): string {
-    const prefix = `${context.getClass().name}-${context.getHandler().name}`;
+  protected generateKey(context: ExecutionContext, throttleIndex: number, suffix: string): string {
+    const prefix = `${context.getClass().name}-${throttleIndex}-${context.getHandler().name}`;
     return md5(`${prefix}-${suffix}`);
   }
 

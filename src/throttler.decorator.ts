@@ -1,10 +1,19 @@
 import { Inject } from '@nestjs/common';
-import { THROTTLER_LIMIT, THROTTLER_SKIP, THROTTLER_TTL } from './throttler.constants';
+import { ThrottleOptions } from './throttler-module-options.interface';
+import { THROTTLER_THROTTLES_OPTIONS, THROTTLER_SKIP } from './throttler.constants';
 import { getOptionsToken, getStorageToken } from './throttler.providers';
 
 function setThrottlerMetadata(target: any, limit: number, ttl: number): void {
-  Reflect.defineMetadata(THROTTLER_TTL, ttl, target);
-  Reflect.defineMetadata(THROTTLER_LIMIT, limit, target);
+  Reflect.defineMetadata(
+    THROTTLER_THROTTLES_OPTIONS,
+    [
+      {
+        limit,
+        ttl,
+      },
+    ] as ThrottleOptions[],
+    target,
+  );
 }
 
 /**
