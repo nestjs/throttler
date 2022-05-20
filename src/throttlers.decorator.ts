@@ -17,11 +17,12 @@ export const Throttles = (options: ThrottleOptions[]): MethodDecorator & ClassDe
     propertyKey?: string | symbol,
     descriptor?: TypedPropertyDescriptor<any>,
   ) => {
+    const _options = Array.isArray(options) ? options : [options];
     if (descriptor) {
-      setThrottlersMetadata(descriptor.value, options);
+      setThrottlersMetadata(descriptor.value, _options);
       return descriptor;
     }
-    setThrottlersMetadata(target, options);
+    setThrottlersMetadata(target, _options);
     return target;
   };
 };
