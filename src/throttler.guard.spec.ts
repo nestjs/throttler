@@ -2,7 +2,11 @@ import { ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Test } from '@nestjs/testing';
 import { ThrottlerStorage } from './throttler-storage.interface';
-import { THROTTLER_OPTIONS } from './throttler.constants';
+import {
+  THROTTLER_OPTIONS,
+  THROTTLER_SKIP,
+  THROTTLER_THROTTLES_OPTIONS,
+} from './throttler.constants';
 import { ThrottlerException } from './throttler.exception';
 import { ThrottlerGuard } from './throttler.guard';
 import { ThrottlerStorageService } from './throttler.service';
@@ -201,6 +205,8 @@ describe('ThrottlerGuard-Multiple throttles', () => {
   let reflector: Reflector;
   let service: ThrottlerStorageService;
   let handler: () => any;
+  const ignoreIp = '127.0.0.1';
+  const overrideIgnoreIp = '0.0.0.0';
 
   beforeEach(async () => {
     const modRef = await Test.createTestingModule({
@@ -219,6 +225,9 @@ describe('ThrottlerGuard-Multiple throttles', () => {
                 ttl: 2,
               },
             ],
+            ignore(context, req) {
+              return ignoreIp === req.ip;
+            },
           },
         },
         {
@@ -256,6 +265,8 @@ describe('ThrottlerGuard-Multiple throttles', () => {
       reqMock = {
         headers: {},
       };
+
+      Object.keys(service.storage).forEach((key) => delete service.storage[key]);
     });
     afterEach(() => {
       headerSettingMock.mockClear();
@@ -358,6 +369,67 @@ describe('ThrottlerGuard-Multiple throttles', () => {
       expect(headerSettingMock).toHaveBeenNthCalledWith(1, 'X-RateLimit-Limit', 2);
       expect(headerSettingMock).toHaveBeenNthCalledWith(2, 'X-RateLimit-Remaining', 1);
       expect(headerSettingMock).toHaveBeenNthCalledWith(3, 'X-RateLimit-Reset', expect.any(Number));
+    });
+
+    it(`should skip due to the ignore method return true when the IP is ${ignoreIp}`, async () => {
+      handler = function userAgentSkip() {
+        return 'string';
+      };
+      reqMock['ip'] = ignoreIp;
+      const ctxMock = contextMockFactory('http', handler, {
+        getResponse: () => resMock,
+        getRequest: () => reqMock,
+      });
+      const canActivate = await guard.canActivate(ctxMock);
+      expect(canActivate).toBe(true);
+      expect(headerSettingMock).toBeCalledTimes(0);
+    });
+    it(`should not skip due to the ignore method return false when the IP is not ${ignoreIp}`, async () => {
+      handler = function userAgentSkip() {
+        return 'string';
+      };
+      reqMock['ip'] = '192.168.1.1';
+      const ctxMock = contextMockFactory('http', handler, {
+        getResponse: () => resMock,
+        getRequest: () => reqMock,
+      });
+
+      const canActivate = await guard.canActivate(ctxMock);
+      expect(canActivate).toBe(true);
+      expect(headerSettingMock).toBeCalledTimes(3);
+      expect(headerSettingMock).toHaveBeenNthCalledWith(1, 'X-RateLimit-Limit', 3);
+      expect(headerSettingMock).toHaveBeenNthCalledWith(2, 'X-RateLimit-Remaining', 2);
+      expect(headerSettingMock).toHaveBeenNthCalledWith(3, 'X-RateLimit-Reset', expect.any(Number));
+    });
+    it(`should skip due to the ignore method return true when the IP is ${overrideIgnoreIp}`, async () => {
+      handler = function useReflector() {
+        return 'string';
+      };
+      reflector.getAllAndOverride = jest.fn().mockImplementation((metadataKey) => {
+        if (metadataKey === THROTTLER_SKIP) {
+          return false;
+        }
+        if (metadataKey === THROTTLER_THROTTLES_OPTIONS) {
+          return [
+            {
+              limit: 3,
+              ttl: 2,
+              ignore(context, req) {
+                return overrideIgnoreIp === req.ip;
+              },
+            },
+          ];
+        }
+      });
+      reqMock.ip = overrideIgnoreIp;
+      const ctxMock = contextMockFactory('http', handler, {
+        getResponse: () => resMock,
+        getRequest: () => reqMock,
+      });
+
+      const canActivate = await guard.canActivate(ctxMock);
+      expect(canActivate).toBe(true);
+      expect(headerSettingMock).toBeCalledTimes(0);
     });
   });
 });
