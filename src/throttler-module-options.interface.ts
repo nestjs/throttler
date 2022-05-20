@@ -15,6 +15,11 @@ export interface ThrottleOptions {
    * The user agents that should be ignored (checked against the User-Agent header).
    */
   ignoreUserAgents?: RegExp[];
+
+  /**
+   * if return true then the request should be ignored
+   */
+  ignore?: (context, req, res) => boolean;
 }
 
 export interface Throttler1ThrottleModuleOptions extends ThrottleOptions {
@@ -34,6 +39,11 @@ export interface ThrottlerMultipleThrottlesModuleOptions {
    * The user agents that should be ignored (checked against the User-Agent header).
    */
   ignoreUserAgents?: RegExp[];
+
+  /**
+   * if return true then the request should be ignored
+   */
+  ignore?: (context, req, res) => boolean;
 
   /**
    * The storage class to use where all the record will be stored in.

@@ -88,10 +88,16 @@ export class ThrottlerGuard implements CanActivate {
   ): Promise<RateLimit> {
     // Here we start to check the amount of requests being done against the ttl.
     const { req, res } = this.getRequestResponse(context);
-    const { limit, ttl, ignoreUserAgents } = routeThrotleOptions;
+    const { limit, ttl, ignore, ignoreUserAgents } = routeThrotleOptions;
 
+    const _ignore = ignore || this.options.ignore;
     const _ignoreUserAgents = ignoreUserAgents || this.options.ignoreUserAgents;
 
+    if (_ignore) {
+      if (_ignore(context, req, res)) {
+        return;
+      }
+    }
     if (Array.isArray(_ignoreUserAgents)) {
       // Return early if the current user agent should be ignored.
       for (const pattern of _ignoreUserAgents) {

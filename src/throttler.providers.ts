@@ -16,6 +16,7 @@ export function createThrottlerProviders(options: ThrottlerModuleOptions): Provi
     : {
         ignoreUserAgents: options.ignoreUserAgents,
         storage: options.storage,
+        ignore: options.ignore,
         throttles: [
           {
             limit: (<Throttler1ThrottleModuleOptions>options).limit,
