@@ -334,5 +334,30 @@ describe('ThrottlerGuard-Multiple throttles', () => {
       expect(headerSettingMock).toBeCalledTimes(16);
       expect(headerSettingMock).toHaveBeenLastCalledWith('Retry-After', expect.any(Number));
     });
+
+    it('should pull values from the reflector instead of options', async () => {
+      handler = function useReflector() {
+        return 'string';
+      };
+      reflector.getAllAndOverride = jest
+        .fn()
+        .mockReturnValueOnce(false)
+        .mockReturnValueOnce([
+          {
+            limit: 2,
+            ttl: 1,
+          },
+        ]);
+      const ctxMock = contextMockFactory('http', handler, {
+        getResponse: () => resMock,
+        getRequest: () => reqMock,
+      });
+      const canActivate = await guard.canActivate(ctxMock);
+      expect(canActivate).toBe(true);
+      expect(headerSettingMock).toBeCalledTimes(3);
+      expect(headerSettingMock).toHaveBeenNthCalledWith(1, 'X-RateLimit-Limit', 2);
+      expect(headerSettingMock).toHaveBeenNthCalledWith(2, 'X-RateLimit-Remaining', 1);
+      expect(headerSettingMock).toHaveBeenNthCalledWith(3, 'X-RateLimit-Reset', expect.any(Number));
+    });
   });
 });
