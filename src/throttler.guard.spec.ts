@@ -76,9 +76,13 @@ describe('ThrottlerGuard', () => {
         {
           provide: THROTTLER_OPTIONS,
           useValue: {
-            limit: 5,
-            ttl: 60,
-            ignoreUserAgents: [/userAgentIgnore/],
+            throttles: [
+              {
+                limit: 5,
+                ttl: 60,
+                ignoreUserAgents: [/userAgentIgnore/],
+              },
+            ],
           },
         },
         {
@@ -154,7 +158,14 @@ describe('ThrottlerGuard', () => {
       handler = function useReflector() {
         return 'string';
       };
-      reflector.getAllAndOverride = jest.fn().mockReturnValueOnce(false).mockReturnValueOnce(2);
+      reflector.getAllAndOverride = jest
+        .fn()
+        .mockReturnValueOnce(false)
+        .mockReturnValueOnce([
+          {
+            limit: 2,
+          },
+        ]);
       const ctxMock = contextMockFactory('http', handler, {
         getResponse: () => resMock,
         getRequest: () => reqMock,
