@@ -203,6 +203,55 @@ You can use the `ignoreUserAgents` key to ignore specific user agents.
 export class AppModule {}
 ```
 
+### Ignoring by a logic
+
+You can use the `skip`. `skip` can return a Promise of boolean.
+
+```ts
+@Module({
+  imports: [
+    ThrottlerModule.forRoot({
+      ttl: 60,
+      limit: 10,
+      skip(context, req, res) {
+        return req.ip === 'google-bot-ip';
+      }
+    }),
+  ],
+})
+```
+
+Override by `@SkipThrottle`
+
+```ts
+@Controller()
+@SkipThrottle((context, req, res) => req.ip === 'another-ip')
+class Controller {
+  @Get() // skip when req.ip === 'another-ip'
+  async index() {
+    return '';
+  }
+
+  @Get('root-setting')
+  @SkipThrottle(false) // skip when req.ip === 'google-bot-ip'
+  async useDefault() {
+    return '';
+  }
+
+  @Get('method-setting')
+  @SkipThrottle((context, req, res) => req.ip === 'another-ip-1') // skip when req.ip === 'another-ip-1'
+  async useMethod() {
+    return '';
+  }
+
+  @Get('dont-skip-at-all')
+  @SkipThrottle(null) // don't skip at all
+  async dontSkipAtAll() {
+    return '';
+  }
+}
+```
+
 ### ThrottlerStorage
 
 Interface to define the methods to handle the details when it comes to keeping track of the requests.
@@ -251,13 +300,21 @@ To work with Websockets you can extend the `ThrottlerGuard` and override the `ha
 ```ts
 @Injectable()
 export class WsThrottlerGuard extends ThrottlerGuard {
-  async handleRequest(context: ExecutionContext, limit: number, ttl: number): Promise<boolean> {
+  async handleRequest(context: ExecutionContext, limit: number, ttl: number, skipMethod: (context, ...param) => boolean | Promise<boolean>): Promise<boolean> {
     const client = context.switchToWs().getClient();
     // this is a generic method to switch between `ws` and `socket.io`. You can choose what is appropriate for you
     const ip = ['conn', '_socket']
       .map((key) => client[key])
       .filter((obj) => obj)
       .shift().remoteAddress;
+
+    if (skipMethod) {
+      const isSkip = await skipMethod(context, ip);
+      if (isSkip) {
+        return true;
+      }
+    }
+
     const key = this.generateKey(context, ip);
     const ttls = await this.storageService.getRecord(key);
 

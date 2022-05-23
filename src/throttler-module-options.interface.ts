@@ -1,11 +1,7 @@
 import { ExecutionContext } from '@nestjs/common';
 import { ModuleMetadata, Type } from '@nestjs/common/interfaces';
 
-export type SkipMethod = (
-  context: ExecutionContext,
-  req: Record<string, any>,
-  res: Record<string, any>,
-) => boolean | Promise<boolean>;
+export type SkipMethod = (context: ExecutionContext, ...param: any) => boolean | Promise<boolean>;
 
 export interface ThrottlerModuleOptions {
   /**
