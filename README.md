@@ -309,8 +309,8 @@ export class WsThrottlerGuard extends ThrottlerGuard {
       .shift().remoteAddress;
 
     if (skipMethod) {
-      const isSkip = await skipMethod(context, ip);
-      if (isSkip) {
+      const shouldSkip = await skipMethod(context, ip);
+      if (shouldSkip) {
         return true;
       }
     }
