@@ -1,10 +1,10 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import * as md5 from 'md5';
-import { ThrottlerModuleOptions } from './throttler-module-options.interface';
+import { ThrottlerModuleOptions, SkipMethod } from './throttler-module-options.interface';
 import { ThrottlerStorage } from './throttler-storage.interface';
 import { THROTTLER_LIMIT, THROTTLER_SKIP, THROTTLER_TTL } from './throttler.constants';
-import { InjectThrottlerOptions, InjectThrottlerStorage } from './throttler.decorator';
+import { InjectThrottlerOptions, InjectThrottlerStorage, Skip } from './throttler.decorator';
 import { ThrottlerException, throttlerMessage } from './throttler.exception';
 
 /**
@@ -30,7 +30,11 @@ export class ThrottlerGuard implements CanActivate {
     const classRef = context.getClass();
 
     // Return early if the current route should be skipped.
-    if (this.reflector.getAllAndOverride<boolean>(THROTTLER_SKIP, [handler, classRef])) {
+    const routeOrClassSkip = this.reflector.getAllAndOverride<Skip>(THROTTLER_SKIP, [
+      handler,
+      classRef,
+    ]);
+    if (routeOrClassSkip === true) {
       return true;
     }
 
@@ -47,7 +51,9 @@ export class ThrottlerGuard implements CanActivate {
     // Check if specific limits are set at class or route level, otherwise use global options.
     const limit = routeOrClassLimit || this.options.limit;
     const ttl = routeOrClassTtl || this.options.ttl;
-    return this.handleRequest(context, limit, ttl);
+    // if routeOrClassIgnore === null then don't skip at all
+    const skipMethod = routeOrClassSkip === null ? null : routeOrClassSkip || this.options.skip;
+    return this.handleRequest(context, limit, ttl, skipMethod);
   }
 
   /**
@@ -60,6 +66,7 @@ export class ThrottlerGuard implements CanActivate {
     context: ExecutionContext,
     limit: number,
     ttl: number,
+    skipMethod?: SkipMethod,
   ): Promise<boolean> {
     // Here we start to check the amount of requests being done against the ttl.
     const { req, res } = this.getRequestResponse(context);
@@ -72,6 +79,14 @@ export class ThrottlerGuard implements CanActivate {
         }
       }
     }
+
+    if (skipMethod) {
+      const isSkip = await skipMethod(context, req, res);
+      if (isSkip) {
+        return true;
+      }
+    }
+
     const tracker = this.getTracker(req);
     const key = this.generateKey(context, tracker);
     const ttls = await this.storageService.getRecord(key);

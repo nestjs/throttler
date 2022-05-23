@@ -1,4 +1,5 @@
 import { Inject } from '@nestjs/common';
+import { SkipMethod } from './throttler-module-options.interface';
 import { THROTTLER_LIMIT, THROTTLER_SKIP, THROTTLER_TTL } from './throttler.constants';
 import { getOptionsToken, getStorageToken } from './throttler.providers';
 
@@ -28,14 +29,18 @@ export const Throttle = (limit = 20, ttl = 60): MethodDecorator & ClassDecorator
   };
 };
 
+export type Skip = SkipMethod | boolean | null;
+
 /**
  * Adds metadata to the target which will be handled by the ThrottlerGuard
  * whether or not to skip throttling for this context.
  * @usage @SkipThrottle()
  * @usage @SkipThrottle(false)
+ * @usage @SkipThrottle((context, req, res) => req.ip === 'google-bot-ip')
+ * @usage @SkipThrottle(null): dont's skip at all
  * @publicApi
  */
-export const SkipThrottle = (skip = true): MethodDecorator & ClassDecorator => {
+export const SkipThrottle = (skip: Skip = true): MethodDecorator & ClassDecorator => {
   return (
     target: any,
     propertyKey?: string | symbol,
