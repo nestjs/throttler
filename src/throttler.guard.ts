@@ -81,8 +81,8 @@ export class ThrottlerGuard implements CanActivate {
     }
 
     if (skipMethod) {
-      const isSkip = await skipMethod(context, req, res);
-      if (isSkip) {
+      const shouldSkip = await skipMethod(context, req, res);
+      if (shouldSkip) {
         return true;
       }
     }
