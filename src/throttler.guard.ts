@@ -73,7 +73,7 @@ export class ThrottlerGuard implements CanActivate {
       }
     }
     const tracker = this.getTracker(req);
-    const key = this.generateKey(context, tracker);
+    const key = this.generateKey(context, Array.isArray(tracker) ? tracker[0] : tracker);
     const ttls = await this.storageService.getRecord(key);
     const nearestExpiryTime = ttls.length > 0 ? Math.ceil((ttls[0] - Date.now()) / 1000) : 0;
 
@@ -90,10 +90,14 @@ export class ThrottlerGuard implements CanActivate {
     res.header(`${this.headerPrefix}-Reset`, nearestExpiryTime);
 
     await this.storageService.addRecord(key, ttl);
+    if (Array.isArray(tracker) && tracker.length > 1) {
+      tracker.splice(0, 1);
+      tracker.forEach((t) => this.storageService.addRecord(this.generateKey(context, t), ttl));
+    }
     return true;
   }
 
-  protected getTracker(req: Record<string, any>): string {
+  protected getTracker(req: Record<string, any>): string | string[] {
     return req.ip;
   }
 
