@@ -18,7 +18,7 @@ export class ThrottlerGuard implements CanActivate {
     @InjectThrottlerOptions() protected readonly options: ThrottlerModuleOptions,
     @InjectThrottlerStorage() protected readonly storageService: ThrottlerStorage,
     protected readonly reflector: Reflector,
-  ) {}
+  ) { }
 
   /**
    * Throttle requests against their TTL limit and whether to allow or deny it.
@@ -72,13 +72,24 @@ export class ThrottlerGuard implements CanActivate {
         }
       }
     }
-    const tracker = this.getTracker(req);
-    const key = this.generateKey(context, tracker);
-    const ttls = await this.storageService.getRecord(key);
-    const nearestExpiryTime = ttls.length > 0 ? Math.ceil((ttls[0] - Date.now()) / 1000) : 0;
+    const t = this.getTracker(req);
+    const trackers = Array.isArray(t) ? t : [t];
+    let maxTtlsLen = 0;
+    let nearestExpiryTime = 0;
+    const keys = []
+    for (const tracker of trackers) {
+      const key = this.generateKey(context, tracker);
+      const ttls = await this.storageService.getRecord(key);
+      if (maxTtlsLen < ttls.length) {
+        maxTtlsLen = ttls.length
+        const expiryTime = ttls.length > 0 ? Math.ceil((ttls[0] - Date.now()) / 1000) : 0;
+        nearestExpiryTime = Math.max(nearestExpiryTime, expiryTime);
+      }
+      keys.push(key)
+    }
 
     // Throw an error when the user reached their limit.
-    if (ttls.length >= limit) {
+    if (maxTtlsLen >= limit) {
       res.header('Retry-After', nearestExpiryTime);
       this.throwThrottlingException(context);
     }
@@ -86,14 +97,15 @@ export class ThrottlerGuard implements CanActivate {
     res.header(`${this.headerPrefix}-Limit`, limit);
     // We're about to add a record so we need to take that into account here.
     // Otherwise the header says we have a request left when there are none.
-    res.header(`${this.headerPrefix}-Remaining`, Math.max(0, limit - (ttls.length + 1)));
+    res.header(`${this.headerPrefix}-Remaining`, Math.max(0, limit - (maxTtlsLen + 1)));
     res.header(`${this.headerPrefix}-Reset`, nearestExpiryTime);
 
-    await this.storageService.addRecord(key, ttl);
+    keys.forEach((key) => this.storageService.addRecord(key, ttl));
+
     return true;
   }
 
-  protected getTracker(req: Record<string, any>): string {
+  protected getTracker(req: Record<string, any>): string | string[] {
     return req.ip;
   }
 
