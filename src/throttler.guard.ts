@@ -76,22 +76,19 @@ export class ThrottlerGuard implements CanActivate {
     const trackers = Array.isArray(tracker) ? tracker : [tracker];
     let maxTtlsLen = 0;
     let nearestExpiryTime = 0;
-    const keys = [];
-    const promises = trackers.map(
-      (tracker) =>
-        new Promise<void>(async (resolve) => {
-          const key = this.generateKey(context, tracker);
-          const ttls = await this.storageService.getRecord(key);
-          if (maxTtlsLen < ttls.length) {
-            maxTtlsLen = ttls.length;
-            const expiryTime = ttls.length > 0 ? Math.ceil((ttls[0] - Date.now()) / 1000) : 0;
-            nearestExpiryTime = Math.max(nearestExpiryTime, expiryTime);
-          }
-          keys.push(key);
-          resolve();
-        })
+    const whenTrackersKey = trackers.map(
+      async (tracker) => {
+        const key = this.generateKey(context, tracker);
+        const ttls = await this.storageService.getRecord(key);
+        if (maxTtlsLen < ttls.length) {
+          maxTtlsLen = ttls.length;
+          const expiryTime = ttls.length > 0 ? Math.ceil((ttls[0] - Date.now()) / 1000) : 0;
+          nearestExpiryTime = Math.max(nearestExpiryTime, expiryTime);
+        }
+        return key;
+      }
     );
-    await Promise.all(promises);
+    const keys = await Promise.all(whenTrackersKey);
 
     // Throw an error when the user reached their limit.
     if (maxTtlsLen >= limit) {
