@@ -89,7 +89,7 @@ export class ThrottlerGuard implements CanActivate {
           }
           keys.push(key);
           resolve();
-        }),
+        })
     );
     await Promise.all(promises);
 
