@@ -18,7 +18,7 @@ export class ThrottlerGuard implements CanActivate {
     @InjectThrottlerOptions() protected readonly options: ThrottlerModuleOptions,
     @InjectThrottlerStorage() protected readonly storageService: ThrottlerStorage,
     protected readonly reflector: Reflector,
-  ) { }
+  ) {}
 
   /**
    * Throttle requests against their TTL limit and whether to allow or deny it.
