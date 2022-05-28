@@ -1,4 +1,4 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import { CanActivate, ExecutionContext, Injectable, Inject } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import * as md5 from 'md5';
 import { ThrottlerModuleOptions } from './throttler-module-options.interface';
@@ -17,7 +17,7 @@ export class ThrottlerGuard implements CanActivate {
   constructor(
     @InjectThrottlerOptions() protected readonly options: ThrottlerModuleOptions,
     @InjectThrottlerStorage() protected readonly storageService: ThrottlerStorage,
-    protected readonly reflector: Reflector,
+    @Inject(Reflector.name) protected readonly reflector: Reflector,
   ) {}
 
   /**
