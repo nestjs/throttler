@@ -72,20 +72,35 @@ export class ThrottlerGuard implements CanActivate {
         }
       }
     }
-    const t = this.getTracker(req);
-    const trackers = Array.isArray(t) ? t : [t];
+    const tracker = this.getTracker(req);
+    const trackers = Array.isArray(tracker) ? tracker : [tracker];
     let maxTtlsLen = 0;
     let nearestExpiryTime = 0;
-    const keys = []
+    const keys = [];
+    const promises = trackers.map(
+      (tracker) =>
+        new Promise<void>(async (resolve) => {
+          const key = this.generateKey(context, tracker);
+          const ttls = await this.storageService.getRecord(key);
+          if (maxTtlsLen < ttls.length) {
+            maxTtlsLen = ttls.length;
+            const expiryTime = ttls.length > 0 ? Math.ceil((ttls[0] - Date.now()) / 1000) : 0;
+            nearestExpiryTime = Math.max(nearestExpiryTime, expiryTime);
+          }
+          keys.push(key);
+          resolve();
+        }),
+    );
+    await Promise.all(promises);
     for (const tracker of trackers) {
       const key = this.generateKey(context, tracker);
       const ttls = await this.storageService.getRecord(key);
       if (maxTtlsLen < ttls.length) {
-        maxTtlsLen = ttls.length
+        maxTtlsLen = ttls.length;
         const expiryTime = ttls.length > 0 ? Math.ceil((ttls[0] - Date.now()) / 1000) : 0;
         nearestExpiryTime = Math.max(nearestExpiryTime, expiryTime);
       }
-      keys.push(key)
+      keys.push(key);
     }
 
     // Throw an error when the user reached their limit.
