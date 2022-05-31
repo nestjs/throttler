@@ -1546,20 +1546,20 @@
     webpack "5.72.1"
     webpack-node-externals "3.0.0"
 
-"@nestjs/common@8.4.5":
-  version "8.4.5"
-  resolved "https://registry.yarnpkg.com/@nestjs/common/-/common-8.4.5.tgz#9279e125b8128c92700dfe0cf2beacc7e7c4abe7"
-  integrity sha512-DL30hLtcmosOWGRFrU1YYB59k+7FGX82sbq2QiXLsEXuSig8ZzFm8LR+tD8CX+aKabU9t1GGc18HLjFud/3sww==
+"@nestjs/common@8.4.6":
+  version "8.4.6"
+  resolved "https://registry.yarnpkg.com/@nestjs/common/-/common-8.4.6.tgz#e2858c230371eeb5ccf7547d5b9434a2096da835"
+  integrity sha512-INp1ERDrLiQ4GwRc3zotTwBLZm2sIwcJwnBE2yXqsth17KijmoVmY8UB5Tares0IlwjsqlRFWkCX8uWE5rzbSA==
   dependencies:
     axios "0.27.2"
     iterare "1.2.1"
     tslib "2.4.0"
     uuid "8.3.2"
 
-"@nestjs/core@8.4.5":
-  version "8.4.5"
-  resolved "https://registry.yarnpkg.com/@nestjs/core/-/core-8.4.5.tgz#a419259f074a9a1b889540ce2ab46a87b85e9fbf"
-  integrity sha512-mT4MV2pEILu+Xy/deIvhb4JkIWaUU+yxssQqMScj8pWvAQ4+6sN52Sxl5NwLb6FTyZ8t5m8Qgr4yZPTmS+Y1Ig==
+"@nestjs/core@8.4.6":
+  version "8.4.6"
+  resolved "https://registry.yarnpkg.com/@nestjs/core/-/core-8.4.6.tgz#db1afa3202cddffa308c6f321e2e07ebcc05d513"
+  integrity sha512-5zHpxTYV7HT3lfF7l/x0EWBfmuyuDOnGRcALf88tzDGs/7Q/VC6l65d6eFwDwI37NLtScqnmEkT9of8E3fT3mA==
   dependencies:
     "@nuxtjs/opencollective" "0.3.2"
     fast-safe-stringify "2.1.1"
@@ -1594,10 +1594,10 @@
   resolved "https://registry.yarnpkg.com/@nestjs/mapped-types/-/mapped-types-1.0.1.tgz#78b62041c7a407db4a90eb140567321602bed18e"
   integrity sha512-NFvofzSinp00j5rzUd4tf+xi9od6383iY0JP7o0Bnu1fuItAUkWBgc4EKuIQ3D+c2QI3i9pG1kDWAeY27EMGtg==
 
-"@nestjs/platform-express@8.4.5":
-  version "8.4.5"
-  resolved "https://registry.yarnpkg.com/@nestjs/platform-express/-/platform-express-8.4.5.tgz#5683da37b4e5463a4f26e78cb5fb1ba75e94440c"
-  integrity sha512-36yGMrcb2MBhwOq9l0/fip3gWAae5OadsAQxfHJbxgm8D5bDisTdIvvO7KRWYuKFGerGg9kBm53mZ7Rs3fmfPQ==
+"@nestjs/platform-express@8.4.6":
+  version "8.4.6"
+  resolved "https://registry.yarnpkg.com/@nestjs/platform-express/-/platform-express-8.4.6.tgz#517f503391248e7a88c51365cedd8ad9a9c6cb9d"
+  integrity sha512-OserZ+RwjMyECFAL0/12Bztf63EnFhlFUEJ4/a502RQ0eZogt4M3ROauaW4bpt2Q3YH4hy0eT+4eqkVOMzjtPQ==
   dependencies:
     body-parser "1.20.0"
     cors "2.8.5"
@@ -1605,34 +1605,34 @@
     multer "1.4.4"
     tslib "2.4.0"
 
-"@nestjs/platform-fastify@8.4.5":
-  version "8.4.5"
-  resolved "https://registry.yarnpkg.com/@nestjs/platform-fastify/-/platform-fastify-8.4.5.tgz#88636e377ed5691cde60001507bbbc0e74481a77"
-  integrity sha512-X2H3weE826558u6WZGr8mY0TA1sZhzgT0NRyN5ZMtDScQRDwd+v76gUZA4CHzDnQ9rJz0sL4g0MpqhFWGxNBOg==
+"@nestjs/platform-fastify@8.4.6":
+  version "8.4.6"
+  resolved "https://registry.yarnpkg.com/@nestjs/platform-fastify/-/platform-fastify-8.4.6.tgz#ef8b95c2d6e66900026bdfa3a1a4b348573a501b"
+  integrity sha512-sRu8nWRFOAyLsu84Mc/YIWztorcYnDkO21P2ZDK6kxGPOrw82ePr0G5xV5BtbbTlkJkzjJ4GWsZvRGYTtnH0cg==
   dependencies:
     fastify "3.29.0"
     fastify-cors "6.1.0"
-    fastify-formbody "5.2.0"
-    light-my-request "4.10.1"
+    fastify-formbody "5.3.0"
+    light-my-request "5.0.0"
     middie "6.1.0"
     path-to-regexp "3.2.0"
     tslib "2.4.0"
 
-"@nestjs/platform-socket.io@8.4.5":
-  version "8.4.5"
-  resolved "https://registry.yarnpkg.com/@nestjs/platform-socket.io/-/platform-socket.io-8.4.5.tgz#d3ce83d85220e70b7e07570a098c42d06653b452"
-  integrity sha512-Uovh0W0d4XmzFrNssc8F3lNgxaj/+UI6iE3mjdnKZRu7ZiPPtVI4mCCBaluVLxScjBWESH+y5waQZSrEBQpnrA==
+"@nestjs/platform-socket.io@8.4.6":
+  version "8.4.6"
+  resolved "https://registry.yarnpkg.com/@nestjs/platform-socket.io/-/platform-socket.io-8.4.6.tgz#1b55e2dcdb7050216ec9a92008d918daf5ea2401"
+  integrity sha512-DVEW4MLg88+LBxruS8bIZ2+MQm5oAqQiJQ4chLeLQ74E/JTiFJ1K+gOkyJ7H3E6gOK0zUSz7r+yrWYUxKW3mTw==
   dependencies:
-    socket.io "4.5.0"
+    socket.io "4.5.1"
     tslib "2.4.0"
 
-"@nestjs/platform-ws@8.4.5":
-  version "8.4.5"
-  resolved "https://registry.yarnpkg.com/@nestjs/platform-ws/-/platform-ws-8.4.5.tgz#b577b0f091f29a322801a0d5c07b40b7e11fbc9a"
-  integrity sha512-+VHz4tHHXMwS0oxoNAe4qPwd+dZ/y2s90xarKgc/6JGfQc/iPXJu+zUwVJoMWj4b6s2JaycgP1QiD6jcTJm4hA==
+"@nestjs/platform-ws@8.4.6":
+  version "8.4.6"
+  resolved "https://registry.yarnpkg.com/@nestjs/platform-ws/-/platform-ws-8.4.6.tgz#627d6211872e9c4a9efb6ff1ab2f6ceb27638bf9"
+  integrity sha512-gykZAsKGTrkK7Q8h6L+xOCFWX351Qo1P38s/oIN22bzhVcdxNxhuVGvKEu/77pHgryUKFs4kb571WNqUIZPWNA==
   dependencies:
     tslib "2.4.0"
-    ws "7.5.6"
+    ws "8.7.0"
 
 "@nestjs/schematics@8.0.11":
   version "8.0.11"
@@ -1656,18 +1656,17 @@
     jsonc-parser "3.0.0"
     pluralize "8.0.0"
 
-"@nestjs/testing@8.4.5":
-  version "8.4.5"
-  resolved "https://registry.yarnpkg.com/@nestjs/testing/-/testing-8.4.5.tgz#b6f6e8c5f8c3c2b8fe6b8f8fa518b97460680f76"
-  integrity sha512-RWFfkRitor8Aw1yWhZqWim/sAYmFv45Hw7jlVaFCx2PCu6IIHCaK2ENv/20yA0+kffaFUQ6KyFzJvCUYKGFoqg==
+"@nestjs/testing@8.4.6":
+  version "8.4.6"
+  resolved "https://registry.yarnpkg.com/@nestjs/testing/-/testing-8.4.6.tgz#4e80368090bb71d775d14d99efa96803b96312d0"
+  integrity sha512-uGRNQ0iWIHqjz5CLxQCTtQ3dB1KyPfkHXnko5mBwKk/iBTiACmll61rVt89Wh8RM+w0bmvCHp9sacNI7IynESg==
   dependencies:
-    optional "0.1.4"
     tslib "2.4.0"
 
-"@nestjs/websockets@8.4.5":
-  version "8.4.5"
-  resolved "https://registry.yarnpkg.com/@nestjs/websockets/-/websockets-8.4.5.tgz#5977770d5eed02c848fca5ba043e4be53f8f9d86"
-  integrity sha512-xKBREaT0N6zYPvL+PKSeElWXdnNYCROmNGsZ/vpnSfnrGAwdSl/QVQ2+HMAgO4xiqmKNQEotvSW+Fs+PvdYx7Q==
+"@nestjs/websockets@8.4.6":
+  version "8.4.6"
+  resolved "https://registry.yarnpkg.com/@nestjs/websockets/-/websockets-8.4.6.tgz#d95d86af1076b153a1fb79aaf7aeef4221b7dd82"
+  integrity sha512-4MQhNv58nz14m8ifyE+jBBsFZoSn7KaaEry7MN2gKYKpWJwn9zW5ghrxb+VoWVvpuLE0CZ1kHN5zlvLqUnFfzA==
   dependencies:
     iterare "1.2.1"
     object-hash "3.0.0"
@@ -4603,12 +4602,20 @@ fastify-cors@6.1.0:
     fastify-cors-deprecated "npm:fastify-cors@6.0.3"
     process-warning "^1.0.0"
 
-fastify-formbody@5.2.0:
+"fastify-formbody-deprecated@npm:fastify-formbody@5.2.0":
   version "5.2.0"
   resolved "https://registry.yarnpkg.com/fastify-formbody/-/fastify-formbody-5.2.0.tgz#942f0847f106888cad419812590cfff7ffb61f92"
   integrity sha512-d8Y5hCL82akPyoFiXh2wYOm3es0pV9jqoPo3pO9OV2cNF0cQx39J5WAVXzCh4MSt9Z2qF4Fy5gHlvlyESwjtvg==
   dependencies:
     fastify-plugin "^3.0.0"
+
+fastify-formbody@5.3.0:
+  version "5.3.0"
+  resolved "https://registry.yarnpkg.com/fastify-formbody/-/fastify-formbody-5.3.0.tgz#c125902b9c07c9d94c1b4a06561896e97968ec69"
+  integrity sha512-7cjFV2HE/doojyfTwCLToIFD6Hmbw2jVTbfqZ2lbUZznQWlSXu+MBQgqBU8T2nHcMfqSi9vx6PyX0LwTehuKkg==
+  dependencies:
+    fastify-formbody-deprecated "npm:fastify-formbody@5.2.0"
+    process-warning "^1.0.0"
 
 fastify-plugin@^3.0.0:
   version "3.0.0"
@@ -6335,10 +6342,10 @@ levn@^0.4.1:
     prelude-ls "^1.2.1"
     type-check "~0.4.0"
 
-light-my-request@4.10.1:
-  version "4.10.1"
-  resolved "https://registry.yarnpkg.com/light-my-request/-/light-my-request-4.10.1.tgz#09a93fa5af6a7b4339322b2e2b3f5d1c9679ed02"
-  integrity sha512-l+zWk0HXGhGzY7IYTZnYEqIpj3Mpcyk2f8+FkKUyREywvaiWCf2jyQVxpasKRsploY/nVpoqTlxx72CIeQNcIQ==
+light-my-request@5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/light-my-request/-/light-my-request-5.0.0.tgz#2ac329d472c5c74c74be62fb2a8790c444c22ab0"
+  integrity sha512-0OPHKV+uHgBOnRokzL1LqeMCnSAo5l/rZS7kyB6G1I8qxGCvhXpq1M6WK565Y9A5CSn50l3DVaHnJ5FCdpguZQ==
   dependencies:
     ajv "^8.1.0"
     cookie "^0.5.0"
@@ -7073,11 +7080,6 @@ optimism@^0.16.1:
   dependencies:
     "@wry/context" "^0.6.0"
     "@wry/trie" "^0.3.0"
-
-optional@0.1.4:
-  version "0.1.4"
-  resolved "https://registry.yarnpkg.com/optional/-/optional-0.1.4.tgz#cdb1a9bedc737d2025f690ceeb50e049444fd5b3"
-  integrity sha512-gtvrrCfkE08wKcgXaVwQVgwEQ8vel2dc5DDBn9RLQZ3YtmtkBss6A2HY6BnJH4N/4Ku97Ri/SF8sNWE2225WJw==
 
 optionator@^0.9.1:
   version "0.9.1"
@@ -8183,18 +8185,6 @@ socket.io@*:
     engine.io "~5.1.0"
     socket.io-adapter "~2.3.0"
     socket.io-parser "~4.0.3"
-
-socket.io@4.5.0:
-  version "4.5.0"
-  resolved "https://registry.yarnpkg.com/socket.io/-/socket.io-4.5.0.tgz#78ae2e84784c29267086a416620c18ef95b37186"
-  integrity sha512-slTYqU2jCgMjXwresG8grhUi/cC6GjzmcfqArzaH3BN/9I/42eZk9yamNvZJdBfTubkjEdKAKs12NEztId+bUA==
-  dependencies:
-    accepts "~1.3.4"
-    base64id "~2.0.0"
-    debug "~4.3.2"
-    engine.io "~6.2.0"
-    socket.io-adapter "~2.4.0"
-    socket.io-parser "~4.0.4"
 
 socket.io@4.5.1:
   version "4.5.1"
@@ -9342,11 +9332,6 @@ write-file-atomic@^4.0.1:
   dependencies:
     imurmurhash "^0.1.4"
     signal-exit "^3.0.7"
-
-ws@7.5.6:
-  version "7.5.6"
-  resolved "https://registry.yarnpkg.com/ws/-/ws-7.5.6.tgz#e59fc509fb15ddfb65487ee9765c5a51dec5fe7b"
-  integrity sha512-6GLgCqo2cy2A2rjCNFlxQS6ZljG/coZfZXclldI8FB/1G3CCI36Zd8xy2HrFVACi8tfk5XrgLQEk+P0Tnz9UcA==
 
 ws@8.7.0:
   version "8.7.0"
