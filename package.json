@@ -67,7 +67,7 @@
     "@types/express-serve-static-core": "4.17.28",
     "@types/jest": "28.1.1",
     "@types/md5": "2.3.2",
-    "@types/node": "16.11.38",
+    "@types/node": "16.11.39",
     "@types/socket.io": "3.0.2",
     "@types/socket.io-client": "3.0.0",
     "@types/supertest": "2.0.12",
