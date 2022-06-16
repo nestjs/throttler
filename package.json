@@ -82,7 +82,7 @@
     "graphql-tools": "8.2.12",
     "husky": "8.0.1",
     "jest": "28.1.1",
-    "lint-staged": "13.0.1",
+    "lint-staged": "13.0.2",
     "nodemon": "2.0.16",
     "pinst": "3.0.0",
     "prettier": "2.7.1",
