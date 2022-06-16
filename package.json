@@ -85,7 +85,7 @@
     "lint-staged": "13.0.1",
     "nodemon": "2.0.16",
     "pinst": "3.0.0",
-    "prettier": "2.7.0",
+    "prettier": "2.7.1",
     "reflect-metadata": "0.1.13",
     "rimraf": "3.0.2",
     "rxjs": "7.5.5",
