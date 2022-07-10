@@ -1,5 +1,11 @@
 # [2.0.0](https://github.com/nestjs/throttler/compare/v1.2.1...v2.0.0) (2021-07-09)
 
+## 3.0.0
+
+### Major Changes
+
+- c9fcd51: Upgrade nest version to v9. No breaking changes in direct code, but in nest v9 upgrade
+
 ## 2.0.1
 
 ### Patch Changes
