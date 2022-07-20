@@ -1288,19 +1288,19 @@
     webpack "5.73.0"
     webpack-node-externals "3.0.0"
 
-"@nestjs/common@9.0.4":
-  version "9.0.4"
-  resolved "https://registry.yarnpkg.com/@nestjs/common/-/common-9.0.4.tgz#f3ece8ebaebee317c040c276439faabbb23303ee"
-  integrity sha512-pLpEXM9zJ0yQbrMz4UlcKaVwybxZTJX33MYkVY2ltMOrax6hN/UkcL99WWRHt4zl45QQ5QDBaJyek0dWrdDQqw==
+"@nestjs/common@9.0.5":
+  version "9.0.5"
+  resolved "https://registry.yarnpkg.com/@nestjs/common/-/common-9.0.5.tgz#cc082a0ef24c2693cf637f2758a357b4db2b6489"
+  integrity sha512-13mncUq4JDSluI5IGvusDZANUfNYCIyPamxlPXJOLawGp8JjqRLHGn9ppNJp7W9mN/B/SmpvW9NFEYFIrKYj9g==
   dependencies:
     iterare "1.2.1"
     tslib "2.4.0"
     uuid "8.3.2"
 
-"@nestjs/core@9.0.4":
-  version "9.0.4"
-  resolved "https://registry.yarnpkg.com/@nestjs/core/-/core-9.0.4.tgz#b44f74d6d617a8a12b2cb94c8574c1850efe48f1"
-  integrity sha512-8mOzpXmxAWRByw5v6Npl/S7Zowmm2JHzS+h46iQK0BGkvlVXwMZXL2sJLH9XIokRvjASVbWqUn+d7W1mMjT9/Q==
+"@nestjs/core@9.0.5":
+  version "9.0.5"
+  resolved "https://registry.yarnpkg.com/@nestjs/core/-/core-9.0.5.tgz#b4cb8f8b0c1d234a840f06e265717d4a24f8d224"
+  integrity sha512-41BBJlsquasVrGeRWNYb74Fwsc+oB5EmKC/hioQJAhGqIw5Kr5AcdEoEFaMKFzNLAPbU6c/nVW8T8CrvtQbQww==
   dependencies:
     "@nuxtjs/opencollective" "0.3.2"
     fast-safe-stringify "2.1.1"
@@ -1335,10 +1335,10 @@
   resolved "https://registry.yarnpkg.com/@nestjs/mapped-types/-/mapped-types-1.1.0.tgz#54a9fa61079635dd6c3c75fd9593f20b2302a55b"
   integrity sha512-+2kSly4P1QI+9eGt+/uGyPdEG1hVz7nbpqPHWZVYgoqz8eOHljpXPag+UCVRw9zo2XCu4sgNUIGe8Uk0+OvUQg==
 
-"@nestjs/platform-express@9.0.4":
-  version "9.0.4"
-  resolved "https://registry.yarnpkg.com/@nestjs/platform-express/-/platform-express-9.0.4.tgz#7327322afb16d95b1cab4779d1a9c9fc98361232"
-  integrity sha512-jUru88otFCI1fOBbPescMJuULvHlg/YbNQkXPYUenGV9iN/isohXYepXqFEZDkbH64LnZo8jjUT87D0cMweTdg==
+"@nestjs/platform-express@9.0.5":
+  version "9.0.5"
+  resolved "https://registry.yarnpkg.com/@nestjs/platform-express/-/platform-express-9.0.5.tgz#e271b0a93a6f137b55ddb5fd4eea542b36a1db89"
+  integrity sha512-I6NiOPfL116cBqEwAEdJc+L1N9iIcmoqWjMJY52Kb5cMV2PUzxebddXPqo2HOs7WQv3OLVg0zIUcgwIntq1CEQ==
   dependencies:
     body-parser "1.20.0"
     cors "2.8.5"
@@ -1346,31 +1346,31 @@
     multer "1.4.4-lts.1"
     tslib "2.4.0"
 
-"@nestjs/platform-fastify@9.0.4":
-  version "9.0.4"
-  resolved "https://registry.yarnpkg.com/@nestjs/platform-fastify/-/platform-fastify-9.0.4.tgz#9ed6cb566b3421627223ffa724a46d2769c7ca40"
-  integrity sha512-JV4rN07do0+DZxnH2Sk8w+LvTcJYBa51FRU9tw4fLDDM8rww8QRHci39RpkfQVP637qtq0MOvhHGEwQUynEFvQ==
+"@nestjs/platform-fastify@9.0.5":
+  version "9.0.5"
+  resolved "https://registry.yarnpkg.com/@nestjs/platform-fastify/-/platform-fastify-9.0.5.tgz#195370ec6b0ea4bfe0dc8b8c8721fec9ae746e37"
+  integrity sha512-vdVV5/F0POFxWMkpnxuA+tTSET3Ltl2zWzz0DTAON52i1dv93DNAv9I6rd7CutSrRMJhOpGCkKbD94MRpw71Pw==
   dependencies:
     "@fastify/cors" "8.0.0"
     "@fastify/formbody" "7.0.1"
     "@fastify/middie" "8.0.0"
     fastify "4.2.1"
-    light-my-request "5.1.0"
+    light-my-request "5.2.0"
     path-to-regexp "3.2.0"
     tslib "2.4.0"
 
-"@nestjs/platform-socket.io@9.0.4":
-  version "9.0.4"
-  resolved "https://registry.yarnpkg.com/@nestjs/platform-socket.io/-/platform-socket.io-9.0.4.tgz#6cebb7005fa6d8a71abbf251a6cde4b4beacf35c"
-  integrity sha512-ct0eg3rx2iXfJelwROrIw9b1DdD0LPz2iai+JFoa//OSdkZAcYEUaEuPxZQZNns8Zzy7ig5poWmqTKHk/ai8Lg==
+"@nestjs/platform-socket.io@9.0.5":
+  version "9.0.5"
+  resolved "https://registry.yarnpkg.com/@nestjs/platform-socket.io/-/platform-socket.io-9.0.5.tgz#7b6407d8d184a0d708c152a18c5f3e33af6a3bd7"
+  integrity sha512-++wYU/0nqf/YugsonsnVMb1xiS6ceNXuRu+cx9GvQ5d0UN8KZGBq2ARl8xlGgkaUvk9BW775FDqmtis5fnbQhw==
   dependencies:
     socket.io "4.5.1"
     tslib "2.4.0"
 
-"@nestjs/platform-ws@9.0.4":
-  version "9.0.4"
-  resolved "https://registry.yarnpkg.com/@nestjs/platform-ws/-/platform-ws-9.0.4.tgz#6de0d3a2f83d76084f06f416c3b0bd2c5cfa2a6c"
-  integrity sha512-2uBJAH7BH23t0t5sQrIKJZKUk5omAFgxkr77qygATiIEMkvY8/AGOsoxAkQOpNEPBEm8InmbAsa6h05/RO31Hg==
+"@nestjs/platform-ws@9.0.5":
+  version "9.0.5"
+  resolved "https://registry.yarnpkg.com/@nestjs/platform-ws/-/platform-ws-9.0.5.tgz#a028e70d7ac16c6fc035191bab6c3d14b8e2c696"
+  integrity sha512-Lz3/sXi6yAtBX3lIw/b4okAGYqoenej9ezxMgFcVYun/pqDrET+JF3F+zw3nqekAGGjmPmIFf2UxQePcIhaS3w==
   dependencies:
     tslib "2.4.0"
     ws "8.8.1"
@@ -1386,17 +1386,17 @@
     jsonc-parser "3.0.0"
     pluralize "8.0.0"
 
-"@nestjs/testing@9.0.4":
-  version "9.0.4"
-  resolved "https://registry.yarnpkg.com/@nestjs/testing/-/testing-9.0.4.tgz#5a7017bb5fd439c4d5fcfe4f8d593f1e4e541981"
-  integrity sha512-N/fq2qv6GhUyZpfTSD4TAS+egMTPConCSQ9zp+t8m2zKNmWQ8AR2dLwiU0VQqQlUJRdoxZHdL4eeU6kNVd7fNw==
+"@nestjs/testing@9.0.5":
+  version "9.0.5"
+  resolved "https://registry.yarnpkg.com/@nestjs/testing/-/testing-9.0.5.tgz#970c2977475aed67102362d1b2477432f16b863d"
+  integrity sha512-/RwWhOBz0rPZzoMiKXsuyCr8FkQrtMxPUHwS+SFnZBsNa/jb56GswgUD7/UnTATU15sjcv0fFtFT3rlu6KK5Ew==
   dependencies:
     tslib "2.4.0"
 
-"@nestjs/websockets@9.0.4":
-  version "9.0.4"
-  resolved "https://registry.yarnpkg.com/@nestjs/websockets/-/websockets-9.0.4.tgz#c324fa7011a754cd3b0a496a8d2aa33652392c6b"
-  integrity sha512-D8zd4dW/vpYV0YRcA7Zvg4N8e9WZ6HIHb22LV5QNVVr9V2xfAN4lU1ZzCvfoYJhkCYVPVpFFxb0kAoWDClsa5g==
+"@nestjs/websockets@9.0.5":
+  version "9.0.5"
+  resolved "https://registry.yarnpkg.com/@nestjs/websockets/-/websockets-9.0.5.tgz#084d376c350c46c7cf0d931cbadcaae90ebc2867"
+  integrity sha512-tb3Lj2qwCKTigVo1TKQleELcZihUh16E7hlLuKUrRkGFh6KygXCv1lNAmX75zdWXEIIAMKhwyILkeJxJZjksrA==
   dependencies:
     iterare "1.2.1"
     object-hash "3.0.0"
@@ -5462,10 +5462,10 @@ levn@^0.4.1:
     prelude-ls "^1.2.1"
     type-check "~0.4.0"
 
-light-my-request@5.1.0:
-  version "5.1.0"
-  resolved "https://registry.yarnpkg.com/light-my-request/-/light-my-request-5.1.0.tgz#00e4a648817d9041537f5df9e1637c7113015c20"
-  integrity sha512-pPQiXZaFGxVJccAC7zigUwyso5iCHz/sk17IKdcB6GUv6sXlxT7lOJFzosPhNs5/TyEXjITIEDfCyM3hHC34iQ==
+light-my-request@5.2.0:
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/light-my-request/-/light-my-request-5.2.0.tgz#b3927b63ae570726fcef755145b4ac0f6eb8c359"
+  integrity sha512-U5Dga8U59VKydIAnHt2XvPVyDfaHsDIpoO+/FPrm4Qnn1tHeczNnLrGjI1bko6BFWgFwTXjTiQN6PkohWiwwcA==
   dependencies:
     cookie "^0.5.0"
     process-warning "^2.0.0"
