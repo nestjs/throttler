@@ -102,13 +102,13 @@ export class ThrottlerGuard implements CanActivate {
     res.header(`${this.headerPrefix}-Remaining`, Math.max(0, limit - (maxTtlsLen + 1)));
     res.header(`${this.headerPrefix}-Reset`, nearestExpiryTime);
 
-    keys.forEach((key) => this.storageService.addRecord(key, ttl));
+    await Promise.all(keys.map(key => this.storageService.addRecord(key, ttl)));
 
     return true;
   }
 
   protected getTracker(req: Record<string, any>): string | string[] {
-    return req.ip;
+    return [req.ip, ...req.ips];
   }
 
   protected getRequestResponse(context: ExecutionContext): {
