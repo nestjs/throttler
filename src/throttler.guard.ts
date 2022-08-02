@@ -108,7 +108,7 @@ export class ThrottlerGuard implements CanActivate {
   }
 
   protected getTracker(req: Record<string, any>): string | string[] {
-    return [req.ip, ...req.ips];
+    return [req.ip, ...(req.ips ?? [])];
   }
 
   protected getRequestResponse(context: ExecutionContext): {
