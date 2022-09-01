@@ -59,7 +59,7 @@
     "@nestjs/platform-fastify": "9.0.11",
     "@nestjs/platform-socket.io": "9.0.11",
     "@nestjs/platform-ws": "9.0.11",
-    "@nestjs/schematics": "9.0.1",
+    "@nestjs/schematics": "9.0.2",
     "@nestjs/testing": "9.0.11",
     "@nestjs/websockets": "9.0.11",
     "@semantic-release/git": "10.0.1",
