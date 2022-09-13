@@ -67,7 +67,7 @@
     "@types/express-serve-static-core": "4.17.31",
     "@types/jest": "29.0.2",
     "@types/md5": "2.3.2",
-    "@types/node": "16.11.58",
+    "@types/node": "16.11.59",
     "@types/supertest": "2.0.12",
     "@typescript-eslint/eslint-plugin": "5.37.0",
     "@typescript-eslint/parser": "5.37.0",
