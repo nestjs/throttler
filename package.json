@@ -88,7 +88,7 @@
     "prettier": "2.7.1",
     "reflect-metadata": "0.1.13",
     "rimraf": "3.0.2",
-    "rxjs": "7.5.6",
+    "rxjs": "7.5.7",
     "socket.io": "4.5.2",
     "supertest": "6.2.4",
     "ts-jest": "29.0.2",
