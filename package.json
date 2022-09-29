@@ -91,7 +91,7 @@
     "rxjs": "7.5.7",
     "socket.io": "4.5.2",
     "supertest": "6.2.4",
-    "ts-jest": "29.0.2",
+    "ts-jest": "29.0.3",
     "ts-loader": "9.4.1",
     "ts-node": "10.9.1",
     "tsconfig-paths": "4.1.0",
