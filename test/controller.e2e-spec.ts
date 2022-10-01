@@ -4,6 +4,7 @@ import { ExpressAdapter } from '@nestjs/platform-express';
 import { FastifyAdapter } from '@nestjs/platform-fastify';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ThrottlerGuard } from '../src';
+import { THROTTLER_OPTIONS } from '../src/throttler.constants';
 import { ControllerModule } from './app/controllers/controller.module';
 import { httPromise } from './utility/httpromise';
 
@@ -116,5 +117,39 @@ describe.each`
         });
       });
     });
+  });
+});
+describe('SkipIf suite', () => {
+  it('should skip throttling if skipIf returns true', async () => {
+    const moduleFixture: TestingModule = await Test.createTestingModule({
+      imports: [ControllerModule],
+      providers: [
+        {
+          provide: APP_GUARD,
+          useClass: ThrottlerGuard,
+        },
+      ],
+    })
+      .overrideProvider(THROTTLER_OPTIONS)
+      .useValue({
+        skipIf: () => true,
+        limit: 5,
+      })
+      .compile();
+
+    const app = moduleFixture.createNestApplication();
+    await app.listen(0);
+    const appUrl = await app.getUrl();
+    for (let i = 0; i < 15; i++) {
+      const response = await httPromise(appUrl + '/');
+      expect(response.status).toBe(200);
+      expect(response.data).toEqual({ success: true });
+      expect(response.headers).not.toMatchObject({
+        'x-ratelimit-limit': '5',
+        'x-ratelimit-remaining': '4',
+        'x-ratelimit-reset': /\d+/,
+      });
+    }
+    await app.close();
   });
 });

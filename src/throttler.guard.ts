@@ -30,7 +30,10 @@ export class ThrottlerGuard implements CanActivate {
     const classRef = context.getClass();
 
     // Return early if the current route should be skipped.
-    if (this.reflector.getAllAndOverride<boolean>(THROTTLER_SKIP, [handler, classRef])) {
+    if (
+      this.reflector.getAllAndOverride<boolean>(THROTTLER_SKIP, [handler, classRef]) ||
+      this.options.skipIf?.(context)
+    ) {
       return true;
     }
 

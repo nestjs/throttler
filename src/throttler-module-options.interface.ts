@@ -1,4 +1,4 @@
-import { ModuleMetadata, Type } from '@nestjs/common/interfaces';
+import { ExecutionContext, ModuleMetadata, Type } from '@nestjs/common/interfaces';
 
 export interface ThrottlerModuleOptions {
   /**
@@ -20,6 +20,12 @@ export interface ThrottlerModuleOptions {
    * The storage class to use where all the record will be stored in.
    */
   storage?: any;
+
+  /**
+   * A factory method to determine if throttling should be skipped.
+   * This can be based on the incoming context, or something like an env value.
+   */
+  skipIf?: (context: ExecutionContext) => boolean;
 }
 
 export interface ThrottlerOptionsFactory {
