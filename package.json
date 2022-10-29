@@ -48,7 +48,7 @@
     "md5": "^2.2.1"
   },
   "devDependencies": {
-    "@changesets/cli": "2.25.0",
+    "@changesets/cli": "2.25.1",
     "@commitlint/cli": "17.1.2",
     "@commitlint/config-angular": "17.1.0",
     "@nestjs/cli": "9.1.5",
