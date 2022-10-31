@@ -49,8 +49,8 @@
   },
   "devDependencies": {
     "@changesets/cli": "2.25.1",
-    "@commitlint/cli": "17.1.2",
-    "@commitlint/config-angular": "17.1.0",
+    "@commitlint/cli": "17.2.0",
+    "@commitlint/config-angular": "17.2.0",
     "@nestjs/cli": "9.1.5",
     "@nestjs/common": "9.1.6",
     "@nestjs/core": "9.1.6",
