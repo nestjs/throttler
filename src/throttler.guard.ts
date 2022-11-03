@@ -6,6 +6,7 @@ import { ThrottlerStorage } from './throttler-storage.interface';
 import { THROTTLER_LIMIT, THROTTLER_SKIP, THROTTLER_TTL } from './throttler.constants';
 import { InjectThrottlerOptions, InjectThrottlerStorage } from './throttler.decorator';
 import { ThrottlerException, throttlerMessage } from './throttler.exception';
+import { ThrottlingInfo } from './throttling-info.interface';
 
 /**
  * @publicApi
@@ -83,7 +84,7 @@ export class ThrottlerGuard implements CanActivate {
     // Throw an error when the user reached their limit.
     if (ttls.length >= limit) {
       res.header('Retry-After', nearestExpiryTime);
-      this.throwThrottlingException(context);
+      this.throwThrottlingException(context, { retryAfter: nearestExpiryTime });
     }
 
     res.header(`${this.headerPrefix}-Limit`, limit);
@@ -125,7 +126,7 @@ export class ThrottlerGuard implements CanActivate {
    * @throws ThrottlerException
    */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  protected throwThrottlingException(context: ExecutionContext): void {
+  protected throwThrottlingException(context: ExecutionContext, info: ThrottlingInfo): void {
     throw new ThrottlerException(this.errorMessage);
   }
 }
