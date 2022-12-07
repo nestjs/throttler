@@ -79,7 +79,7 @@
     "eslint-config-prettier": "8.5.0",
     "eslint-plugin-import": "2.26.0",
     "graphql": "16.6.0",
-    "graphql-tools": "8.3.12",
+    "graphql-tools": "8.3.13",
     "husky": "8.0.2",
     "jest": "29.3.1",
     "lint-staged": "13.1.0",
