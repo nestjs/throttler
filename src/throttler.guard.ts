@@ -76,12 +76,25 @@ export class ThrottlerGuard implements CanActivate {
       }
     }
     const tracker = this.getTracker(req);
-    const key = this.generateKey(context, tracker);
-    const ttls = await this.storageService.getRecord(key);
-    const nearestExpiryTime = ttls.length > 0 ? Math.ceil((ttls[0] - Date.now()) / 1000) : 0;
+    const trackers = Array.isArray(tracker) ? tracker : [tracker];
+    let maxTtlsLen = 0;
+    let nearestExpiryTime = 0;
+    const whenTrackersKey = trackers.map(
+      async (tracker) => {
+        const key = this.generateKey(context, tracker);
+        const ttls = await this.storageService.getRecord(key);
+        if (maxTtlsLen < ttls.length) {
+          maxTtlsLen = ttls.length;
+          const expiryTime = ttls.length > 0 ? Math.ceil((ttls[0] - Date.now()) / 1000) : 0;
+          nearestExpiryTime = Math.max(nearestExpiryTime, expiryTime);
+        }
+        return key;
+      }
+    );
+    const keys = await Promise.all(whenTrackersKey);
 
     // Throw an error when the user reached their limit.
-    if (ttls.length >= limit) {
+    if (maxTtlsLen >= limit) {
       res.header('Retry-After', nearestExpiryTime);
       this.throwThrottlingException(context);
     }
@@ -89,15 +102,16 @@ export class ThrottlerGuard implements CanActivate {
     res.header(`${this.headerPrefix}-Limit`, limit);
     // We're about to add a record so we need to take that into account here.
     // Otherwise the header says we have a request left when there are none.
-    res.header(`${this.headerPrefix}-Remaining`, Math.max(0, limit - (ttls.length + 1)));
+    res.header(`${this.headerPrefix}-Remaining`, Math.max(0, limit - (maxTtlsLen + 1)));
     res.header(`${this.headerPrefix}-Reset`, nearestExpiryTime);
 
-    await this.storageService.addRecord(key, ttl);
+    await Promise.all(keys.map(key => this.storageService.addRecord(key, ttl)));
+
     return true;
   }
 
-  protected getTracker(req: Record<string, any>): string {
-    return req.ip;
+  protected getTracker(req: Record<string, any>): string | string[] {
+    return [req.ip, ...(req.ips ?? [])];
   }
 
   protected getRequestResponse(context: ExecutionContext): {
