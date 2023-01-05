@@ -4,7 +4,7 @@ export interface ThrottlerStorage {
    * The key is a hashed key based on the current context and IP.
    * The value of is an object contains the two keys:
    *   - totalHits    (number): Amount of requests being done.
-   *   - timeToExpire (number): Amount of seconds until this expiration.
+   *   - timeToExpire (number): Amount of seconds until this key expires.
    */
   storage: Record<string, { totalHits: number; timeToExpire: number }>;
 
