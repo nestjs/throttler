@@ -31,7 +31,6 @@ For an overview of the community storage providers, see [Community Storage Provi
 
 This package comes with a couple of goodies that should be mentioned, first is the `ThrottlerModule`.
 
-
 ## Installation
 
 ```bash
@@ -216,8 +215,8 @@ The interface looks like this:
 
 ```ts
 export interface ThrottlerStorage {
-  getRecord(key: string): Promise<number[]>;
-  addRecord(key: string, ttl: number): Promise<void>;
+  storage: Record<string, { totalHits: number; timeToExpire: number }>;
+  addRecord(key: string, ttl: number): Promise<{ totalHits: number; timeToExpire: number }>;
 }
 ```
 
