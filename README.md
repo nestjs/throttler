@@ -215,8 +215,8 @@ The interface looks like this:
 
 ```ts
 export interface ThrottlerStorage {
-  storage: Record<string, { totalHits: number; timeToExpire: number }>;
-  addRecord(key: string, ttl: number): Promise<{ totalHits: number; timeToExpire: number }>;
+  storage: Record<string, ThrottlerStorageOptions>;
+  increment(key: string, ttl: number): Promise<ThrottlerStorageRecord>;
 }
 ```
 
@@ -258,13 +258,12 @@ export class WsThrottlerGuard extends ThrottlerGuard {
       .filter((obj) => obj)
       .shift().remoteAddress;
     const key = this.generateKey(context, ip);
-    const ttls = await this.storageService.getRecord(key);
+    const { totalHits } = await this.storageService.increment(key, ttl);
 
-    if (ttls.length >= limit) {
+    if (totalHits > limit) {
       throw new ThrottlerException();
     }
 
-    await this.storageService.addRecord(key, ttl);
     return true;
   }
 }
