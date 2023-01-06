@@ -50,7 +50,7 @@ describe.each`
         expect(response.headers).not.toMatchObject({
           'x-ratelimit-limit': '2',
           'x-ratelimit-remaining': '1',
-          'x-ratelimit-reset': /\d+/,
+          'x-ratelimit-reset': /^\d+$/,
         });
       });
       it('GET /ignore-user-agents', async () => {
@@ -61,7 +61,7 @@ describe.each`
         expect(response.headers).not.toMatchObject({
           'x-ratelimit-limit': '2',
           'x-ratelimit-remaining': '1',
-          'x-ratelimit-reset': /\d+/,
+          'x-ratelimit-reset': /^\d+$/,
         });
       });
       it('GET /', async () => {
@@ -70,7 +70,7 @@ describe.each`
         expect(response.headers).toMatchObject({
           'x-ratelimit-limit': '2',
           'x-ratelimit-remaining': '1',
-          'x-ratelimit-reset': /\d+/,
+          'x-ratelimit-reset': /^\d+$/,
         });
       });
     });
@@ -91,13 +91,13 @@ describe.each`
             expect(response.headers).toMatchObject({
               'x-ratelimit-limit': limit.toString(),
               'x-ratelimit-remaining': (limit - (i + 1)).toString(),
-              'x-ratelimit-reset': /\d+/,
+              'x-ratelimit-reset': /^\d+$/,
             });
           }
           const errRes = await httPromise(appUrl + '/limit' + url, method);
           expect(errRes.data).toMatchObject({ statusCode: 429, message: /ThrottlerException/ });
           expect(errRes.headers).toMatchObject({
-            'retry-after': /\d+/,
+            'retry-after': /^\d+$/,
           });
           expect(errRes.status).toBe(429);
         },
@@ -113,7 +113,7 @@ describe.each`
         expect(response.headers).toMatchObject({
           'x-ratelimit-limit': '5',
           'x-ratelimit-remaining': '4',
-          'x-ratelimit-reset': /\d+/,
+          'x-ratelimit-reset': /^\d+$/,
         });
       });
     });
@@ -147,7 +147,7 @@ describe('SkipIf suite', () => {
       expect(response.headers).not.toMatchObject({
         'x-ratelimit-limit': '5',
         'x-ratelimit-remaining': '4',
-        'x-ratelimit-reset': /\d+/,
+        'x-ratelimit-reset': /^\d+$/,
       });
     }
     await app.close();
