@@ -7,20 +7,23 @@ import { ThrottlerException } from './throttler.exception';
 import { ThrottlerGuard } from './throttler.guard';
 
 class ThrottlerStorageServiceMock implements ThrottlerStorage {
-  private _storage: Record<string, { totalHits: number; timeToExpire: number }> = {};
-  get storage(): Record<string, { totalHits: number; timeToExpire: number }> {
+  private _storage: Record<string, { totalHits: number; expiresAt: number }> = {};
+  get storage(): Record<string, { totalHits: number; expiresAt: number }> {
     return this._storage;
   }
 
   async addRecord(key: string, ttl: number): Promise<{ totalHits: number; timeToExpire: number }> {
     const ttlMilliseconds = ttl * 1000;
     if (!this.storage[key]) {
-      this.storage[key] = { totalHits: 0, timeToExpire: ttlMilliseconds };
+      this.storage[key] = { totalHits: 0, expiresAt: Date.now() + ttlMilliseconds };
     }
 
     this.storage[key].totalHits++;
 
-    return this.storage[key];
+    return {
+      totalHits: this.storage[key].totalHits,
+      timeToExpire: Math.floor((this.storage[key].expiresAt - Date.now()) / 1000),
+    };
   }
 }
 

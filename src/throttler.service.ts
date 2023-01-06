@@ -3,17 +3,17 @@ import { ThrottlerStorage } from './throttler-storage.interface';
 
 @Injectable()
 export class ThrottlerStorageService implements ThrottlerStorage, OnApplicationShutdown {
-  private _storage: Record<string, { totalHits: number; timeToExpire: number }> = {};
+  private _storage: Record<string, { totalHits: number; expiresAt: number }> = {};
   private timeoutIds: NodeJS.Timeout[] = [];
 
-  get storage(): Record<string, { totalHits: number; timeToExpire: number }> {
+  get storage(): Record<string, { totalHits: number; expiresAt: number }> {
     return this._storage;
   }
 
   async addRecord(key: string, ttl: number): Promise<{ totalHits: number; timeToExpire: number }> {
     const ttlMilliseconds = ttl * 1000;
     if (!this.storage[key]) {
-      this.storage[key] = { totalHits: 0, timeToExpire: ttlMilliseconds };
+      this.storage[key] = { totalHits: 0, expiresAt: Date.now() + ttlMilliseconds };
     }
 
     this.storage[key].totalHits++;
@@ -25,7 +25,10 @@ export class ThrottlerStorageService implements ThrottlerStorage, OnApplicationS
     }, ttlMilliseconds);
     this.timeoutIds.push(timeoutId);
 
-    return this.storage[key];
+    return {
+      totalHits: this.storage[key].totalHits,
+      timeToExpire: Math.floor((this.storage[key].expiresAt - Date.now()) / 1000),
+    };
   }
 
   onApplicationShutdown() {
