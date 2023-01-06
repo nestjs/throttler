@@ -14,7 +14,7 @@ class ThrottlerStorageServiceMock implements ThrottlerStorage {
     return this._storage;
   }
 
-  getExpirationTime(key: string): number {
+  private getExpirationTime(key: string): number {
     return Math.floor((this.storage[key].expiresAt - Date.now()) / 1000);
   }
 
