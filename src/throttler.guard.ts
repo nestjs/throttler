@@ -77,7 +77,7 @@ export class ThrottlerGuard implements CanActivate {
     }
     const tracker = this.getTracker(req);
     const key = this.generateKey(context, tracker);
-    const { totalHits, timeToExpire } = await this.storageService.addRecord(key, ttl);
+    const { totalHits, timeToExpire } = await this.storageService.increment(key, ttl);
 
     // Throw an error when the user reached their limit.
     if (totalHits > limit) {

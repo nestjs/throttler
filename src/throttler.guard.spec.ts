@@ -1,28 +1,42 @@
 import { ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Test } from '@nestjs/testing';
+import { ThrottlerStorageOptions } from './throttler-storage-options.interface';
+import { ThrottlerStorageRecord } from './throttler-storage-record.interface';
 import { ThrottlerStorage } from './throttler-storage.interface';
 import { THROTTLER_OPTIONS } from './throttler.constants';
 import { ThrottlerException } from './throttler.exception';
 import { ThrottlerGuard } from './throttler.guard';
 
 class ThrottlerStorageServiceMock implements ThrottlerStorage {
-  private _storage: Record<string, { totalHits: number; expiresAt: number }> = {};
-  get storage(): Record<string, { totalHits: number; expiresAt: number }> {
+  private _storage: Record<string, ThrottlerStorageOptions> = {};
+  get storage(): Record<string, ThrottlerStorageOptions> {
     return this._storage;
   }
 
-  async addRecord(key: string, ttl: number): Promise<{ totalHits: number; timeToExpire: number }> {
+  getExpirationTime(key: string): number {
+    return Math.floor((this.storage[key].expiresAt - Date.now()) / 1000);
+  }
+
+  async increment(key: string, ttl: number): Promise<ThrottlerStorageRecord> {
     const ttlMilliseconds = ttl * 1000;
     if (!this.storage[key]) {
       this.storage[key] = { totalHits: 0, expiresAt: Date.now() + ttlMilliseconds };
+    }
+
+    let timeToExpire = this.getExpirationTime(key);
+
+    // Reset the `expiresAt` once it has been expired.
+    if (timeToExpire <= 0) {
+      this.storage[key].expiresAt = Date.now() + ttlMilliseconds;
+      timeToExpire = this.getExpirationTime(key);
     }
 
     this.storage[key].totalHits++;
 
     return {
       totalHits: this.storage[key].totalHits,
-      timeToExpire: Math.floor((this.storage[key].expiresAt - Date.now()) / 1000),
+      timeToExpire,
     };
   }
 }
