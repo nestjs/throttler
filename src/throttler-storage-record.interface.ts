@@ -10,4 +10,4 @@ export interface ThrottlerStorageRecord {
   timeToExpire: number;
 }
 
-export const ThrottlerStorageRecordOptions = Symbol('ThrottlerStorageRecordOptions');
+export const ThrottlerStorageRecord = Symbol('ThrottlerStorageRecord');
