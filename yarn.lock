@@ -2632,6 +2632,16 @@ array.prototype.flat@^1.3.1:
     es-abstract "^1.20.4"
     es-shim-unscopables "^1.0.0"
 
+array.prototype.flatmap@^1.3.0:
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/array.prototype.flatmap/-/array.prototype.flatmap-1.3.1.tgz#1aae7903c2100433cb8261cd4ed310aab5c4a183"
+  integrity sha512-8UGn9O1FDVvMNB0UlLv4voxRMze7+FpHyF5mSMRjWHUMlpoDViniy05870VlxhfgTnLbpuwTzvD76MTtWxB/mQ==
+  dependencies:
+    call-bind "^1.0.2"
+    define-properties "^1.1.4"
+    es-abstract "^1.20.4"
+    es-shim-unscopables "^1.0.0"
+
 arrify@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/arrify/-/arrify-1.0.1.tgz#898508da2226f380df904728456849c1501a4b0d"
@@ -3936,13 +3946,14 @@ eslint-module-utils@^2.7.4:
   dependencies:
     debug "^3.2.7"
 
-eslint-plugin-import@2.27.0:
-  version "2.27.0"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-import/-/eslint-plugin-import-2.27.0.tgz#29824226ae1c14965af445e4f71769ef1e3fe365"
-  integrity sha512-g+25RejC0uMcimFhm55XGPkbXR5qJMZ8KRN9hEJrQ+9U1VLrt76IjHD3/+QKu/0h1Wm6S2a73DFK8UYZRmfnYg==
+eslint-plugin-import@2.27.2:
+  version "2.27.2"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-import/-/eslint-plugin-import-2.27.2.tgz#4619f1952566a3cc1471ee07716322d4b0254526"
+  integrity sha512-/S1QaM52PzKy1C4c5Sw7hB6glROSUpMZ8RVREVC4se7z4AlyDxv0kU7uWkHc8aIVNb19oz86z7c6vdtuKUwLvw==
   dependencies:
     array-includes "^3.1.6"
     array.prototype.flat "^1.3.1"
+    array.prototype.flatmap "^1.3.0"
     debug "^3.2.7"
     doctrine "^2.1.0"
     eslint-import-resolver-node "^0.3.7"
