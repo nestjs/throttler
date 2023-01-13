@@ -87,7 +87,7 @@
     "pinst": "3.0.0",
     "prettier": "2.8.2",
     "reflect-metadata": "0.1.13",
-    "rimraf": "3.0.2",
+    "rimraf": "4.0.4",
     "rxjs": "7.8.0",
     "socket.io": "4.5.4",
     "supertest": "6.3.3",
