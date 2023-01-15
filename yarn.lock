@@ -7411,10 +7411,10 @@ rimraf@3.0.2, rimraf@^3.0.2:
   dependencies:
     glob "^7.1.3"
 
-rimraf@4.0.5:
-  version "4.0.5"
-  resolved "https://registry.yarnpkg.com/rimraf/-/rimraf-4.0.5.tgz#c93184b2cc87e78b205f912226320c8515df9cf9"
-  integrity sha512-3gf/WdsBM+ZkuPb76MpXSxNKt00QQ3PdXqDCCBOsHgcoBs8DAhXbqtrGQUAkhxHgXYWzXxuaOsN4s21+at5fBw==
+rimraf@4.0.6:
+  version "4.0.6"
+  resolved "https://registry.yarnpkg.com/rimraf/-/rimraf-4.0.6.tgz#cfaf33accc45fa393faaf77a1b3fd68de7a0a7fa"
+  integrity sha512-O6zMt2OF2Vuxtm6V4wdBd9t21WPqJeXrHQiFBL4BFHnPMk0MBYaUhcJ4/u64Cp+PpM9UgVajhtidh8nD6fz1FA==
 
 run-async@^2.2.0, run-async@^2.4.0:
   version "2.4.1"
