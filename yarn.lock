@@ -1430,10 +1430,10 @@
     globby "^11.0.0"
     read-yaml-file "^1.1.0"
 
-"@nestjs/cli@9.1.8":
-  version "9.1.8"
-  resolved "https://registry.yarnpkg.com/@nestjs/cli/-/cli-9.1.8.tgz#e4cb06c0cb628bf08ae143c2c6278a7beb38044b"
-  integrity sha512-53laCMoPLAkjyz3405FlMSrHnbr3DGeoaQjY963bEroezLlm/qfQhwj6oGJwtgA28eNFgx68mvQV2f1VZNUJtw==
+"@nestjs/cli@9.1.9":
+  version "9.1.9"
+  resolved "https://registry.yarnpkg.com/@nestjs/cli/-/cli-9.1.9.tgz#f696b79e1e6478e9fff3bc90c70253720d19f03f"
+  integrity sha512-oRiJArvQcYUJRO0jRWG99KkXuw+HafSnlfWcO4028gTDb4IanRwbl6fw4mELTEAaXAwDGOcuk8R0QY8H3muyiQ==
   dependencies:
     "@angular-devkit/core" "15.0.4"
     "@angular-devkit/schematics" "15.0.4"
