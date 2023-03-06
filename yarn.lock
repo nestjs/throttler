@@ -1029,6 +1029,14 @@
     "@graphql-tools/utils" "9.2.1"
     tslib "^2.4.0"
 
+"@graphql-tools/merge@8.4.0":
+  version "8.4.0"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/merge/-/merge-8.4.0.tgz#47fbe5c4b6764276dc35bd19c4e7d3c46d3dc0fc"
+  integrity sha512-3XYCWe0d3I4F1azNj1CdShlbHfTIfiDgj00R9uvFH8tHKh7i1IWN3F7QQYovcHKhayaR6zPok3YYMESYQcBoaA==
+  dependencies:
+    "@graphql-tools/utils" "9.2.1"
+    tslib "^2.4.0"
+
 "@graphql-tools/mock@^8.1.2":
   version "8.7.0"
   resolved "https://registry.yarnpkg.com/@graphql-tools/mock/-/mock-8.7.0.tgz#da286596ef05b84165e76cf6f608eeea4109a60c"
@@ -1055,6 +1063,16 @@
   integrity sha512-kF+tbYPPf/6K2aHG3e1SWIbapDLQaqnIHVRG6ow3onkFoowwtKszvUyOASL6Krcv2x9bIMvd1UkvRf9OaoROQQ==
   dependencies:
     "@graphql-tools/merge" "8.3.18"
+    "@graphql-tools/utils" "9.2.1"
+    tslib "^2.4.0"
+    value-or-promise "1.0.12"
+
+"@graphql-tools/schema@9.0.17":
+  version "9.0.17"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/schema/-/schema-9.0.17.tgz#d731e9899465f88d5b9bf69e607ec465bb88b062"
+  integrity sha512-HVLq0ecbkuXhJlpZ50IHP5nlISqH2GbNgjBJhhRzHeXhfwlUOT4ISXGquWTmuq61K0xSaO0aCjMpxe4QYbKTng==
+  dependencies:
+    "@graphql-tools/merge" "8.4.0"
     "@graphql-tools/utils" "9.2.1"
     tslib "^2.4.0"
     value-or-promise "1.0.12"
@@ -4875,12 +4893,12 @@ graphql-tag@2.12.6, graphql-tag@^2.11.0, graphql-tag@^2.12.6:
   dependencies:
     tslib "^2.1.0"
 
-graphql-tools@8.3.18:
-  version "8.3.18"
-  resolved "https://registry.yarnpkg.com/graphql-tools/-/graphql-tools-8.3.18.tgz#259ee5efb668edd8ae768762e5997cf0b6ee0e48"
-  integrity sha512-UnTpONDidlMNZqNi1wGBVSpGCcpKtlW0K46aWhNJCC4gTFics0r2hz1nA+Rpn04jaQy8L71Fo2II2fkKeuyuNQ==
+graphql-tools@8.3.19:
+  version "8.3.19"
+  resolved "https://registry.yarnpkg.com/graphql-tools/-/graphql-tools-8.3.19.tgz#f1a924d1f9ccdf56981e78ebb1d393b0f2e54dab"
+  integrity sha512-K/BCebBd6b+iMNREi6TdSsI8Ot0Oiux43c4TixH/a1nOzXl8KDUfEygl6F7W8AHw0ks35UfRSWBIOWhdws9o7Q==
   dependencies:
-    "@graphql-tools/schema" "9.0.16"
+    "@graphql-tools/schema" "9.0.17"
     tslib "^2.4.0"
   optionalDependencies:
     "@apollo/client" "~3.2.5 || ~3.3.0 || ~3.4.0 || ~3.5.0 || ~3.6.0 || ~3.7.0"
