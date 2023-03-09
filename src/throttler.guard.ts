@@ -116,6 +116,13 @@ export class ThrottlerGuard implements CanActivate {
   }
 
   /**
+   * Get throttling message
+   */
+  protected throttlingMessage(): string {
+    return this.errorMessage;
+  }
+
+  /**
    * Throws an exception for the event that the rate limit has been exceeded.
    *
    * The context parameter allows to access the context when overwriting
@@ -124,6 +131,6 @@ export class ThrottlerGuard implements CanActivate {
    */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   protected throwThrottlingException(context: ExecutionContext): void {
-    throw new ThrottlerException(this.errorMessage);
+    throw new ThrottlerException(this.throttlingMessage());
   }
 }
