@@ -54,7 +54,7 @@
     "@nestjs/cli": "9.2.0",
     "@nestjs/common": "9.3.9",
     "@nestjs/core": "9.3.9",
-    "@nestjs/graphql": "10.2.0",
+    "@nestjs/graphql": "11.0.0",
     "@nestjs/platform-express": "9.3.9",
     "@nestjs/platform-fastify": "9.3.9",
     "@nestjs/platform-socket.io": "9.3.9",
