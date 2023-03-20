@@ -10,7 +10,7 @@ function setThrottlerMetadata(target: any, limit: number, ttl: number): void {
 /**
  * Adds metadata to the target which will be handled by the ThrottlerGuard to
  * handle incoming requests based on the given metadata.
- * @usage @Throttle(2, 10)
+ * usage @Throttle(2, 10)
  * @publicApi
  */
 export const Throttle = (limit = 20, ttl = 60): MethodDecorator & ClassDecorator => {
@@ -31,8 +31,8 @@ export const Throttle = (limit = 20, ttl = 60): MethodDecorator & ClassDecorator
 /**
  * Adds metadata to the target which will be handled by the ThrottlerGuard
  * whether or not to skip throttling for this context.
- * @usage @SkipThrottle()
- * @usage @SkipThrottle(false)
+ * usage @SkipThrottle()
+ * usage @SkipThrottle(false)
  * @publicApi
  */
 export const SkipThrottle = (skip = true): MethodDecorator & ClassDecorator => {
@@ -52,14 +52,14 @@ export const SkipThrottle = (skip = true): MethodDecorator & ClassDecorator => {
 
 /**
  * Sets the proper injection token for the `THROTTLER_OPTIONS`
- * @usage @InjectThrottlerOptions()
+ * usage @InjectThrottlerOptions()
  * @publicApi
  */
 export const InjectThrottlerOptions = () => Inject(getOptionsToken());
 
 /**
  * Sets the proper injection token for the `ThrottlerStorage`
- * @usage @InjectThrottlerStorage()
+ * usage @InjectThrottlerStorage()
  * @publicApi
  */
 export const InjectThrottlerStorage = () => Inject(getStorageToken());
