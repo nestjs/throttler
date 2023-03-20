@@ -23,7 +23,7 @@ export class ThrottlerGuard implements CanActivate {
   /**
    * Throttle requests against their TTL limit and whether to allow or deny it.
    * Based on the context type different handlers will be called.
-   * @throws ThrottlerException
+   * @throws {ThrottlerException}
    */
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const handler = context.getHandler();
@@ -57,7 +57,7 @@ export class ThrottlerGuard implements CanActivate {
    * Throttles incoming HTTP requests.
    * All the outgoing requests will contain RFC-compatible RateLimit headers.
    * @see https://tools.ietf.org/id/draft-polli-ratelimit-headers-00.html#header-specifications
-   * @throws ThrottlerException
+   * @throws {ThrottlerException}
    */
   protected async handleRequest(
     context: ExecutionContext,
@@ -120,7 +120,7 @@ export class ThrottlerGuard implements CanActivate {
    *
    * The context parameter allows to access the context when overwriting
    * the method.
-   * @throws ThrottlerException
+   * @throws {ThrottlerException}
    */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   protected throwThrottlingException(context: ExecutionContext): void {

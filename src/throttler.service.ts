@@ -3,6 +3,9 @@ import { ThrottlerStorageOptions } from './throttler-storage-options.interface';
 import { ThrottlerStorageRecord } from './throttler-storage-record.interface';
 import { ThrottlerStorage } from './throttler-storage.interface';
 
+/**
+ * @publicApi
+ */
 @Injectable()
 export class ThrottlerStorageService implements ThrottlerStorage, OnApplicationShutdown {
   private _storage: Record<string, ThrottlerStorageOptions> = {};
