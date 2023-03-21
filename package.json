@@ -58,7 +58,7 @@
     "@nestjs/platform-express": "9.3.10",
     "@nestjs/platform-fastify": "9.3.10",
     "@nestjs/platform-socket.io": "9.3.10",
-    "@nestjs/platform-ws": "9.3.10",
+    "@nestjs/platform-ws": "9.3.11",
     "@nestjs/schematics": "9.0.4",
     "@nestjs/testing": "9.3.10",
     "@nestjs/websockets": "9.3.10",
