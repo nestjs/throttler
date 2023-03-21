@@ -1688,10 +1688,10 @@
     socket.io "4.6.1"
     tslib "2.5.0"
 
-"@nestjs/platform-ws@9.3.10":
-  version "9.3.10"
-  resolved "https://registry.yarnpkg.com/@nestjs/platform-ws/-/platform-ws-9.3.10.tgz#e81af256327275e0bdbd4b0e5471b023e5fd7bf9"
-  integrity sha512-CtoL0zH7toM3+bVY/vKlhRSnbG+aH8lTYznRBnl2kXf4H2Qb5uK21ClShAc/WJkKzC3ZsoiFnmeeUtE8qOLNJA==
+"@nestjs/platform-ws@9.3.11":
+  version "9.3.11"
+  resolved "https://registry.yarnpkg.com/@nestjs/platform-ws/-/platform-ws-9.3.11.tgz#132c47035a3f28f375f01c5a1aca3e8925c3025b"
+  integrity sha512-1sAD1x4tLPufW2L0+af+aWFEKwrKTsORKIVLd3WQ9RP+tRB8lcrOs1oEEdD3bVYzTGQlBXXXBLfDhscvcF5JHQ==
   dependencies:
     tslib "2.5.0"
     ws "8.13.0"
