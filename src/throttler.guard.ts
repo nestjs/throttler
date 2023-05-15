@@ -132,6 +132,5 @@ export class ThrottlerGuard implements CanActivate {
     resolvableValue: Resolvable<T>,
   ): Promise<T> {
     return typeof resolvableValue === 'function' ? resolvableValue(context) : resolvableValue;
-    //return resolvableValue as any;
   }
 }
