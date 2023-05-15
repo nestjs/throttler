@@ -1,7 +1,7 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import * as md5 from 'md5';
-import { ThrottlerModuleOptions } from './throttler-module-options.interface';
+import { Resolvable, ThrottlerModuleOptions } from './throttler-module-options.interface';
 import { ThrottlerStorage } from './throttler-storage.interface';
 import { THROTTLER_LIMIT, THROTTLER_SKIP, THROTTLER_TTL } from './throttler.constants';
 import { InjectThrottlerOptions, InjectThrottlerStorage } from './throttler.decorator';
@@ -38,18 +38,18 @@ export class ThrottlerGuard implements CanActivate {
     }
 
     // Return early when we have no limit or ttl data.
-    const routeOrClassLimit = this.reflector.getAllAndOverride<number>(THROTTLER_LIMIT, [
-      handler,
-      classRef,
-    ]);
-    const routeOrClassTtl = this.reflector.getAllAndOverride<number>(THROTTLER_TTL, [
+    const routeOrClassLimit = this.reflector.getAllAndOverride<Resolvable<number>>(
+      THROTTLER_LIMIT,
+      [handler, classRef],
+    );
+    const routeOrClassTtl = this.reflector.getAllAndOverride<Resolvable<number>>(THROTTLER_TTL, [
       handler,
       classRef,
     ]);
 
     // Check if specific limits are set at class or route level, otherwise use global options.
-    const limit = routeOrClassLimit || this.options.limit;
-    const ttl = routeOrClassTtl || this.options.ttl;
+    const limit = await this.resolveValue(context, routeOrClassLimit || this.options.limit);
+    const ttl = await this.resolveValue(context, routeOrClassTtl || this.options.ttl);
     return this.handleRequest(context, limit, ttl);
   }
 
@@ -125,5 +125,13 @@ export class ThrottlerGuard implements CanActivate {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   protected throwThrottlingException(context: ExecutionContext): void {
     throw new ThrottlerException(this.errorMessage);
+  }
+
+  private async resolveValue<T extends number | string | boolean>(
+    context: ExecutionContext,
+    resolvableValue: Resolvable<T>,
+  ): Promise<T> {
+    return typeof resolvableValue === 'function' ? resolvableValue(context) : resolvableValue;
+    //return resolvableValue as any;
   }
 }
