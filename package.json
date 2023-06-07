@@ -71,7 +71,7 @@
     "@types/supertest": "2.0.12",
     "@typescript-eslint/eslint-plugin": "5.59.9",
     "@typescript-eslint/parser": "5.59.9",
-    "@apollo/server": "4.7.2",
+    "@apollo/server": "4.7.3",
     "apollo-server-fastify": "3.12.0",
     "conventional-changelog-cli": "3.0.0",
     "cz-conventional-changelog": "3.3.0",
