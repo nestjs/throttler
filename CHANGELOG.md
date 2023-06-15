@@ -1,5 +1,11 @@
 # [2.0.0](https://github.com/nestjs/throttler/compare/v1.2.1...v2.0.0) (2021-07-09)
 
+## 4.1.0
+
+### Minor Changes
+
+- 527d51c: Support Nest v10
+
 ## 4.0.0
 
 ### Major Changes
