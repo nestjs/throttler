@@ -41,6 +41,8 @@ $ npm i --save @nestjs/throttler
 
 `@nestjs/throttler@^1` is compatible with Nest v7 while `@nestjs/throttler@^2` is compatible with Nest v7 and Nest v8, but it is suggested to be used with only v8 in case of breaking changes against v7 that are unseen.
 
+For NestJS v10, please use version 4.1.0 or above
+
 ## Table of Contents
 
 - [Description](#description)
