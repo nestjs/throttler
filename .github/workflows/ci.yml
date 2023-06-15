@@ -17,7 +17,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [14.x]
+        node-version: [18.x, 20.x]
 
     steps:
     - uses: actions/checkout@v3
@@ -25,16 +25,18 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
-    - name: install
-      run: yarn
+    - name: install pnpm
+      run: npm i -g pnpm@^8
+    - name: install deps
+      run: pnpm i
     - name: lint
-      run: yarn lint
+      run: pnpm lint
     - name: build
-      run: yarn build
+      run: pnpm build
     - name: test
-      run: yarn test:cov
+      run: pnpm test:cov
     - name: E2E test
-      run: yarn test:e2e
+      run: pnpm test:e2e
 
   auto-merge:
     needs: test
