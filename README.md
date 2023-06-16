@@ -301,6 +301,7 @@ export class GqlThrottlerGuard extends ThrottlerGuard {
 ## Community Storage Providers
 
 - [Redis](https://github.com/kkoomen/nestjs-throttler-storage-redis)
+- [Mongo](https://www.npmjs.com/package/nestjs-throttler-storage-mongo)
 
 Feel free to submit a PR with your custom storage provider being added to this list.
 
