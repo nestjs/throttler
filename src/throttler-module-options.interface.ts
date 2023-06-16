@@ -1,18 +1,16 @@
 import { ExecutionContext, ModuleMetadata, Type } from '@nestjs/common/interfaces';
+import { ThrottlerStorage } from './throttler-storage.interface';
 
 /**
  * @publicApi
  */
 export interface ThrottlerModuleOptions {
   /**
-   * The amount of requests that are allowed within the ttl's time window.
+   * The rate limits and time windows for different time units.
+   * Each item in the array represents a time unit (e.g., minute, second, hour, day).
+   * The format is { limit: number, ttl: number }.
    */
-  limit?: number;
-
-  /**
-   * The amount of seconds of how many requests are allowed within this time.
-   */
-  ttl?: number;
+  limits?: ThrottlerRateLimit[];
 
   /**
    * The user agents that should be ignored (checked against the User-Agent header).
@@ -20,13 +18,15 @@ export interface ThrottlerModuleOptions {
   ignoreUserAgents?: RegExp[];
 
   /**
-   * The storage class to use where all the record will be stored in.
+   * The storage options to use for rate limiting.
+   * This can be an instance of a custom storage class or
+   * one of the built-in storage classes (MongoDB, Redis).
    */
-  storage?: any;
+  storage?: ThrottlerStorage;
 
   /**
    * A factory method to determine if throttling should be skipped.
-   * This can be based on the incoming context, or something like an env value.
+   * This can be based on the incoming context or something like an env value.
    */
   skipIf?: (context: ExecutionContext) => boolean;
 }
@@ -60,3 +60,13 @@ export interface ThrottlerAsyncOptions extends Pick<ModuleMetadata, 'imports'> {
    */
   inject?: any[];
 }
+
+/**
+ * Rate limit configuration for a specific time unit.
+ */
+export interface ThrottlerRateLimit {
+  timeUnit: TimeUnit | number;
+  limit: number;
+}
+
+export type TimeUnit = 'second' | 'minute' | 'hour' | 'day' | 'week';

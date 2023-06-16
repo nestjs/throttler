@@ -1,29 +1,27 @@
 import { Inject } from '@nestjs/common';
-import { THROTTLER_LIMIT, THROTTLER_SKIP, THROTTLER_TTL } from './throttler.constants';
+import { THROTTLER_LIMIT, THROTTLER_SKIP } from './throttler.constants';
 import { getOptionsToken, getStorageToken } from './throttler.providers';
-
-function setThrottlerMetadata(target: any, limit: number, ttl: number): void {
-  Reflect.defineMetadata(THROTTLER_TTL, ttl, target);
-  Reflect.defineMetadata(THROTTLER_LIMIT, limit, target);
-}
+import { ThrottlerRateLimit } from './throttler-module-options.interface';
 
 /**
  * Adds metadata to the target which will be handled by the ThrottlerGuard to
  * handle incoming requests based on the given metadata.
- * @example @Throttle(2, 10)
+ * @example @Throttle([{ timeUnit: 'minute', limit: 20 }])
  * @publicApi
  */
-export const Throttle = (limit = 20, ttl = 60): MethodDecorator & ClassDecorator => {
+export const Throttle = (
+  limits: ThrottlerRateLimit[] = [{ timeUnit: 'minute', limit: 20 }],
+): MethodDecorator & ClassDecorator => {
   return (
     target: any,
     propertyKey?: string | symbol,
     descriptor?: TypedPropertyDescriptor<any>,
   ) => {
     if (descriptor) {
-      setThrottlerMetadata(descriptor.value, limit, ttl);
+      Reflect.defineMetadata(THROTTLER_LIMIT, limits, descriptor.value);
       return descriptor;
     }
-    setThrottlerMetadata(target, limit, ttl);
+    Reflect.defineMetadata(THROTTLER_LIMIT, limits, target);
     return target;
   };
 };

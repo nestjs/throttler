@@ -3,7 +3,7 @@ import { SkipThrottle, Throttle } from '../../../src';
 import { AppService } from '../app.service';
 
 @Controller()
-@Throttle(2, 10)
+@Throttle([{ timeUnit: 'minute', limit: 6 }])
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
@@ -21,5 +21,11 @@ export class AppController {
   @Get('ignore-user-agents')
   async ignoreUserAgents() {
     return this.appService.ignored();
+  }
+
+  @Throttle([{ timeUnit: 20, limit: 3 }]) // 20 seconds
+  @Get('custom')
+  getCustom() {
+    return this.appService.success();
   }
 }

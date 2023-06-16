@@ -1,34 +1,34 @@
 import { ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Test } from '@nestjs/testing';
-import { ThrottlerStorageOptions } from './throttler-storage-options.interface';
 import { ThrottlerStorageRecord } from './throttler-storage-record.interface';
 import { ThrottlerStorage } from './throttler-storage.interface';
 import { THROTTLER_OPTIONS } from './throttler.constants';
 import { ThrottlerException } from './throttler.exception';
 import { ThrottlerGuard } from './throttler.guard';
+import { ThrottlerStorageRedisService } from './throttler.service';
 
 class ThrottlerStorageServiceMock implements ThrottlerStorage {
-  private _storage: Record<string, ThrottlerStorageOptions> = {};
-  get storage(): Record<string, ThrottlerStorageOptions> {
+  private _storage: Record<string, ThrottlerStorageRecord> = {};
+  get storage(): Record<string, ThrottlerStorageRecord> {
     return this._storage;
   }
 
   private getExpirationTime(key: string): number {
-    return Math.floor((this.storage[key].expiresAt - Date.now()) / 1000);
+    return Math.floor((this.storage[key].timeToExpire - Date.now()) / 1000);
   }
 
   async increment(key: string, ttl: number): Promise<ThrottlerStorageRecord> {
     const ttlMilliseconds = ttl * 1000;
     if (!this.storage[key]) {
-      this.storage[key] = { totalHits: 0, expiresAt: Date.now() + ttlMilliseconds };
+      this.storage[key] = { totalHits: 0, timeToExpire: Date.now() + ttlMilliseconds };
     }
 
     let timeToExpire = this.getExpirationTime(key);
 
     // Reset the `expiresAt` once it has been expired.
     if (timeToExpire <= 0) {
-      this.storage[key].expiresAt = Date.now() + ttlMilliseconds;
+      this.storage[key].timeToExpire = Date.now() + ttlMilliseconds;
       timeToExpire = this.getExpirationTime(key);
     }
 
@@ -91,9 +91,13 @@ describe('ThrottlerGuard', () => {
         {
           provide: THROTTLER_OPTIONS,
           useValue: {
-            limit: 5,
-            ttl: 60,
+            limits: [
+              { timeUnit: 'hour', limit: 15 },
+              { timeUnit: 'minute', limit: 10 },
+            ],
             ignoreUserAgents: [/userAgentIgnore/],
+            storage: new ThrottlerStorageRedisService(),
+            skipIf: () => false,
           },
         },
         {
@@ -118,6 +122,7 @@ describe('ThrottlerGuard', () => {
     expect(reflector).toBeDefined();
     expect(service).toBeDefined();
   });
+
   describe('HTTP Context', () => {
     let reqMock;
     let resMock;
@@ -132,67 +137,104 @@ describe('ThrottlerGuard', () => {
         headers: {},
       };
     });
+
     afterEach(() => {
       headerSettingMock.mockClear();
     });
+
     it('should add headers to the res', async () => {
       handler = function addHeaders() {
         return 'string';
       };
+
       const ctxMock = contextMockFactory('http', handler, {
         getResponse: () => resMock,
         getRequest: () => reqMock,
       });
+
       const canActivate = await guard.canActivate(ctxMock);
+
       expect(canActivate).toBe(true);
-      expect(headerSettingMock).toBeCalledTimes(3);
-      expect(headerSettingMock).toHaveBeenNthCalledWith(1, 'X-RateLimit-Limit', 5);
-      expect(headerSettingMock).toHaveBeenNthCalledWith(2, 'X-RateLimit-Remaining', 4);
-      expect(headerSettingMock).toHaveBeenNthCalledWith(3, 'X-RateLimit-Reset', expect.any(Number));
+      expect(headerSettingMock).toBeCalledTimes(6);
+      expect(headerSettingMock).toHaveBeenNthCalledWith(1, 'X-RateLimit-Limit-hour', 15);
+      expect(headerSettingMock).toHaveBeenNthCalledWith(2, 'X-RateLimit-Remaining-hour', 14);
+      expect(headerSettingMock).toHaveBeenNthCalledWith(4, 'X-RateLimit-Limit-minute', 10);
+      expect(headerSettingMock).toHaveBeenNthCalledWith(5, 'X-RateLimit-Remaining-minute', 9);
+      expect(headerSettingMock).toHaveBeenNthCalledWith(
+        6,
+        'X-RateLimit-Reset-minute',
+        expect.any(Number),
+      );
     });
+
     it('should return an error after passing the limit', async () => {
       handler = function returnError() {
         return 'string';
       };
+
       const ctxMock = contextMockFactory('http', handler, {
         getResponse: () => resMock,
         getRequest: () => reqMock,
       });
-      for (let i = 0; i < 5; i++) {
+
+      for (let i = 0; i < 10; i++) {
         await guard.canActivate(ctxMock);
       }
+
       await expect(guard.canActivate(ctxMock)).rejects.toThrowError(ThrottlerException);
-      expect(headerSettingMock).toBeCalledTimes(16);
+      expect(headerSettingMock).toBeCalledTimes(64);
       expect(headerSettingMock).toHaveBeenLastCalledWith('Retry-After', expect.any(Number));
     });
+
     it('should pull values from the reflector instead of options', async () => {
       handler = function useReflector() {
         return 'string';
       };
-      reflector.getAllAndOverride = jest.fn().mockReturnValueOnce(false).mockReturnValueOnce(2);
+
+      reflector.getAllAndOverride = jest
+        .fn()
+        .mockReturnValueOnce(false)
+        .mockReturnValueOnce([
+          { timeUnit: 'hour', limit: 12 },
+          { timeUnit: 'minute', limit: 7 },
+        ]);
+
       const ctxMock = contextMockFactory('http', handler, {
         getResponse: () => resMock,
         getRequest: () => reqMock,
       });
+
       const canActivate = await guard.canActivate(ctxMock);
+
       expect(canActivate).toBe(true);
-      expect(headerSettingMock).toBeCalledTimes(3);
-      expect(headerSettingMock).toHaveBeenNthCalledWith(1, 'X-RateLimit-Limit', 2);
-      expect(headerSettingMock).toHaveBeenNthCalledWith(2, 'X-RateLimit-Remaining', 1);
-      expect(headerSettingMock).toHaveBeenNthCalledWith(3, 'X-RateLimit-Reset', expect.any(Number));
+      expect(headerSettingMock).toBeCalledTimes(6);
+      expect(headerSettingMock).toHaveBeenNthCalledWith(1, 'X-RateLimit-Limit-hour', 12);
+      expect(headerSettingMock).toHaveBeenNthCalledWith(2, 'X-RateLimit-Remaining-hour', 11);
+      expect(headerSettingMock).toHaveBeenNthCalledWith(4, 'X-RateLimit-Limit-minute', 7);
+      expect(headerSettingMock).toHaveBeenNthCalledWith(5, 'X-RateLimit-Remaining-minute', 6);
+      expect(headerSettingMock).toHaveBeenNthCalledWith(
+        6,
+        'X-RateLimit-Reset-minute',
+        expect.any(Number),
+      );
     });
+
     it('should skip due to the user-agent header', async () => {
       handler = function userAgentSkip() {
         return 'string';
       };
+
       reqMock['headers'] = {
         'user-agent': 'userAgentIgnore',
       };
+
       const ctxMock = contextMockFactory('http', handler, {
         getResponse: () => resMock,
         getRequest: () => reqMock,
       });
+
       const canActivate = await guard.canActivate(ctxMock);
+
       expect(canActivate).toBe(true);
       expect(headerSettingMock).toBeCalledTimes(0);
     });

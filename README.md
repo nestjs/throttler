@@ -58,15 +58,69 @@ For NestJS v10, please use version 4.1.0 or above
   - [Proxies](#proxies)
   - [Working with Websockets](#working-with-websockets)
   - [Working with GraphQL](#working-with-graphql)
-- [Community Storage Providers](#community-storage-providers)
+- [Storage Options](#storage-options)
 
 ## Usage
+
+To start using NestJS Throttler, you need to import the ThrottlerModule into your application module and configure it with your desired rate limit options.
+
+```ts
+import { Module } from '@nestjs/common';
+import { ThrottlerModule } from '@nestjs/throttler';
+
+@Module({
+  imports: [
+    ThrottlerModule.forRoot({
+      limits: [
+        { timeUnit: 'second', limit: 10 }, // Example rate limit configuration
+        { timeUnit: 'minute', limit: 100 },
+        { timeUnit: 'hour', limit: 200 },
+        { timeUnit: 'day', limit: 300 },
+        { timeUnit: 'week', limit: 1000 },
+        { timeUnit: 1200, limit: 150 }, // custom configuration 1200 seconds ie. 20 mins
+      ],
+
+      // Below are possible options on how to configure the storage service.
+
+      // default config (host = localhost, port = 6379)
+      storage: new ThrottlerStorageRedisService(),
+
+      // connection url
+      storage: new ThrottlerStorageRedisService('redis://'),
+
+      // redis object
+      storage: new ThrottlerStorageRedisService(new Redis()),
+
+      // redis clusters
+      storage: new ThrottlerStorageRedisService(new Redis.Cluster(nodes, options)),
+
+      // connection url
+      storage: new ThrottlerStorageMongoService('mongodb://'),
+
+      // MongoDB connection string with connection options
+      storage: new ThrottlerStorageMongoService('mongodb://', {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        // Other connection options
+      }),
+
+      //In-memory storage option
+      storage: new ThrottlerStorageMemoryService(),
+    }),
+  ],
+})
+export class AppModule {}
+```
+
+You can customize the rate limits by specifying the timeUnit (e.g., 'second', 'minute', 'hour', 'day', 'week') and the corresponding limit. The package also supports multiple rate limits, allowing you to define different limits for various time units.
+
+Additionally, NestJS Throttler provides support for different storage options, such as Redis, in-memory storage (default), and MongoDB.
 
 ### ThrottlerModule
 
 The `ThrottleModule` is the main entry point for this package, and can be used
 in a synchronous or asynchronous manner. All the needs to be passed is the
-`ttl`, the time to live in seconds for the request tracker, and the `limit`, or
+`timeUnit`, the time to live in seconds for the request tracker, and the `limit`, or
 how many times an endpoint can be hit before returning a 429.
 
 ```ts
@@ -75,10 +129,11 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 
 @Module({
   imports: [
-    ThrottlerModule.forRoot({
-      ttl: 60,
-      limit: 10,
-    }),
+    ThrottlerModule.forRoot([
+      { timeUnit: 'minute', limit: 5 },
+      { timeUnit: 'hour', limit: 50 },
+      { timeUnit: 20, limit: 3 }, // 20 seconds
+    ]),
   ],
   providers: [
     {
@@ -90,7 +145,8 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 export class AppModule {}
 ```
 
-The above would mean that 10 requests from the same IP can be made to a single endpoint in 1 minute.
+The above would mean that 5 requests from the same IP can be made to a single endpoint in 1 minute,
+along with 50 requests for 1 hour and a custom timelimit of 20 seconds with 3 requests.
 
 ```ts
 @Module({
@@ -99,8 +155,7 @@ The above would mean that 10 requests from the same IP can be made to a single e
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
-        ttl: config.get('THROTTLE_TTL'),
-        limit: config.get('THROTTLE_LIMIT'),
+        limits: config.get('THROTTLE_LIMIT'),
       }),
     }),
   ],
@@ -126,12 +181,7 @@ Example with `@UseGuards(ThrottlerGuard)`:
 ```ts
 // app.module.ts
 @Module({
-  imports: [
-    ThrottlerModule.forRoot({
-      ttl: 60,
-      limit: 10,
-    }),
-  ],
+  imports: [ThrottlerModule.forRoot([{ timeUnit: 'minute', limit: 20 }])],
 })
 export class AppModule {}
 
@@ -139,7 +189,11 @@ export class AppModule {}
 @Controller()
 export class AppController {
   @UseGuards(ThrottlerGuard)
-  @Throttle(5, 30)
+  @Throttle([
+    { timeUnit: 'minute', limit: 20 },
+    { timeUnit: 'hour', limit: 100 },
+    { timeUnit: 'second', limit: 1 },
+  ])
   normal() {}
 }
 ```
@@ -149,10 +203,10 @@ export class AppController {
 #### @Throttle()
 
 ```ts
-@Throttle(limit: number = 30, ttl: number = 60)
+@Throttle([{ timeUnit: 'minute', limit: 20 }])
 ```
 
-This decorator will set `THROTTLER_LIMIT` and `THROTTLER_TTL` metadatas on the
+This decorator will set `THROTTLER_LIMIT` metadatas on the
 route, for retrieval from the `Reflector` class. Can be applied to controllers
 and routes.
 
@@ -187,8 +241,11 @@ You can use the `ignoreUserAgents` key to ignore specific user agents.
 @Module({
   imports: [
     ThrottlerModule.forRoot({
-      ttl: 60,
-      limit: 10,
+      limits: [
+        { timeUnit: 'minute', limit: 20 },
+        { timeUnit: 'hour', limit: 100 },
+        { timeUnit: 'day', limit: 200 },
+      ],
       ignoreUserAgents: [
         // Don't throttle request that have 'googlebot' defined in them.
         // Example user agent: Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)
@@ -208,8 +265,8 @@ export class AppModule {}
 
 Interface to define the methods to handle the details when it comes to keeping track of the requests.
 
-Currently the key is seen as an `MD5` hash of the `IP` the `ClassName` and the
-`MethodName`, to ensure that no unsafe characters are used and to ensure that
+Currently the key is seen as an `MD5` hash of the `IP`, the `ClassName`, the
+`MethodName` and `TimeUnit` to ensure that no unsafe characters are used and to ensure that
 the package works for contexts that don't have explicit routes (like Websockets
 and GraphQL).
 
@@ -217,7 +274,7 @@ The interface looks like this:
 
 ```ts
 export interface ThrottlerStorage {
-  storage: Record<string, ThrottlerStorageOptions>;
+  storage: Record<string, ThrottlerStorageRecord>;
   increment(key: string, ttl: number): Promise<ThrottlerStorageRecord>;
 }
 ```
@@ -252,18 +309,24 @@ To work with Websockets you can extend the `ThrottlerGuard` and override the `ha
 ```ts
 @Injectable()
 export class WsThrottlerGuard extends ThrottlerGuard {
-  async handleRequest(context: ExecutionContext, limit: number, ttl: number): Promise<boolean> {
+  async handleRequest(context: ExecutionContext, limits: ThrottlerRateLimit[]): Promise<boolean> {
     const client = context.switchToWs().getClient();
     // this is a generic method to switch between `ws` and `socket.io`. You can choose what is appropriate for you
     const ip = ['conn', '_socket']
       .map((key) => client[key])
       .filter((obj) => obj)
       .shift().remoteAddress;
-    const key = this.generateKey(context, ip);
-    const { totalHits } = await this.storageService.increment(key, ttl);
+    for (const limit of limits) {
+      const key = this.generateKey(context, tracker, limit.timeUnit);
+      const { totalHits, timeToExpire } = await this.storageService.increment(
+        key,
+        this.getTTL(limit.timeUnit) * 1000,
+      );
 
-    if (totalHits > limit) {
-      throw new ThrottlerException();
+      // Throw an error when the user has reached their limit for the current rate limit
+      if (totalHits > limit.limit) {
+        throw new ThrottlerException();
+      }
     }
 
     return true;
@@ -298,12 +361,56 @@ export class GqlThrottlerGuard extends ThrottlerGuard {
 }
 ```
 
-## Community Storage Providers
+## Storage Options
 
-- [Redis](https://github.com/kkoomen/nestjs-throttler-storage-redis)
-- [Mongo](https://www.npmjs.com/package/nestjs-throttler-storage-mongo)
+The storage property is used to define the storage option for the rate limiter. There are three options available:
+Option 1: Redis
 
-Feel free to submit a PR with your custom storage provider being added to this list.
+```ts
+@Module({
+  imports: [
+  ThrottlerModule.forRoot({
+  limits: [{ timeUnit: 'minute', limit: 5 }],
+  storage: new ThrottlerStorageRedisService(),
+  }),
+  ],
+})
+```
+
+This option uses Redis as the storage for the rate limiter. It requires providing the valid Redis server URL.
+
+Option 2: Memory (default)
+
+```ts
+@Module({
+  imports: [
+  ThrottlerModule.forRoot({
+  limits: [{ timeUnit: 'minute', limit: 5 }],
+  storage: new ThrottlerStorageMemoryService(),// -- default
+    }),
+  ],
+})
+```
+
+This option uses in-memory storage for the rate limiter. It is the default option if no storage property is provided.
+
+Option 3: MongoDB
+
+```ts
+@Module({
+  imports: [
+    ThrottlerModule.forRoot({
+      limits: [{ timeUnit: 'minute', limit: 5 }],
+      storage: new ThrottlerStorageMongoService('mongodb://'),
+    }),
+  ],
+})
+
+```
+
+This option uses MongoDB as the storage for the rate limiter. It requires providing the valid MongoDB server URL.
+
+Feel free to submit a PR with your custom storage options being added to this list.
 
 ## License
 

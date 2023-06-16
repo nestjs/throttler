@@ -1,9 +1,13 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import * as md5 from 'md5';
-import { ThrottlerModuleOptions } from './throttler-module-options.interface';
+import {
+  ThrottlerModuleOptions,
+  ThrottlerRateLimit,
+  TimeUnit,
+} from './throttler-module-options.interface';
 import { ThrottlerStorage } from './throttler-storage.interface';
-import { THROTTLER_LIMIT, THROTTLER_SKIP, THROTTLER_TTL } from './throttler.constants';
+import { THROTTLER_LIMIT, THROTTLER_SKIP } from './throttler.constants';
 import { InjectThrottlerOptions, InjectThrottlerStorage } from './throttler.decorator';
 import { ThrottlerException, throttlerMessage } from './throttler.exception';
 
@@ -14,6 +18,7 @@ import { ThrottlerException, throttlerMessage } from './throttler.exception';
 export class ThrottlerGuard implements CanActivate {
   protected headerPrefix = 'X-RateLimit';
   protected errorMessage = throttlerMessage;
+
   constructor(
     @InjectThrottlerOptions() protected readonly options: ThrottlerModuleOptions,
     @InjectThrottlerStorage() protected readonly storageService: ThrottlerStorage,
@@ -37,22 +42,41 @@ export class ThrottlerGuard implements CanActivate {
       return true;
     }
 
-    // Return early when we have no limit or ttl data.
-    const routeOrClassLimit = this.reflector.getAllAndOverride<number>(THROTTLER_LIMIT, [
-      handler,
-      classRef,
-    ]);
-    const routeOrClassTtl = this.reflector.getAllAndOverride<number>(THROTTLER_TTL, [
-      handler,
-      classRef,
-    ]);
+    // Return early when we have no limit.
+    const routeOrClassLimit = this.reflector.getAllAndOverride<ThrottlerRateLimit[]>(
+      THROTTLER_LIMIT,
+      [handler, classRef],
+    );
 
     // Check if specific limits are set at class or route level, otherwise use global options.
-    const limit = routeOrClassLimit || this.options.limit;
-    const ttl = routeOrClassTtl || this.options.ttl;
-    return this.handleRequest(context, limit, ttl);
+    const limits = routeOrClassLimit || this.options.limits;
+
+    return this.handleRequest(context, limits);
   }
 
+  private getTTL(timeUnit: TimeUnit | number): number {
+    if (typeof timeUnit === 'number') {
+      // Custom time unit specified
+      return timeUnit;
+    }
+
+    // Use predefined time units
+    switch (timeUnit) {
+      case 'second':
+        return 1;
+      case 'minute':
+        return 60;
+      case 'hour':
+        return 60 * 60;
+      case 'day':
+        return 24 * 60 * 60;
+      case 'week':
+        return 24 * 60 * 60 * 7;
+
+      default:
+        throw new Error(`Invalid time unit: ${timeUnit}`);
+    }
+  }
   /**
    * Throttles incoming HTTP requests.
    * All the outgoing requests will contain RFC-compatible RateLimit headers.
@@ -61,10 +85,8 @@ export class ThrottlerGuard implements CanActivate {
    */
   protected async handleRequest(
     context: ExecutionContext,
-    limit: number,
-    ttl: number,
+    limits: ThrottlerRateLimit[],
   ): Promise<boolean> {
-    // Here we start to check the amount of requests being done against the ttl.
     const { req, res } = this.getRequestResponse(context);
 
     // Return early if the current user agent should be ignored.
@@ -75,21 +97,31 @@ export class ThrottlerGuard implements CanActivate {
         }
       }
     }
+
     const tracker = this.getTracker(req);
-    const key = this.generateKey(context, tracker);
-    const { totalHits, timeToExpire } = await this.storageService.increment(key, ttl);
 
-    // Throw an error when the user reached their limit.
-    if (totalHits > limit) {
-      res.header('Retry-After', timeToExpire);
-      this.throwThrottlingException(context);
+    // Iterate through the rate limits and check against each one
+    for (const limit of limits) {
+      const key = this.generateKey(context, tracker, limit.timeUnit);
+      const { totalHits, timeToExpire } = await this.storageService.increment(
+        key,
+        this.getTTL(limit.timeUnit) * 1000,
+      );
+
+      // Throw an error when the user has reached their limit for the current rate limit
+      if (totalHits > limit.limit) {
+        res.header('Retry-After', timeToExpire);
+        this.throwThrottlingException(context);
+      }
+
+      // Set the appropriate headers for the rate limit
+      res.header(`${this.headerPrefix}-Limit-${limit.timeUnit}`, limit.limit);
+      res.header(
+        `${this.headerPrefix}-Remaining-${limit.timeUnit}`,
+        Math.max(0, limit.limit - totalHits),
+      );
+      res.header(`${this.headerPrefix}-Reset-${limit.timeUnit}`, timeToExpire);
     }
-
-    res.header(`${this.headerPrefix}-Limit`, limit);
-    // We're about to add a record so we need to take that into account here.
-    // Otherwise the header says we have a request left when there are none.
-    res.header(`${this.headerPrefix}-Remaining`, Math.max(0, limit - totalHits));
-    res.header(`${this.headerPrefix}-Reset`, timeToExpire);
 
     return true;
   }
@@ -108,11 +140,15 @@ export class ThrottlerGuard implements CanActivate {
 
   /**
    * Generate a hashed key that will be used as a storage key.
-   * The key will always be a combination of the current context and IP.
+   * The key will always be a combination of the current context, TimeUnit and IP.
    */
-  protected generateKey(context: ExecutionContext, suffix: string): string {
+  protected generateKey(
+    context: ExecutionContext,
+    suffix: string,
+    timeUnit: TimeUnit | number,
+  ): string {
     const prefix = `${context.getClass().name}-${context.getHandler().name}`;
-    return md5(`${prefix}-${suffix}`);
+    return md5(`${prefix}-${timeUnit}-${suffix}`);
   }
 
   /**

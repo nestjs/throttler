@@ -1,12 +1,11 @@
-import { ThrottlerStorageOptions } from './throttler-storage-options.interface';
 import { ThrottlerStorageRecord } from './throttler-storage-record.interface';
 
 export interface ThrottlerStorage {
   /**
    * The internal storage with all the request records.
-   * The key is a hashed key based on the current context and IP.
+   * The key is a hashed key based on the current context, TimeUnit and IP.
    */
-  storage: Record<string, ThrottlerStorageOptions>;
+  storage: Record<string, ThrottlerStorageRecord>;
 
   /**
    * Increment the amount of requests for a given record. The record will
