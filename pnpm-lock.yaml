@@ -32,8 +32,8 @@ devDependencies:
     specifier: 10.0.2
     version: 10.0.2(@nestjs/common@10.0.2)(@nestjs/platform-express@10.0.2)(@nestjs/websockets@10.0.2)(reflect-metadata@0.1.13)(rxjs@7.8.1)
   '@nestjs/graphql':
-    specifier: 12.0.1
-    version: 12.0.1(@nestjs/common@10.0.2)(@nestjs/core@10.0.2)(graphql@16.6.0)(reflect-metadata@0.1.13)
+    specifier: 12.0.2
+    version: 12.0.2(@nestjs/common@10.0.2)(@nestjs/core@10.0.2)(graphql@16.6.0)(reflect-metadata@0.1.13)
   '@nestjs/platform-express':
     specifier: 10.0.2
     version: 10.0.2(@nestjs/common@10.0.2)(@nestjs/core@10.0.2)
@@ -1914,8 +1914,8 @@ packages:
       - encoding
     dev: true
 
-  /@nestjs/graphql@12.0.1(@nestjs/common@10.0.2)(@nestjs/core@10.0.2)(graphql@16.6.0)(reflect-metadata@0.1.13):
-    resolution: {integrity: sha512-6/bnatLaizmCJuaWhR10ro7ieG3D2mKE5xUsf7yGMVeip8LN0lmPE/pdqHpXZLaIeIPGe3NajLvCUkW7PPtdBA==}
+  /@nestjs/graphql@12.0.2(@nestjs/common@10.0.2)(@nestjs/core@10.0.2)(graphql@16.6.0)(reflect-metadata@0.1.13):
+    resolution: {integrity: sha512-9179H3F/p9sEP8hOS5xXCOAXigmLgZ8UYuq+J6x3wQKhb2n2QoYSrKr+m2/aJIzHp4GmNeXJpjm1C50/Eq3pew==}
     peerDependencies:
       '@apollo/subgraph': ^2.0.0
       '@nestjs/common': ^9.3.8 || ^10.0.0
@@ -1940,7 +1940,7 @@ packages:
       '@graphql-tools/utils': 10.0.1(graphql@16.6.0)
       '@nestjs/common': 10.0.2(reflect-metadata@0.1.13)(rxjs@7.8.1)
       '@nestjs/core': 10.0.2(@nestjs/common@10.0.2)(@nestjs/platform-express@10.0.2)(@nestjs/websockets@10.0.2)(reflect-metadata@0.1.13)(rxjs@7.8.1)
-      '@nestjs/mapped-types': 2.0.0(@nestjs/common@10.0.2)(reflect-metadata@0.1.13)
+      '@nestjs/mapped-types': 2.0.1(@nestjs/common@10.0.2)(reflect-metadata@0.1.13)
       chokidar: 3.5.3
       fast-glob: 3.2.12
       graphql: 16.6.0
@@ -1958,8 +1958,8 @@ packages:
       - utf-8-validate
     dev: true
 
-  /@nestjs/mapped-types@2.0.0(@nestjs/common@10.0.2)(reflect-metadata@0.1.13):
-    resolution: {integrity: sha512-JyIOY1OE4x2t8Z2ImWLQJnHVqLCBHJZXm6RqcOG3+4rIsqMQxm5smHbb7H5C6tLAdDcRYd/fG2gYK1J1GiqKLw==}
+  /@nestjs/mapped-types@2.0.1(@nestjs/common@10.0.2)(reflect-metadata@0.1.13):
+    resolution: {integrity: sha512-wPk94x5GmAdrfmrfsmUJkLh0eQbHOvZX1shDRiN23vQGVsw+wSH03ot+FxS7PwqQcZ53Vb5TCtO0ck9Jd1bStg==}
     peerDependencies:
       '@nestjs/common': ^8.0.0 || ^9.0.0 || ^10.0.0
       class-transformer: ^0.4.0 || ^0.5.0
