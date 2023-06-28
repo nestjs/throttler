@@ -92,7 +92,7 @@
     "socket.io": "4.7.1",
     "supertest": "6.3.3",
     "ts-jest": "29.1.0",
-    "ts-loader": "9.4.3",
+    "ts-loader": "9.4.4",
     "ts-node": "10.9.1",
     "tsconfig-paths": "4.2.0",
     "typescript": "5.1.5",
