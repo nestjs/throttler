@@ -9,6 +9,7 @@
 - allow for easily overriding throttler message based on guard method
 - extra context passed to throw method for better customization of message
 - `ThrottlerStorage` no longer needs a `storage` property`
+- `getTracker` can now be async
 
 # BREAKING CHANGES
 
