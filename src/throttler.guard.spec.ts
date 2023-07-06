@@ -90,11 +90,13 @@ describe('ThrottlerGuard', () => {
         ThrottlerGuard,
         {
           provide: THROTTLER_OPTIONS,
-          useValue: {
-            limit: 5,
-            ttl: 60,
-            ignoreUserAgents: [/userAgentIgnore/],
-          },
+          useValue: [
+            {
+              limit: 5,
+              ttl: 60,
+              ignoreUserAgents: [/userAgentIgnore/],
+            },
+          ],
         },
         {
           provide: ThrottlerStorage,
@@ -109,6 +111,7 @@ describe('ThrottlerGuard', () => {
       ],
     }).compile();
     guard = modRef.get(ThrottlerGuard);
+    await guard.onModuleInit();
     reflector = modRef.get(Reflector);
     service = modRef.get<ThrottlerStorageServiceMock>(ThrottlerStorage);
   });
@@ -195,6 +198,48 @@ describe('ThrottlerGuard', () => {
       const canActivate = await guard.canActivate(ctxMock);
       expect(canActivate).toBe(true);
       expect(headerSettingMock).toBeCalledTimes(0);
+    });
+    it('should accept callback options for ttl and limit', async () => {
+      const modRef = await Test.createTestingModule({
+        providers: [
+          ThrottlerGuard,
+          {
+            provide: THROTTLER_OPTIONS,
+            useValue: [
+              {
+                limit: () => 5,
+                ttl: () => 60,
+                ignoreUserAgents: [/userAgentIgnore/],
+              },
+            ],
+          },
+          {
+            provide: ThrottlerStorage,
+            useClass: ThrottlerStorageServiceMock,
+          },
+          {
+            provide: Reflector,
+            useValue: {
+              getAllAndOverride: jest.fn(),
+            },
+          },
+        ],
+      }).compile();
+      const guard = modRef.get(ThrottlerGuard);
+      await guard.onModuleInit();
+      handler = function addHeaders() {
+        return 'string';
+      };
+      const ctxMock = contextMockFactory('http', handler, {
+        getResponse: () => resMock,
+        getRequest: () => reqMock,
+      });
+      const canActivate = await guard.canActivate(ctxMock);
+      expect(canActivate).toBe(true);
+      expect(headerSettingMock).toBeCalledTimes(3);
+      expect(headerSettingMock).toHaveBeenNthCalledWith(1, 'X-RateLimit-Limit', 5);
+      expect(headerSettingMock).toHaveBeenNthCalledWith(2, 'X-RateLimit-Remaining', 4);
+      expect(headerSettingMock).toHaveBeenNthCalledWith(3, 'X-RateLimit-Reset', expect.any(Number));
     });
   });
 });

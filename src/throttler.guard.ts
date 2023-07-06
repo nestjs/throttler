@@ -1,7 +1,11 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import * as md5 from 'md5';
-import { ThrottlerModuleOptions, ThrottlerOptions } from './throttler-module-options.interface';
+import {
+  Resolvable,
+  ThrottlerModuleOptions,
+  ThrottlerOptions,
+} from './throttler-module-options.interface';
 import { ThrottlerStorage } from './throttler-storage.interface';
 import { THROTTLER_LIMIT, THROTTLER_SKIP, THROTTLER_TTL } from './throttler.constants';
 import { InjectThrottlerOptions, InjectThrottlerStorage } from './throttler.decorator';
@@ -68,11 +72,11 @@ export class ThrottlerGuard implements CanActivate {
       }
 
       // Return early when we have no limit or ttl data.
-      const routeOrClassLimit = this.reflector.getAllAndOverride<number>(
+      const routeOrClassLimit = this.reflector.getAllAndOverride<Resolvable<number>>(
         THROTTLER_LIMIT + namedThrottler.name,
         [handler, classRef],
       );
-      const routeOrClassTtl = this.reflector.getAllAndOverride<number>(
+      const routeOrClassTtl = this.reflector.getAllAndOverride<Resolvable<number>>(
         THROTTLER_TTL + namedThrottler.name,
         [handler, classRef],
       );
