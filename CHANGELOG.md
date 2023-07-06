@@ -1,5 +1,11 @@
 # [2.0.0](https://github.com/nestjs/throttler/compare/v1.2.1...v2.0.0) (2021-07-09)
 
+## 4.2.0
+
+### Minor Changes
+
+- d8d8c93: Allow for ttl and limit to be set based on the execution context, instead of statically assigned for the entire application
+
 ## 4.1.0
 
 ### Minor Changes
