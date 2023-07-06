@@ -2,7 +2,12 @@
 '@nestjs/throttler': major
 ---
 
-Allow for multiple Throttler Contexts
+# FEATURES
+
+- allow for multiple Throttler Contexts
+- allow for conditionally skipping based on `ThrottleGuard#shouldSkip` method
+- allow for easily overriding throttler message based on guard method
+- extra context passed to throw method for better customization of message
 
 # BREAKING CHANGES
 
