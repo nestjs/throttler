@@ -52,7 +52,7 @@ export type ThrottlerModuleOptions =
       /**
        * The storage class to use where all the record will be stored in.
        */
-      storage?: Type<ThrottlerStorage>;
+      storage?: ThrottlerStorage;
       /**
        * The named throttlers to use
        */
