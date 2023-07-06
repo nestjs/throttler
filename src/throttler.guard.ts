@@ -171,12 +171,18 @@ export class ThrottlerGuard implements CanActivate {
    * the method.
    * @throws {ThrottlerException}
    */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  protected throwThrottlingException(
+  protected async throwThrottlingException(
     context: ExecutionContext,
     throttlerLimitDetail: ThrottlerLimitDetail,
-  ): void {
-    throw new ThrottlerException(this.errorMessage);
+  ): Promise<void> {
+    throw new ThrottlerException(await this.getErrorMessage(context, throttlerLimitDetail));
+  }
+
+  protected async getErrorMessage(
+    _context: ExecutionContext,
+    _throttlerLimitDetail: ThrottlerLimitDetail,
+  ): Promise<string> {
+    return this.errorMessage;
   }
 
   private async resolveValue<T extends number | string | boolean>(
