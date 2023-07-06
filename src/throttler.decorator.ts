@@ -1,29 +1,43 @@
 import { Inject } from '@nestjs/common';
 import { THROTTLER_LIMIT, THROTTLER_SKIP, THROTTLER_TTL } from './throttler.constants';
 import { getOptionsToken, getStorageToken } from './throttler.providers';
+import { Resolvable } from './throttler-module-options.interface';
 
-function setThrottlerMetadata(target: any, limit: number, ttl: number): void {
-  Reflect.defineMetadata(THROTTLER_TTL, ttl, target);
-  Reflect.defineMetadata(THROTTLER_LIMIT, limit, target);
+interface ThrottlerMethodOrControllerOptions {
+  limit?: Resolvable<number>;
+  ttl?: Resolvable<number>;
+}
+
+function setThrottlerMetadata(
+  target: any,
+  options: Record<string, ThrottlerMethodOrControllerOptions>,
+): void {
+  for (const name in options) {
+    Reflect.defineMetadata(THROTTLER_TTL + name, options[name].ttl, target);
+    Reflect.defineMetadata(THROTTLER_LIMIT + name, options[name].limit, target);
+  }
 }
 
 /**
  * Adds metadata to the target which will be handled by the ThrottlerGuard to
  * handle incoming requests based on the given metadata.
- * @example @Throttle(2, 10)
+ * @example @Throttle({ default: { limit: 2, ttl: 10 }})
+ * @example @Throttle({default: { limit: () => 20, ttl: () => 60 }})
  * @publicApi
  */
-export const Throttle = (limit = 20, ttl = 60): MethodDecorator & ClassDecorator => {
+export const Throttle = (
+  options: Record<string, ThrottlerMethodOrControllerOptions>,
+): MethodDecorator & ClassDecorator => {
   return (
     target: any,
     propertyKey?: string | symbol,
     descriptor?: TypedPropertyDescriptor<any>,
   ) => {
     if (descriptor) {
-      setThrottlerMetadata(descriptor.value, limit, ttl);
+      setThrottlerMetadata(descriptor.value, options);
       return descriptor;
     }
-    setThrottlerMetadata(target, limit, ttl);
+    setThrottlerMetadata(target, options);
     return target;
   };
 };
@@ -35,18 +49,22 @@ export const Throttle = (limit = 20, ttl = 60): MethodDecorator & ClassDecorator
  * @example @SkipThrottle(false)
  * @publicApi
  */
-export const SkipThrottle = (skip = true): MethodDecorator & ClassDecorator => {
+export const SkipThrottle = (
+  skip: Record<string, boolean> = { default: true },
+): MethodDecorator & ClassDecorator => {
   return (
     target: any,
     propertyKey?: string | symbol,
     descriptor?: TypedPropertyDescriptor<any>,
   ) => {
-    if (descriptor) {
-      Reflect.defineMetadata(THROTTLER_SKIP, skip, descriptor.value);
-      return descriptor;
+    for (const key in skip) {
+      if (descriptor) {
+        Reflect.defineMetadata(THROTTLER_SKIP + key, skip[key], descriptor.value);
+        return descriptor;
+      }
+      Reflect.defineMetadata(THROTTLER_SKIP + key, skip[key], target);
+      return target;
     }
-    Reflect.defineMetadata(THROTTLER_SKIP, skip, target);
-    return target;
   };
 };
 

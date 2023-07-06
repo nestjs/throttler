@@ -1,7 +1,7 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import * as md5 from 'md5';
-import { ThrottlerModuleOptions } from './throttler-module-options.interface';
+import { ThrottlerModuleOptions, ThrottlerOptions } from './throttler-module-options.interface';
 import { ThrottlerStorage } from './throttler-storage.interface';
 import { THROTTLER_LIMIT, THROTTLER_SKIP, THROTTLER_TTL } from './throttler.constants';
 import { InjectThrottlerOptions, InjectThrottlerStorage } from './throttler.decorator';
@@ -15,11 +15,35 @@ import { ThrottlerLimitDetail } from './throttler.guard.interface';
 export class ThrottlerGuard implements CanActivate {
   protected headerPrefix = 'X-RateLimit';
   protected errorMessage = throttlerMessage;
+  protected throttlers: Array<ThrottlerOptions>;
+  protected commonOptions: Pick<ThrottlerOptions, 'skipIf' | 'ignoreUserAgents'>;
   constructor(
     @InjectThrottlerOptions() protected readonly options: ThrottlerModuleOptions,
     @InjectThrottlerStorage() protected readonly storageService: ThrottlerStorage,
     protected readonly reflector: Reflector,
   ) {}
+
+  async onModuleInit() {
+    this.throttlers = (Array.isArray(this.options) ? this.options : this.options.throttlers)
+      .sort((first, second) => {
+        if (typeof first.ttl === 'function') {
+          return 1;
+        }
+        if (typeof second.ttl === 'function') {
+          return 0;
+        }
+        return first.ttl - second.ttl;
+      })
+      .map((opt) => ({ ...opt, name: opt.name ?? 'default' }));
+    if (Array.isArray(this.options)) {
+      this.commonOptions = {};
+    } else {
+      this.commonOptions = {
+        skipIf: this.options.skipIf,
+        ignoreUserAgents: this.options.ignoreUserAgents,
+      };
+    }
+  }
 
   /**
    * Throttle requests against their TTL limit and whether to allow or deny it.
@@ -30,28 +54,41 @@ export class ThrottlerGuard implements CanActivate {
     const handler = context.getHandler();
     const classRef = context.getClass();
 
-    // Return early if the current route should be skipped.
-    if (
-      this.reflector.getAllAndOverride<boolean>(THROTTLER_SKIP, [handler, classRef]) ||
-      this.options.skipIf?.(context)
-    ) {
-      return true;
+    const continues: boolean[] = [];
+    for (const namedThrottler of this.throttlers) {
+      // Return early if the current route should be skipped.
+      const skip = this.reflector.getAllAndOverride<boolean>(THROTTLER_SKIP + namedThrottler.name, [
+        handler,
+        classRef,
+      ]);
+      const skipIf = namedThrottler.skipIf || this.commonOptions.skipIf;
+      if (skip || skipIf?.(context)) {
+        continues.push(true);
+        continue;
+      }
+
+      // Return early when we have no limit or ttl data.
+      const routeOrClassLimit = this.reflector.getAllAndOverride<number>(
+        THROTTLER_LIMIT + namedThrottler.name,
+        [handler, classRef],
+      );
+      const routeOrClassTtl = this.reflector.getAllAndOverride<number>(
+        THROTTLER_TTL + namedThrottler.name,
+        [handler, classRef],
+      );
+
+      // Check if specific limits are set at class or route level, otherwise use global options.
+      let limit = routeOrClassLimit || namedThrottler.limit;
+      let ttl = routeOrClassTtl || namedThrottler.ttl;
+      if (typeof limit === 'function') {
+        limit = await limit(context);
+      }
+      if (typeof ttl === 'function') {
+        ttl = await ttl(context);
+      }
+      continues.push(await this.handleRequest(context, limit, ttl, namedThrottler));
     }
-
-    // Return early when we have no limit or ttl data.
-    const routeOrClassLimit = this.reflector.getAllAndOverride<number>(THROTTLER_LIMIT, [
-      handler,
-      classRef,
-    ]);
-    const routeOrClassTtl = this.reflector.getAllAndOverride<number>(THROTTLER_TTL, [
-      handler,
-      classRef,
-    ]);
-
-    // Check if specific limits are set at class or route level, otherwise use global options.
-    const limit = routeOrClassLimit || this.options.limit;
-    const ttl = routeOrClassTtl || this.options.ttl;
-    return this.handleRequest(context, limit, ttl);
+    return continues.every((cont) => cont);
   }
 
   /**
@@ -64,25 +101,28 @@ export class ThrottlerGuard implements CanActivate {
     context: ExecutionContext,
     limit: number,
     ttl: number,
+    throttler: ThrottlerOptions,
   ): Promise<boolean> {
     // Here we start to check the amount of requests being done against the ttl.
     const { req, res } = this.getRequestResponse(context);
-
+    const ignoreUserAgents = throttler.ignoreUserAgents ?? this.commonOptions.ignoreUserAgents;
     // Return early if the current user agent should be ignored.
-    if (Array.isArray(this.options.ignoreUserAgents)) {
-      for (const pattern of this.options.ignoreUserAgents) {
+    if (Array.isArray(ignoreUserAgents)) {
+      for (const pattern of ignoreUserAgents) {
         if (pattern.test(req.headers['user-agent'])) {
           return true;
         }
       }
     }
     const tracker = this.getTracker(req);
-    const key = this.generateKey(context, tracker);
+    const key = this.generateKey(context, tracker, throttler.name);
     const { totalHits, timeToExpire } = await this.storageService.increment(key, ttl);
+
+    const getThrottlerSuffix = (name: string) => (name === 'default' ? '' : `-${name}`);
 
     // Throw an error when the user reached their limit.
     if (totalHits > limit) {
-      res.header('Retry-After', timeToExpire);
+      res.header(`Retry-After${getThrottlerSuffix(throttler.name)}`, timeToExpire);
       this.throwThrottlingException(context, {
         limit,
         ttl,
@@ -93,11 +133,14 @@ export class ThrottlerGuard implements CanActivate {
       });
     }
 
-    res.header(`${this.headerPrefix}-Limit`, limit);
+    res.header(`${this.headerPrefix}-Limit${getThrottlerSuffix(throttler.name)}`, limit);
     // We're about to add a record so we need to take that into account here.
     // Otherwise the header says we have a request left when there are none.
-    res.header(`${this.headerPrefix}-Remaining`, Math.max(0, limit - totalHits));
-    res.header(`${this.headerPrefix}-Reset`, timeToExpire);
+    res.header(
+      `${this.headerPrefix}-Remaining${getThrottlerSuffix(throttler.name)}`,
+      Math.max(0, limit - totalHits),
+    );
+    res.header(`${this.headerPrefix}-Reset${getThrottlerSuffix(throttler.name)}`, timeToExpire);
 
     return true;
   }
@@ -118,8 +161,8 @@ export class ThrottlerGuard implements CanActivate {
    * Generate a hashed key that will be used as a storage key.
    * The key will always be a combination of the current context and IP.
    */
-  protected generateKey(context: ExecutionContext, suffix: string): string {
-    const prefix = `${context.getClass().name}-${context.getHandler().name}`;
+  protected generateKey(context: ExecutionContext, suffix: string, name: string): string {
+    const prefix = `${context.getClass().name}-${context.getHandler().name}-${name}`;
     return md5(`${prefix}-${suffix}`);
   }
 

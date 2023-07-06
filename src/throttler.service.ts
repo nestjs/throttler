@@ -35,7 +35,7 @@ export class ThrottlerStorageService implements ThrottlerStorage, OnApplicationS
   }
 
   async increment(key: string, ttl: number): Promise<ThrottlerStorageRecord> {
-    const ttlMilliseconds = ttl * 1000;
+    const ttlMilliseconds = ttl;
     if (!this.storage[key]) {
       this.storage[key] = { totalHits: 0, expiresAt: Date.now() + ttlMilliseconds };
     }

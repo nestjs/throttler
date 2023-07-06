@@ -16,7 +16,7 @@ export class ThrottlerModule {
   /**
    * Register the module synchronously.
    */
-  static forRoot(options: ThrottlerModuleOptions = {}): DynamicModule {
+  static forRoot(options: ThrottlerModuleOptions = [{}]): DynamicModule {
     const providers = [...createThrottlerProviders(options), ThrottlerStorageProvider];
     return {
       module: ThrottlerModule,
