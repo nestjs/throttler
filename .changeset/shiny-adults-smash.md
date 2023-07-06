@@ -19,6 +19,8 @@
   setting multiple throttle contexts at once in a more readable manner
 - `@ThrottleSkip()` now takes in an object with string boolean to say which
   throttler should be skipped
+- `ttl` and `limit` are no longer optional in the module's options. If an option
+  object is passed, it **must** define the defaults for that throttler
 
 # HOW TO MIGRATE
 
