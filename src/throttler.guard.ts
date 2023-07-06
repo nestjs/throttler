@@ -1,11 +1,15 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import * as md5 from 'md5';
+<<<<<<< HEAD
 import {
   Resolvable,
   ThrottlerModuleOptions,
   ThrottlerOptions,
 } from './throttler-module-options.interface';
+=======
+import { ThrottlerModuleOptions, ThrottlerOptions } from './throttler-module-options.interface';
+>>>>>>> ccc52db (feat: allowfor multiple throttler contexts)
 import { ThrottlerStorage } from './throttler-storage.interface';
 import { THROTTLER_LIMIT, THROTTLER_SKIP, THROTTLER_TTL } from './throttler.constants';
 import { InjectThrottlerOptions, InjectThrottlerStorage } from './throttler.decorator';
