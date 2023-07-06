@@ -82,14 +82,8 @@ export class ThrottlerGuard implements CanActivate {
       );
 
       // Check if specific limits are set at class or route level, otherwise use global options.
-      let limit = routeOrClassLimit || namedThrottler.limit;
-      let ttl = routeOrClassTtl || namedThrottler.ttl;
-      if (typeof limit === 'function') {
-        limit = await limit(context);
-      }
-      if (typeof ttl === 'function') {
-        ttl = await ttl(context);
-      }
+      const limit = await this.resolveValue(context, routeOrClassLimit || namedThrottler.limit);
+      const ttl = await this.resolveValue(context, routeOrClassTtl || namedThrottler.ttl);
       continues.push(await this.handleRequest(context, limit, ttl, namedThrottler));
     }
     return continues.every((cont) => cont);
@@ -183,5 +177,12 @@ export class ThrottlerGuard implements CanActivate {
     throttlerLimitDetail: ThrottlerLimitDetail,
   ): void {
     throw new ThrottlerException(this.errorMessage);
+  }
+
+  private async resolveValue<T extends number | string | boolean>(
+    context: ExecutionContext,
+    resolvableValue: Resolvable<T>,
+  ): Promise<T> {
+    return typeof resolvableValue === 'function' ? resolvableValue(context) : resolvableValue;
   }
 }
