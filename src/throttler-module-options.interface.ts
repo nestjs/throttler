@@ -1,6 +1,10 @@
 import { ExecutionContext, ModuleMetadata, Type } from '@nestjs/common/interfaces';
 import { ThrottlerStorage } from './throttler-storage.interface';
 
+export type Resolvable<T extends number | string | boolean> =
+  | T
+  | ((context: ExecutionContext) => T | Promise<T>);
+
 /**
  * @publicApi
  */
@@ -15,12 +19,12 @@ export interface ThrottlerOptions {
   /**
    * The amount of requests that are allowed within the ttl's time window.
    */
-  limit?: number;
+  limit: Resolvable<number>;
 
   /**
    * The number of milliseconds the limit of requests are allowed
    */
-  ttl?: number;
+  ttl: Resolvable<number>;
 
   /**
    * The user agents that should be ignored (checked against the User-Agent header).
