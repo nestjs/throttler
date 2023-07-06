@@ -119,7 +119,7 @@ export class ThrottlerGuard implements CanActivate {
         }
       }
     }
-    const tracker = this.getTracker(req);
+    const tracker = await this.getTracker(req);
     const key = this.generateKey(context, tracker, throttler.name);
     const { totalHits, timeToExpire } = await this.storageService.increment(key, ttl);
 
@@ -150,7 +150,7 @@ export class ThrottlerGuard implements CanActivate {
     return true;
   }
 
-  protected getTracker(req: Record<string, any>): string {
+  protected async getTracker(req: Record<string, any>): Promise<string> {
     return req.ip;
   }
 
