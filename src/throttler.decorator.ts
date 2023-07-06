@@ -1,8 +1,13 @@
 import { Inject } from '@nestjs/common';
 import { THROTTLER_LIMIT, THROTTLER_SKIP, THROTTLER_TTL } from './throttler.constants';
 import { getOptionsToken, getStorageToken } from './throttler.providers';
+import { Resolvable } from './throttler-module-options.interface';
 
-function setThrottlerMetadata(target: any, limit: number, ttl: number): void {
+function setThrottlerMetadata(
+  target: any,
+  limit: Resolvable<number>,
+  ttl: Resolvable<number>,
+): void {
   Reflect.defineMetadata(THROTTLER_TTL, ttl, target);
   Reflect.defineMetadata(THROTTLER_LIMIT, limit, target);
 }
@@ -11,9 +16,13 @@ function setThrottlerMetadata(target: any, limit: number, ttl: number): void {
  * Adds metadata to the target which will be handled by the ThrottlerGuard to
  * handle incoming requests based on the given metadata.
  * @example @Throttle(2, 10)
+ * @example @Throttle(() => 2, () => 10)
  * @publicApi
  */
-export const Throttle = (limit = 20, ttl = 60): MethodDecorator & ClassDecorator => {
+export const Throttle = (
+  limit: Resolvable<number> = 20,
+  ttl: Resolvable<number> = 60,
+): MethodDecorator & ClassDecorator => {
   return (
     target: any,
     propertyKey?: string | symbol,
