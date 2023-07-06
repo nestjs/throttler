@@ -121,7 +121,7 @@ export class ThrottlerGuard implements CanActivate {
     // Throw an error when the user reached their limit.
     if (totalHits > limit) {
       res.header(`Retry-After${getThrottlerSuffix(throttler.name)}`, timeToExpire);
-      this.throwThrottlingException(context, {
+      await this.throwThrottlingException(context, {
         limit,
         ttl,
         key,
