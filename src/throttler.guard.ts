@@ -58,6 +58,9 @@ export class ThrottlerGuard implements CanActivate {
     const handler = context.getHandler();
     const classRef = context.getClass();
 
+    if (await this.shouldSkip(context)) {
+      return true;
+    }
     const continues: boolean[] = [];
     for (const namedThrottler of this.throttlers) {
       // Return early if the current route should be skipped.
@@ -87,6 +90,10 @@ export class ThrottlerGuard implements CanActivate {
       continues.push(await this.handleRequest(context, limit, ttl, namedThrottler));
     }
     return continues.every((cont) => cont);
+  }
+
+  protected async shouldSkip(_context: ExecutionContext): Promise<boolean> {
+    return false;
   }
 
   /**
