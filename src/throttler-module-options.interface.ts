@@ -1,12 +1,5 @@
 import { ExecutionContext, ModuleMetadata, Type } from '@nestjs/common/interfaces';
 import { ThrottlerStorage } from './throttler-storage.interface';
-<<<<<<< HEAD
-
-export type Resolvable<T extends number | string | boolean> =
-  | T
-  | ((context: ExecutionContext) => T | Promise<T>);
-=======
->>>>>>> ccc52db (feat: allowfor multiple throttler contexts)
 
 export type Resolvable<T extends number | string | boolean> =
   | T
@@ -63,11 +56,7 @@ export type ThrottlerModuleOptions =
       /**
        * The storage class to use where all the record will be stored in.
        */
-<<<<<<< HEAD
       storage?: ThrottlerStorage;
-=======
-      storage?: Type<ThrottlerStorage>;
->>>>>>> ccc52db (feat: allowfor multiple throttler contexts)
       /**
        * The named throttlers to use
        */
