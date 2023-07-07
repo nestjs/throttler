@@ -204,25 +204,6 @@ You can use the `ignoreUserAgents` key to ignore specific user agents.
 export class AppModule {}
 ```
 
-### Setting contextual ttl or limit
-
-You can specify the `ttl` or `limit` based on request's information using a callback function instead of a value:
-
-```ts
-@Module({
-  imports: [
-    ThrottlerModule.forRoot({
-      ttl: 60,
-      limit: (context) => context.swithToHttp().getRequest().ip === "some-ip" ? 1000 : 10,
-    })
-  ]
-})
-```
-
-The same is available for `ttl`, and on the `Throttle` decorator.
-
-The callback accepts a Promise if you need an asynchronous operation to retrieve the value.
-
 ### ThrottlerStorage
 
 Interface to define the methods to handle the details when it comes to keeping track of the requests.
