@@ -1,5 +1,14 @@
 # [2.0.0](https://github.com/nestjs/throttler/compare/v1.2.1...v2.0.0) (2021-07-09)
 
+## 4.2.1
+
+### Patch Changes
+
+- b72c9cb: Revert resolvable properties for ttl and limit
+
+  The resolvable properties made a breaking change for custom guards that was
+  unforseen. This reverts it and schedules the changes for 5.0.0 instead
+
 ## 4.2.0
 
 ### Minor Changes
