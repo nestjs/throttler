@@ -32,8 +32,8 @@ devDependencies:
     specifier: 10.0.5
     version: 10.0.5(@nestjs/common@10.0.5)(@nestjs/platform-express@10.0.5)(@nestjs/websockets@10.0.5)(reflect-metadata@0.1.13)(rxjs@7.8.1)
   '@nestjs/graphql':
-    specifier: 12.0.7
-    version: 12.0.7(@nestjs/common@10.0.5)(@nestjs/core@10.0.5)(graphql@16.7.1)(reflect-metadata@0.1.13)
+    specifier: 12.0.8
+    version: 12.0.8(@nestjs/common@10.0.5)(@nestjs/core@10.0.5)(graphql@16.7.1)(reflect-metadata@0.1.13)
   '@nestjs/platform-express':
     specifier: 10.0.5
     version: 10.0.5(@nestjs/common@10.0.5)(@nestjs/core@10.0.5)
@@ -1961,8 +1961,8 @@ packages:
       - encoding
     dev: true
 
-  /@nestjs/graphql@12.0.7(@nestjs/common@10.0.5)(@nestjs/core@10.0.5)(graphql@16.7.1)(reflect-metadata@0.1.13):
-    resolution: {integrity: sha512-4XnfdAb9JHazh6Z/zbh0IUbcs8iPS5VxCoDS77CsjOHDCYzrwDVFWiZ3k5XofACIpdyekagavmVNuo1G0Q6JlA==}
+  /@nestjs/graphql@12.0.8(@nestjs/common@10.0.5)(@nestjs/core@10.0.5)(graphql@16.7.1)(reflect-metadata@0.1.13):
+    resolution: {integrity: sha512-odYDHUdLOMCxjC5VSEmF/23r8cY40N1KCwBkWaCmI1IF76Ffe3srWRDv8HS9tcai9eSmOeSWuyLBEg2OSru0cQ==}
     peerDependencies:
       '@apollo/subgraph': ^2.0.0
       '@nestjs/common': ^9.3.8 || ^10.0.0
