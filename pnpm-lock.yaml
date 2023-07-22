@@ -11,8 +11,8 @@ dependencies:
 
 devDependencies:
   '@apollo/server':
-    specifier: 4.8.0
-    version: 4.8.0(graphql@16.7.1)
+    specifier: 4.8.1
+    version: 4.8.1(graphql@16.7.1)
   '@changesets/cli':
     specifier: 2.26.2
     version: 2.26.2
@@ -343,8 +343,8 @@ packages:
       graphql: 16.7.1
     dev: true
 
-  /@apollo/server@4.8.0(graphql@16.7.1):
-    resolution: {integrity: sha512-aJtRxeG5bojUtCAPc6EbC9WuqM/2ZGA3HQEVcs3alXhKjtblnMssMFsgXhp8dHBN2v4aK1MPxj6ZPpKIwizmwA==}
+  /@apollo/server@4.8.1(graphql@16.7.1):
+    resolution: {integrity: sha512-gHDYfWXNdo8B6z4z7qs4KLscX7HCFtpG6k744H+y+8IixjNzyGPcSlR+e0CZr42tRjPfi5z0UtHRr6dpTSh+5A==}
     engines: {node: '>=14.16.0'}
     peerDependencies:
       graphql: ^16.6.0
