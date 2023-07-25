@@ -30,7 +30,7 @@ devDependencies:
     version: 10.1.1(reflect-metadata@0.1.13)(rxjs@7.8.1)
   '@nestjs/core':
     specifier: 10.1.1
-    version: 10.1.1(@nestjs/common@10.1.1)(@nestjs/platform-express@10.1.2)(@nestjs/websockets@10.1.1)(reflect-metadata@0.1.13)(rxjs@7.8.1)
+    version: 10.1.1(@nestjs/common@10.1.1)(@nestjs/platform-express@10.1.2)(@nestjs/websockets@10.1.2)(reflect-metadata@0.1.13)(rxjs@7.8.1)
   '@nestjs/graphql':
     specifier: 12.0.8
     version: 12.0.8(@nestjs/common@10.1.1)(@nestjs/core@10.1.1)(graphql@16.7.1)(reflect-metadata@0.1.13)
@@ -41,11 +41,11 @@ devDependencies:
     specifier: 10.1.2
     version: 10.1.2(@nestjs/common@10.1.1)(@nestjs/core@10.1.1)
   '@nestjs/platform-socket.io':
-    specifier: 10.1.1
-    version: 10.1.1(@nestjs/common@10.1.1)(@nestjs/websockets@10.1.1)(rxjs@7.8.1)
+    specifier: 10.1.2
+    version: 10.1.2(@nestjs/common@10.1.1)(@nestjs/websockets@10.1.2)(rxjs@7.8.1)
   '@nestjs/platform-ws':
     specifier: 10.1.2
-    version: 10.1.2(@nestjs/common@10.1.1)(@nestjs/websockets@10.1.1)(rxjs@7.8.1)
+    version: 10.1.2(@nestjs/common@10.1.1)(@nestjs/websockets@10.1.2)(rxjs@7.8.1)
   '@nestjs/schematics':
     specifier: 10.0.1
     version: 10.0.1(chokidar@3.5.3)(typescript@5.1.6)
@@ -53,8 +53,8 @@ devDependencies:
     specifier: 10.1.1
     version: 10.1.1(@nestjs/common@10.1.1)(@nestjs/core@10.1.1)(@nestjs/platform-express@10.1.2)
   '@nestjs/websockets':
-    specifier: 10.1.1
-    version: 10.1.1(@nestjs/common@10.1.1)(@nestjs/core@10.1.1)(@nestjs/platform-socket.io@10.1.1)(reflect-metadata@0.1.13)(rxjs@7.8.1)
+    specifier: 10.1.2
+    version: 10.1.2(@nestjs/common@10.1.1)(@nestjs/core@10.1.1)(@nestjs/platform-socket.io@10.1.2)(reflect-metadata@0.1.13)(rxjs@7.8.1)
   '@semantic-release/git':
     specifier: 10.0.1
     version: 10.0.1(semantic-release@21.0.5)
@@ -287,7 +287,7 @@ packages:
       response-iterator: 0.2.6
       symbol-observable: 4.0.0
       ts-invariant: 0.10.3
-      tslib: 2.6.0
+      tslib: 2.6.1
       zen-observable-ts: 1.2.5
     dev: true
     optional: true
@@ -1399,7 +1399,7 @@ packages:
     dependencies:
       '@graphql-tools/utils': 8.9.0(graphql@16.7.1)
       graphql: 16.7.1
-      tslib: 2.6.0
+      tslib: 2.6.1
     dev: true
 
   /@graphql-tools/merge@8.4.2(graphql@16.7.1):
@@ -1409,7 +1409,7 @@ packages:
     dependencies:
       '@graphql-tools/utils': 9.2.1(graphql@16.7.1)
       graphql: 16.7.1
-      tslib: 2.6.0
+      tslib: 2.6.1
     dev: true
 
   /@graphql-tools/merge@9.0.0(graphql@16.7.1):
@@ -1420,7 +1420,7 @@ packages:
     dependencies:
       '@graphql-tools/utils': 10.0.1(graphql@16.7.1)
       graphql: 16.7.1
-      tslib: 2.6.0
+      tslib: 2.6.1
     dev: true
 
   /@graphql-tools/mock@8.7.20(graphql@16.7.1):
@@ -1432,7 +1432,7 @@ packages:
       '@graphql-tools/utils': 9.2.1(graphql@16.7.1)
       fast-json-stable-stringify: 2.1.0
       graphql: 16.7.1
-      tslib: 2.6.0
+      tslib: 2.6.1
     dev: true
 
   /@graphql-tools/schema@10.0.0(graphql@16.7.1):
@@ -1444,7 +1444,7 @@ packages:
       '@graphql-tools/merge': 9.0.0(graphql@16.7.1)
       '@graphql-tools/utils': 10.0.1(graphql@16.7.1)
       graphql: 16.7.1
-      tslib: 2.6.0
+      tslib: 2.6.1
       value-or-promise: 1.0.12
     dev: true
 
@@ -1456,7 +1456,7 @@ packages:
       '@graphql-tools/merge': 8.3.1(graphql@16.7.1)
       '@graphql-tools/utils': 8.9.0(graphql@16.7.1)
       graphql: 16.7.1
-      tslib: 2.6.0
+      tslib: 2.6.1
       value-or-promise: 1.0.11
     dev: true
 
@@ -1468,7 +1468,7 @@ packages:
       '@graphql-tools/merge': 8.4.2(graphql@16.7.1)
       '@graphql-tools/utils': 9.2.1(graphql@16.7.1)
       graphql: 16.7.1
-      tslib: 2.6.0
+      tslib: 2.6.1
       value-or-promise: 1.0.12
     dev: true
 
@@ -1480,7 +1480,7 @@ packages:
     dependencies:
       '@graphql-typed-document-node/core': 3.2.0(graphql@16.7.1)
       graphql: 16.7.1
-      tslib: 2.6.0
+      tslib: 2.6.1
     dev: true
 
   /@graphql-tools/utils@8.9.0(graphql@16.7.1):
@@ -1489,7 +1489,7 @@ packages:
       graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
     dependencies:
       graphql: 16.7.1
-      tslib: 2.6.0
+      tslib: 2.6.1
     dev: true
 
   /@graphql-tools/utils@9.2.1(graphql@16.7.1):
@@ -1499,7 +1499,7 @@ packages:
     dependencies:
       '@graphql-typed-document-node/core': 3.2.0(graphql@16.7.1)
       graphql: 16.7.1
-      tslib: 2.6.0
+      tslib: 2.6.1
     dev: true
 
   /@graphql-typed-document-node/core@3.2.0(graphql@16.7.1):
@@ -1931,7 +1931,7 @@ packages:
       uid: 2.0.2
     dev: true
 
-  /@nestjs/core@10.1.1(@nestjs/common@10.1.1)(@nestjs/platform-express@10.1.2)(@nestjs/websockets@10.1.1)(reflect-metadata@0.1.13)(rxjs@7.8.1):
+  /@nestjs/core@10.1.1(@nestjs/common@10.1.1)(@nestjs/platform-express@10.1.2)(@nestjs/websockets@10.1.2)(reflect-metadata@0.1.13)(rxjs@7.8.1):
     resolution: {integrity: sha512-1Mp1ucKBQ3QGlK5lUHh2K0uRCQG9GY0q36Qd0Kym/wAKT+Y2DnaaVJLPElgem1o5fDMk8eYgHNa+qjLtwfPSYw==}
     requiresBuild: true
     peerDependencies:
@@ -1951,7 +1951,7 @@ packages:
     dependencies:
       '@nestjs/common': 10.1.1(reflect-metadata@0.1.13)(rxjs@7.8.1)
       '@nestjs/platform-express': 10.1.2(@nestjs/common@10.1.1)(@nestjs/core@10.1.1)
-      '@nestjs/websockets': 10.1.1(@nestjs/common@10.1.1)(@nestjs/core@10.1.1)(@nestjs/platform-socket.io@10.1.1)(reflect-metadata@0.1.13)(rxjs@7.8.1)
+      '@nestjs/websockets': 10.1.2(@nestjs/common@10.1.1)(@nestjs/core@10.1.1)(@nestjs/platform-socket.io@10.1.2)(reflect-metadata@0.1.13)(rxjs@7.8.1)
       '@nuxtjs/opencollective': 0.3.2
       fast-safe-stringify: 2.1.1
       iterare: 1.2.1
@@ -1989,7 +1989,7 @@ packages:
       '@graphql-tools/schema': 10.0.0(graphql@16.7.1)
       '@graphql-tools/utils': 10.0.1(graphql@16.7.1)
       '@nestjs/common': 10.1.1(reflect-metadata@0.1.13)(rxjs@7.8.1)
-      '@nestjs/core': 10.1.1(@nestjs/common@10.1.1)(@nestjs/platform-express@10.1.2)(@nestjs/websockets@10.1.1)(reflect-metadata@0.1.13)(rxjs@7.8.1)
+      '@nestjs/core': 10.1.1(@nestjs/common@10.1.1)(@nestjs/platform-express@10.1.2)(@nestjs/websockets@10.1.2)(reflect-metadata@0.1.13)(rxjs@7.8.1)
       '@nestjs/mapped-types': 2.0.2(@nestjs/common@10.1.1)(reflect-metadata@0.1.13)
       chokidar: 3.5.3
       fast-glob: 3.2.12
@@ -2032,7 +2032,7 @@ packages:
       '@nestjs/core': ^10.0.0
     dependencies:
       '@nestjs/common': 10.1.1(reflect-metadata@0.1.13)(rxjs@7.8.1)
-      '@nestjs/core': 10.1.1(@nestjs/common@10.1.1)(@nestjs/platform-express@10.1.2)(@nestjs/websockets@10.1.1)(reflect-metadata@0.1.13)(rxjs@7.8.1)
+      '@nestjs/core': 10.1.1(@nestjs/common@10.1.1)(@nestjs/platform-express@10.1.2)(@nestjs/websockets@10.1.2)(reflect-metadata@0.1.13)(rxjs@7.8.1)
       body-parser: 1.20.2
       cors: 2.8.5
       express: 4.18.2
@@ -2059,7 +2059,7 @@ packages:
       '@fastify/formbody': 7.4.0
       '@fastify/middie': 8.3.0
       '@nestjs/common': 10.1.1(reflect-metadata@0.1.13)(rxjs@7.8.1)
-      '@nestjs/core': 10.1.1(@nestjs/common@10.1.1)(@nestjs/platform-express@10.1.2)(@nestjs/websockets@10.1.1)(reflect-metadata@0.1.13)(rxjs@7.8.1)
+      '@nestjs/core': 10.1.1(@nestjs/common@10.1.1)(@nestjs/platform-express@10.1.2)(@nestjs/websockets@10.1.2)(reflect-metadata@0.1.13)(rxjs@7.8.1)
       fastify: 4.20.0
       light-my-request: 5.10.0
       path-to-regexp: 3.2.0
@@ -2068,25 +2068,25 @@ packages:
       - supports-color
     dev: true
 
-  /@nestjs/platform-socket.io@10.1.1(@nestjs/common@10.1.1)(@nestjs/websockets@10.1.1)(rxjs@7.8.1):
-    resolution: {integrity: sha512-i4RlRxLmve2yHVxhhgEfguR71mAym1kqkunxFH3bNrJnr06SEr0nxMf06LDS0ggNjtJK9zCI6Xg8Hk0vAPopPQ==}
+  /@nestjs/platform-socket.io@10.1.2(@nestjs/common@10.1.1)(@nestjs/websockets@10.1.2)(rxjs@7.8.1):
+    resolution: {integrity: sha512-qrn14RYNC7zF7EnEYJmg/24FXx03Sjy9nzGt9EhsylH93lIlEtjK9TIzRQEh7WZIzEojktYEAHAyilBMPTeP6g==}
     peerDependencies:
       '@nestjs/common': ^10.0.0
       '@nestjs/websockets': ^10.0.0
       rxjs: ^7.1.0
     dependencies:
       '@nestjs/common': 10.1.1(reflect-metadata@0.1.13)(rxjs@7.8.1)
-      '@nestjs/websockets': 10.1.1(@nestjs/common@10.1.1)(@nestjs/core@10.1.1)(@nestjs/platform-socket.io@10.1.1)(reflect-metadata@0.1.13)(rxjs@7.8.1)
+      '@nestjs/websockets': 10.1.2(@nestjs/common@10.1.1)(@nestjs/core@10.1.1)(@nestjs/platform-socket.io@10.1.2)(reflect-metadata@0.1.13)(rxjs@7.8.1)
       rxjs: 7.8.1
       socket.io: 4.7.1
-      tslib: 2.6.0
+      tslib: 2.6.1
     transitivePeerDependencies:
       - bufferutil
       - supports-color
       - utf-8-validate
     dev: true
 
-  /@nestjs/platform-ws@10.1.2(@nestjs/common@10.1.1)(@nestjs/websockets@10.1.1)(rxjs@7.8.1):
+  /@nestjs/platform-ws@10.1.2(@nestjs/common@10.1.1)(@nestjs/websockets@10.1.2)(rxjs@7.8.1):
     resolution: {integrity: sha512-c6S97Jq+ERtbGF/0SkGuJvgkS/epFB0EtC87ZYliNZ0ETUAtMecU0w20C06UkcL9HP2HazggwOCDpmISt/lnfQ==}
     peerDependencies:
       '@nestjs/common': ^10.0.0
@@ -2094,7 +2094,7 @@ packages:
       rxjs: ^7.1.0
     dependencies:
       '@nestjs/common': 10.1.1(reflect-metadata@0.1.13)(rxjs@7.8.1)
-      '@nestjs/websockets': 10.1.1(@nestjs/common@10.1.1)(@nestjs/core@10.1.1)(@nestjs/platform-socket.io@10.1.1)(reflect-metadata@0.1.13)(rxjs@7.8.1)
+      '@nestjs/websockets': 10.1.2(@nestjs/common@10.1.1)(@nestjs/core@10.1.1)(@nestjs/platform-socket.io@10.1.2)(reflect-metadata@0.1.13)(rxjs@7.8.1)
       rxjs: 7.8.1
       tslib: 2.6.1
       ws: 8.13.0
@@ -2132,13 +2132,13 @@ packages:
         optional: true
     dependencies:
       '@nestjs/common': 10.1.1(reflect-metadata@0.1.13)(rxjs@7.8.1)
-      '@nestjs/core': 10.1.1(@nestjs/common@10.1.1)(@nestjs/platform-express@10.1.2)(@nestjs/websockets@10.1.1)(reflect-metadata@0.1.13)(rxjs@7.8.1)
+      '@nestjs/core': 10.1.1(@nestjs/common@10.1.1)(@nestjs/platform-express@10.1.2)(@nestjs/websockets@10.1.2)(reflect-metadata@0.1.13)(rxjs@7.8.1)
       '@nestjs/platform-express': 10.1.2(@nestjs/common@10.1.1)(@nestjs/core@10.1.1)
       tslib: 2.6.0
     dev: true
 
-  /@nestjs/websockets@10.1.1(@nestjs/common@10.1.1)(@nestjs/core@10.1.1)(@nestjs/platform-socket.io@10.1.1)(reflect-metadata@0.1.13)(rxjs@7.8.1):
-    resolution: {integrity: sha512-HuVcrHpK906vkUTYM5vorypLBtFM9Crf+n+WV5c7MzR7jY/BH627VZtX94R8s+hzPgMyvfaW7v/9KZ3f4op0Ww==}
+  /@nestjs/websockets@10.1.2(@nestjs/common@10.1.1)(@nestjs/core@10.1.1)(@nestjs/platform-socket.io@10.1.2)(reflect-metadata@0.1.13)(rxjs@7.8.1):
+    resolution: {integrity: sha512-4ENk/aZytxy1A9YDtGBH6GiJoT/f9VfR/6SFC3FKrsxwElrHtV18ah25NiUbKuhB6uJJf0JxrMawKlGDTSz+qQ==}
     peerDependencies:
       '@nestjs/common': ^10.0.0
       '@nestjs/core': ^10.0.0
@@ -2150,13 +2150,13 @@ packages:
         optional: true
     dependencies:
       '@nestjs/common': 10.1.1(reflect-metadata@0.1.13)(rxjs@7.8.1)
-      '@nestjs/core': 10.1.1(@nestjs/common@10.1.1)(@nestjs/platform-express@10.1.2)(@nestjs/websockets@10.1.1)(reflect-metadata@0.1.13)(rxjs@7.8.1)
-      '@nestjs/platform-socket.io': 10.1.1(@nestjs/common@10.1.1)(@nestjs/websockets@10.1.1)(rxjs@7.8.1)
+      '@nestjs/core': 10.1.1(@nestjs/common@10.1.1)(@nestjs/platform-express@10.1.2)(@nestjs/websockets@10.1.2)(reflect-metadata@0.1.13)(rxjs@7.8.1)
+      '@nestjs/platform-socket.io': 10.1.2(@nestjs/common@10.1.1)(@nestjs/websockets@10.1.2)(rxjs@7.8.1)
       iterare: 1.2.1
       object-hash: 3.0.0
       reflect-metadata: 0.1.13
       rxjs: 7.8.1
-      tslib: 2.6.0
+      tslib: 2.6.1
     dev: true
 
   /@nodelib/fs.scandir@2.1.5:
@@ -3019,7 +3019,7 @@ packages:
     engines: {node: '>=8'}
     requiresBuild: true
     dependencies:
-      tslib: 2.6.0
+      tslib: 2.6.1
     dev: true
     optional: true
 
@@ -3028,7 +3028,7 @@ packages:
     engines: {node: '>=8'}
     requiresBuild: true
     dependencies:
-      tslib: 2.6.0
+      tslib: 2.6.1
     dev: true
     optional: true
 
@@ -3037,7 +3037,7 @@ packages:
     engines: {node: '>=8'}
     requiresBuild: true
     dependencies:
-      tslib: 2.6.0
+      tslib: 2.6.1
     dev: true
     optional: true
 
@@ -3046,7 +3046,7 @@ packages:
     engines: {node: '>=8'}
     requiresBuild: true
     dependencies:
-      tslib: 2.6.0
+      tslib: 2.6.1
     dev: true
     optional: true
 
@@ -5802,7 +5802,7 @@ packages:
       graphql: ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
     dependencies:
       graphql: 16.7.1
-      tslib: 2.6.0
+      tslib: 2.6.1
     dev: true
 
   /graphql-tools@9.0.0(graphql@16.7.1):
@@ -9607,7 +9607,7 @@ packages:
     engines: {node: '>=8'}
     requiresBuild: true
     dependencies:
-      tslib: 2.6.0
+      tslib: 2.6.1
     dev: true
     optional: true
 
