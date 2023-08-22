@@ -23,8 +23,8 @@ devDependencies:
     specifier: 17.7.0
     version: 17.7.0
   '@nestjs/cli':
-    specifier: 10.1.12
-    version: 10.1.12
+    specifier: 10.1.13
+    version: 10.1.13
   '@nestjs/common':
     specifier: 10.2.1
     version: 10.2.1(reflect-metadata@0.1.13)(rxjs@7.8.1)
@@ -1887,8 +1887,8 @@ packages:
       read-yaml-file: 1.1.0
     dev: true
 
-  /@nestjs/cli@10.1.12:
-    resolution: {integrity: sha512-L+KZOGBvSQUJACC4/o83FRLn5h3MOD5TrGi+Y2NjiDiZr0WYG5b0FaSaCSCy9WQTk46lMaiQYbvi0d4keHJnrw==}
+  /@nestjs/cli@10.1.13:
+    resolution: {integrity: sha512-ZRJEIPWq7sLd//RIJc8a0mfAWgPrWtcn6OupavQ/PVkRqmEK3LCiitNPYiePeOlMjgarU62Zh9Q8BXWHZwMbMw==}
     engines: {node: '>= 16'}
     hasBin: true
     peerDependencies:
