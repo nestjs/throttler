@@ -20,8 +20,6 @@
 <a href="https://opencollective.com/nest#sponsor"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
   <a href="https://twitter.com/nestframework"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
 </p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
 ## Description
 
@@ -50,185 +48,117 @@ For NestJS v10, please use version 4.1.0 or above
 - [Table of Contents](#table-of-contents)
 - [Usage](#usage)
   - [ThrottlerModule](#throttlermodule)
-  - [Decorators](#decorators)
-    - [@Throttle()](#throttle)
-    - [@SkipThrottle()](#skipthrottle)
-  - [Ignoring specific user agents](#ignoring-specific-user-agents)
-  - [ThrottlerStorage](#throttlerstorage)
+  - [Customization](#customization)
+  - [ThrottlerStorage](#storages)
   - [Proxies](#proxies)
-  - [Working with Websockets](#working-with-websockets)
-  - [Working with GraphQL](#working-with-graphql)
+  - [Working with Websockets](#websockets)
+  - [Working with GraphQL](#graphql)
 - [Community Storage Providers](#community-storage-providers)
 
 ## Usage
 
 ### ThrottlerModule
 
-The `ThrottleModule` is the main entry point for this package, and can be used
-in a synchronous or asynchronous manner. All the needs to be passed is the
-`ttl`, the time to live in seconds for the request tracker, and the `limit`, or
-how many times an endpoint can be hit before returning a 429.
+Once the installation is complete, the `ThrottlerModule` can be configured as any other Nest package with `forRoot` or `forRootAsync` methods.
 
-```ts
-import { APP_GUARD } from '@nestjs/core';
-import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
-
+```typescript
+@@filename(app.module)
 @Module({
   imports: [
-    ThrottlerModule.forRoot({
-      ttl: 60,
+    ThrottlerModule.forRoot([{
+      ttl: 60000,
       limit: 10,
-    }),
-  ],
-  providers: [
-    {
-      provide: APP_GUARD,
-      useClass: ThrottlerGuard,
-    },
+    }]),
   ],
 })
 export class AppModule {}
 ```
 
-The above would mean that 10 requests from the same IP can be made to a single endpoint in 1 minute.
+The above will set the global options for the `ttl`, the time to live in milliseconds, and the `limit`, the maximum number of requests within the ttl, for the routes of your application that are guarded.
 
-```ts
-@Module({
-  imports: [
-    ThrottlerModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (config: ConfigService) => ({
-        ttl: config.get('THROTTLE_TTL'),
-        limit: config.get('THROTTLE_LIMIT'),
-      }),
-    }),
-  ],
-  providers: [
-    {
-      provide: APP_GUARD,
-      useClass: ThrottlerGuard,
-    },
-  ],
-})
-export class AppModule {}
-```
+Once the module has been imported, you can then choose how you would like to bind the `ThrottlerGuard`. Any kind of binding as mentioned in the [guards](https://docs.nestjs.com/guards) section is fine. If you wanted to bind the guard globally, for example, you could do so by adding this provider to any module:
 
-The above is also a valid configuration for asynchronous registration of the module.
-
-**NOTE:** If you add the `ThrottlerGuard` to your `AppModule` as a global guard
-then all the incoming requests will be throttled by default. This can also be
-omitted in favor of `@UseGuards(ThrottlerGuard)`. The global guard check can be
-skipped using the `@SkipThrottle()` decorator mentioned later.
-
-Example with `@UseGuards(ThrottlerGuard)`:
-
-```ts
-// app.module.ts
-@Module({
-  imports: [
-    ThrottlerModule.forRoot({
-      ttl: 60,
-      limit: 10,
-    }),
-  ],
-})
-export class AppModule {}
-
-// app.controller.ts
-@Controller()
-export class AppController {
-  @UseGuards(ThrottlerGuard)
-  @Throttle(5, 30)
-  normal() {}
+```typescript
+{
+  provide: APP_GUARD,
+  useClass: ThrottlerGuard
 }
 ```
 
-### Decorators
+#### Multiple Throttler Definitions
 
-#### @Throttle()
+There may come upon times where you want to set up multiple throttling definitions, like no more than 3 calls in a second, 20 calls in 10 seconds, and 100 calls in a minute. To do so, you can set up your definitions in the array with named options, that can later be referenced in the `@SkipThrottle()` and `@Throttle()` decorators to change the options again.
 
-```ts
-@Throttle(limit: number = 30, ttl: number = 60)
+```typescript
+@@filename(app.module)
+@Module({
+  imports: [
+    ThrottlerModule.forRoot([
+      {
+        name: 'short'
+        ttl: 1000,
+        limit: 3,
+      },
+      {
+        name: 'medium',
+        ttl: 10000,
+        limit: 20
+      },
+      {
+        long: 'long',
+        ttl: 60000,
+        limit: 100
+      }
+    ]),
+  ],
+})
+export class AppModule {}
 ```
 
-This decorator will set `THROTTLER_LIMIT` and `THROTTLER_TTL` metadatas on the
-route, for retrieval from the `Reflector` class. Can be applied to controllers
-and routes.
+#### Customization
 
-#### @SkipThrottle()
+There may be a time where you want to bind the guard to a controller or globally, but want to disable rate limiting for one or more of your endpoints. For that, you can use the `@SkipThrottle()` decorator, to negate the throttler for an entire class or a single route. The `@SkipThrottle()` decorator can also take in an object of string keys with boolean values for if there is a case where you want to exclude _most_ of a controller, but not every route, and configure it per throttler set if you have more than one. If you do not pass an object, the default is to use `{{ '{' }} default: true {{ '}' }}`
 
-```ts
-@SkipThrottle(skip = true)
-```
-
-This decorator can be used to skip a route or a class **or** to negate the
-skipping of a route in a class that is skipped.
-
-```ts
+```typescript
 @SkipThrottle()
-@Controller()
-export class AppController {
-  @SkipThrottle(false)
-  dontSkip() {}
+@Controller('users')
+export class UsersController {}
+```
 
-  doSkip() {}
+This `@SkipThrottle()` decorator can be used to skip a route or a class or to negate the skipping of a route in a class that is skipped.
+
+```typescript
+@SkipThrottle()
+@Controller('users')
+export class UsersController {
+  // Rate limiting is applied to this route.
+  @SkipThrottle({ default: false })
+  dontSkip() {
+    return 'List users work with Rate limiting.';
+  }
+  // This route will skip rate limiting.
+  doSkip() {
+    return 'List users work without Rate limiting.';
+  }
 }
 ```
 
-In the above controller, `dontSkip` would be counted against and rate-limited
-while `doSkip` would not be limited in any way.
+There is also the `@Throttle()` decorator which can be used to override the `limit` and `ttl` set in the global module, to give tighter or looser security options. This decorator can be used on a class or a function as well. With version 5 and onwards, the decorator takes in an object with the string relating to the name of the throttler set, and an object with the limit and ttl keys and integer values, similar to the options passed to the root module. If you do not have a name set in your original options, use the string `default` You have to configure it like this:
 
-### Ignoring specific user agents
-
-You can use the `ignoreUserAgents` key to ignore specific user agents.
-
-```ts
-@Module({
-  imports: [
-    ThrottlerModule.forRoot({
-      ttl: 60,
-      limit: 10,
-      ignoreUserAgents: [
-        // Don't throttle request that have 'googlebot' defined in them.
-        // Example user agent: Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)
-        /googlebot/gi,
-
-        // Don't throttle request that have 'bingbot' defined in them.
-        // Example user agent: Mozilla/5.0 (compatible; Bingbot/2.0; +http://www.bing.com/bingbot.htm)
-        new RegExp('bingbot', 'gi'),
-      ],
-    }),
-  ],
-})
-export class AppModule {}
-```
-
-### ThrottlerStorage
-
-Interface to define the methods to handle the details when it comes to keeping track of the requests.
-
-Currently the key is seen as an `MD5` hash of the `IP` the `ClassName` and the
-`MethodName`, to ensure that no unsafe characters are used and to ensure that
-the package works for contexts that don't have explicit routes (like Websockets
-and GraphQL).
-
-The interface looks like this:
-
-```ts
-export interface ThrottlerStorage {
-  storage: Record<string, ThrottlerStorageOptions>;
-  increment(key: string, ttl: number): Promise<ThrottlerStorageRecord>;
+```typescript
+// Override default configuration for Rate limiting and duration.
+@Throttle({ default: { limit: 3, ttl: 60000 } })
+@Get()
+findAll() {
+  return "List users works with custom rate limiting.";
 }
 ```
 
-So long as the Storage service implements this interface, it should be usable by the `ThrottlerGuard`.
+#### Proxies
 
-### Proxies
+If your application runs behind a proxy server, check the specific HTTP adapter options ([express](http://expressjs.com/en/guide/behind-proxies.html) and [fastify](https://www.fastify.io/docs/latest/Reference/Server/#trustproxy)) for the `trust proxy` option and enable it. Doing so will allow you to get the original IP address from the `X-Forwarded-For` header, and you can override the `getTracker()` method to pull the value from the header rather than from `req.ip`. The following example works with both express and fastify:
 
-If you are working behind a proxy, check the specific HTTP adapter options ([express](http://expressjs.com/en/guide/behind-proxies.html) and [fastify](https://www.fastify.io/docs/latest/Server/#trustproxy)) for the `trust proxy` option and enable it. Doing so will allow you to get the original IP address from the `X-Forward-For` header, and you can override the `getTracker()` method to pull the value from the header rather than from `req.ip`. The following example works with both express and fastify:
-
-```ts
+```typescript
 // throttler-behind-proxy.guard.ts
 import { ThrottlerGuard } from '@nestjs/throttler';
 import { Injectable } from '@nestjs/common';
@@ -242,23 +172,22 @@ export class ThrottlerBehindProxyGuard extends ThrottlerGuard {
 
 // app.controller.ts
 import { ThrottlerBehindProxyGuard } from './throttler-behind-proxy.guard';
+
 @UseGuards(ThrottlerBehindProxyGuard)
 ```
 
-### Working with Websockets
+> info **Hint** You can find the API of the `req` Request object for express [here](https://expressjs.com/en/api.html#req.ips) and for fastify [here](https://www.fastify.io/docs/latest/Reference/Request/).
 
-To work with Websockets you can extend the `ThrottlerGuard` and override the `handleRequest` method with something like the following method
+#### Websockets
 
-```ts
+This module can work with websockets, but it requires some class extension. You can extend the `ThrottlerGuard` and override the `handleRequest` method like so:
+
+```typescript
 @Injectable()
 export class WsThrottlerGuard extends ThrottlerGuard {
   async handleRequest(context: ExecutionContext, limit: number, ttl: number): Promise<boolean> {
     const client = context.switchToWs().getClient();
-    // this is a generic method to switch between `ws` and `socket.io`. You can choose what is appropriate for you
-    const ip = ['conn', '_socket']
-      .map((key) => client[key])
-      .filter((obj) => obj)
-      .shift().remoteAddress;
+    const ip = client._socket.remoteAddress;
     const key = this.generateKey(context, ip);
     const { totalHits } = await this.storageService.increment(key, ttl);
 
@@ -271,32 +200,148 @@ export class WsThrottlerGuard extends ThrottlerGuard {
 }
 ```
 
-There are some things to take keep in mind when working with websockets:
+> info **Hint** If you are using ws, it is necessary to replace the `_socket` with `conn`
 
-- You cannot bind the guard with `APP_GUARD` or `app.useGlobalGuards()` due to how Nest binds global guards.
-- When a limit is reached, Nest will emit an `exception` event, so make sure there is a listener ready for this.
+There's a few things to keep in mind when working with WebSockets:
 
-### Working with GraphQL
+- Guard cannot be registered with the `APP_GUARD` or `app.useGlobalGuards()`
+- When a limit is reached, Nest will emit an `exception` event, so make sure there is a listener ready for this
 
-To get the `ThrottlerModule` to work with the GraphQL context, a couple of things must happen.
+> info **Hint** If you are using the `@nestjs/platform-ws` package you can use `client._socket.remoteAddress` instead.
 
-- You must use `Express` and `apollo-server-express` as your GraphQL server engine. This is
-  the default for Nest, but the [`apollo-server-fastify`](https://github.com/apollographql/apollo-server/tree/master/packages/apollo-server-fastify) package does not currently support passing `res` to the `context`, meaning headers cannot be properly set.
-- When configuring your `GraphQLModule`, you need to pass an option for `context` in the form
-  of `({ req, res}) => ({ req, res })`. This will allow access to the Express Request and Response
-  objects, allowing for the reading and writing of headers.
-- You must add in some additional context switching to get the `ExecutionContext` to pass back values correctly (or you can override the method entirely)
+#### GraphQL
 
-```ts
+The `ThrottlerGuard` can also be used to work with GraphQL requests. Again, the guard can be extended, but this time the `getRequestResponse` method will be overridden
+
+```typescript
 @Injectable()
 export class GqlThrottlerGuard extends ThrottlerGuard {
   getRequestResponse(context: ExecutionContext) {
     const gqlCtx = GqlExecutionContext.create(context);
     const ctx = gqlCtx.getContext();
-    return { req: ctx.req, res: ctx.res }; // ctx.request and ctx.reply for fastify
+    return { req: ctx.req, res: ctx.res };
   }
 }
 ```
+
+#### Configuration
+
+The following options are valid for the object passed to the array of the `ThrottlerModule`'s options:
+
+<table>
+  <tr>
+    <td><code>name</code></td>
+    <td>the name for internal tracking of which throttler set is being used. Defaults to `default` if not passed</td>
+  </tr>
+  <tr>
+    <td><code>ttl</code></td>
+    <td>the number of milliseconds that each request will last in storage</td>
+  </tr>
+  <tr>
+    <td><code>limit</code></td>
+    <td>the maximum number of requests within the TTL limit</td>
+  </tr>
+  <tr>
+    <td><code>ignoreUserAgents</code></td>
+    <td>an array of regular expressions of user-agents to ignore when it comes to throttling requests</td>
+  </tr>
+  <tr>
+    <td><code>skipIf</code></td>
+    <td>a function that takes in the <code>ExecutionContext</code> and returns a <code>boolean</code> to short circuit the throttler logic. Like <code>@SkipThrottler()</code>, but based on the request</td>
+  </tr>
+</table>
+
+If you need to set up storages instead, or want to use a some of the above options in a more global sense, applying to each throttler set, you can pass the options above via the `throttlers` option key and use the below table
+
+<table>
+  <tr>
+    <td><code>storage</code></td>
+    <td>a custom storage service for where the throttling should be kept track. <a href="/security/rate-limiting#storages">See here.</a></td>
+  </tr>
+  <tr>
+    <td><code>ignoreUserAgents</code></td>
+    <td>an array of regular expressions of user-agents to ignore when it comes to throttling requests</td>
+  </tr>
+  <tr>
+    <td><code>skipIf</code></td>
+    <td>a function that takes in the <code>ExecutionContext</code> and returns a <code>boolean</code> to short circuit the throttler logic. Like <code>@SkipThrottler()</code>, but based on the request</td>
+  </tr>
+  <tr>
+    <td><code>throttlers</code></td>
+    <td>an array of throttler sets, defined using the table above</td>
+  </tr>
+</table>
+
+#### Async Configuration
+
+You may want to get your rate-limiting configuration asynchronously instead of synchronously. You can use the `forRootAsync()` method, which allows for dependency injection and `async` methods.
+
+One approach would be to use a factory function:
+
+```typescript
+@Module({
+  imports: [
+    ThrottlerModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => [
+        {
+          ttl: config.get('THROTTLE_TTL'),
+          limit: config.get('THROTTLE_LIMIT'),
+        },
+      ],
+    }),
+  ],
+})
+export class AppModule {}
+```
+
+You can also use the `useClass` syntax:
+
+```typescript
+@Module({
+  imports: [
+    ThrottlerModule.forRootAsync({
+      imports: [ConfigModule],
+      useClass: ThrottlerConfigService,
+    }),
+  ],
+})
+export class AppModule {}
+```
+
+This is doable, as long as `ThrottlerConfigService` implements the interface `ThrottlerOptionsFactory`.
+
+#### Storages
+
+The built in storage is an in memory cache that keeps track of the requests made until they have passed the TTL set by the global options. You can drop in your own storage option to the `storage` option of the `ThrottlerModule` so long as the class implements the `ThrottlerStorage` interface.
+
+> info **Note** `ThrottlerStorage` can be imported from `@nestjs/throttler`.
+
+#### Time Helpers
+
+There are a couple of helper methods to make the timings more readable if you prefer to use them over the direct definition. `@nestjs/throttler` exports five different helpers, `seconds`, `minutes`, `hours`, `days`, and `weeks`. To use them, simply call `seconds(5)` or any of the other helpers, and the correct number of milliseconds will be returned.
+
+#### Migration Guide
+
+For most people, wrapping your options in an array will be enough.
+
+If you are using a custom storage, you should wrap you `ttl` and `limit` in an
+array and assign it to the `throttlers` property of the options object.
+
+Any `@ThrottleSkip()` should now take in an object with `string: boolean` props.
+The strings are the names of the throttlers. If you do not have a name, pass the
+string `'default'`, as this is what will be used under the hood otherwise.
+
+Any `@Throttle()` decorators should also now take in an object with string keys,
+relating to the names of the throttler contexts (again, `'default'` if no name)
+and values of objects that have `limit` and `ttl` keys.
+
+> Warning **Important** The `ttl` is now in **milliseconds**. If you want to keep your ttl
+> in seconds for readability, use the `seconds` helper from this package. It just
+> multiplies the ttl by 1000 to make it in milliseconds.
+
+For more info, see the [Changelog](https://github.com/nestjs/throttler/blob/master/CHANGELOG.md#500)
 
 ## Community Storage Providers
 
