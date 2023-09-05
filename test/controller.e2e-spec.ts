@@ -131,10 +131,12 @@ describe('SkipIf suite', () => {
       ],
     })
       .overrideProvider(THROTTLER_OPTIONS)
-      .useValue({
-        skipIf: () => true,
-        limit: 5,
-      })
+      .useValue([
+        {
+          skipIf: () => true,
+          limit: 5,
+        },
+      ])
       .compile();
 
     const app = moduleFixture.createNestApplication();

@@ -16,7 +16,9 @@ export function createThrottlerProviders(options: ThrottlerModuleOptions): Provi
 export const ThrottlerStorageProvider = {
   provide: ThrottlerStorage,
   useFactory: (options: ThrottlerModuleOptions) => {
-    return options.storage ? options.storage : new ThrottlerStorageService();
+    return !Array.isArray(options) && options.storage
+      ? options.storage
+      : new ThrottlerStorageService();
   },
   inject: [THROTTLER_OPTIONS],
 };

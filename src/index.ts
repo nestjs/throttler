@@ -6,3 +6,4 @@ export * from './throttler.guard';
 export * from './throttler.module';
 export { getOptionsToken, getStorageToken } from './throttler.providers';
 export * from './throttler.service';
+export * from './utilities';

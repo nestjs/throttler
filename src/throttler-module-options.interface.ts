@@ -1,18 +1,30 @@
 import { ExecutionContext, ModuleMetadata, Type } from '@nestjs/common/interfaces';
+import { ThrottlerStorage } from './throttler-storage.interface';
+
+export type Resolvable<T extends number | string | boolean> =
+  | T
+  | ((context: ExecutionContext) => T | Promise<T>);
 
 /**
  * @publicApi
  */
-export interface ThrottlerModuleOptions {
+export interface ThrottlerOptions {
+  /**
+   * The name for the rate limit to be used.
+   * This can be left blank and it will be tracked as "default" internally.
+   * If this is set, it will be added to the return headers.
+   * e.g. x-ratelimit-remaining-long: 5
+   */
+  name?: string;
   /**
    * The amount of requests that are allowed within the ttl's time window.
    */
-  limit?: number;
+  limit: Resolvable<number>;
 
   /**
-   * The amount of seconds of how many requests are allowed within this time.
+   * The number of milliseconds the limit of requests are allowed
    */
-  ttl?: number;
+  ttl: Resolvable<number>;
 
   /**
    * The user agents that should be ignored (checked against the User-Agent header).
@@ -20,16 +32,36 @@ export interface ThrottlerModuleOptions {
   ignoreUserAgents?: RegExp[];
 
   /**
-   * The storage class to use where all the record will be stored in.
-   */
-  storage?: any;
-
-  /**
    * A factory method to determine if throttling should be skipped.
    * This can be based on the incoming context, or something like an env value.
    */
   skipIf?: (context: ExecutionContext) => boolean;
 }
+
+/**
+ * @publicApi
+ */
+export type ThrottlerModuleOptions =
+  | Array<ThrottlerOptions>
+  | {
+      /**
+       * A factory method to determine if throttling should be skipped.
+       * This can be based on the incoming context, or something like an env value.
+       */
+      skipIf?: (context: ExecutionContext) => boolean;
+      /**
+       * The user agents that should be ignored (checked against the User-Agent header).
+       */
+      ignoreUserAgents?: RegExp[];
+      /**
+       * The storage class to use where all the record will be stored in.
+       */
+      storage?: ThrottlerStorage;
+      /**
+       * The named throttlers to use
+       */
+      throttlers: Array<ThrottlerOptions>;
+    };
 
 /**
  * @publicApi
