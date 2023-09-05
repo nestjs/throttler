@@ -105,7 +105,7 @@ There may come upon times where you want to set up multiple throttling definitio
         limit: 20
       },
       {
-        long: 'long',
+        name: 'long',
         ttl: 60000,
         limit: 100
       }
