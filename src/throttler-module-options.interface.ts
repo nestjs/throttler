@@ -27,6 +27,11 @@ export interface ThrottlerOptions {
   ttl: Resolvable<number>;
 
   /**
+   * The number of millisecond the request will be blocked
+   */
+  blockDuration?: Resolvable<number>;
+
+  /**
    * The user agents that should be ignored (checked against the User-Agent header).
    */
   ignoreUserAgents?: RegExp[];

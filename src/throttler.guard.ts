@@ -87,7 +87,8 @@ export class ThrottlerGuard implements CanActivate {
       // Check if specific limits are set at class or route level, otherwise use global options.
       const limit = await this.resolveValue(context, routeOrClassLimit || namedThrottler.limit);
       const ttl = await this.resolveValue(context, routeOrClassTtl || namedThrottler.ttl);
-      continues.push(await this.handleRequest(context, limit, ttl, namedThrottler));
+      const blockDuration = (await this.resolveValue(context, namedThrottler.blockDuration)) || ttl;
+      continues.push(await this.handleRequest(context, limit, ttl, namedThrottler, blockDuration));
     }
     return continues.every((cont) => cont);
   }
@@ -107,6 +108,7 @@ export class ThrottlerGuard implements CanActivate {
     limit: number,
     ttl: number,
     throttler: ThrottlerOptions,
+    blockDuration: number,
   ): Promise<boolean> {
     // Here we start to check the amount of requests being done against the ttl.
     const { req, res } = this.getRequestResponse(context);
@@ -121,13 +123,14 @@ export class ThrottlerGuard implements CanActivate {
     }
     const tracker = await this.getTracker(req);
     const key = this.generateKey(context, tracker, throttler.name);
-    const { totalHits, timeToExpire } = await this.storageService.increment(key, ttl);
+    const { totalHits, timeToExpire, isBlocked, timeToBlockExpire } =
+      await this.storageService.increment(key, ttl, limit, blockDuration, throttler.name);
 
     const getThrottlerSuffix = (name: string) => (name === 'default' ? '' : `-${name}`);
 
     // Throw an error when the user reached their limit.
-    if (totalHits > limit) {
-      res.header(`Retry-After${getThrottlerSuffix(throttler.name)}`, timeToExpire);
+    if (isBlocked) {
+      res.header(`Retry-After${getThrottlerSuffix(throttler.name)}`, timeToBlockExpire);
       await this.throwThrottlingException(context, {
         limit,
         ttl,
@@ -135,6 +138,8 @@ export class ThrottlerGuard implements CanActivate {
         tracker,
         totalHits,
         timeToExpire,
+        isBlocked,
+        timeToBlockExpire,
       });
     }
 

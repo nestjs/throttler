@@ -6,6 +6,7 @@ import { Resolvable } from './throttler-module-options.interface';
 interface ThrottlerMethodOrControllerOptions {
   limit?: Resolvable<number>;
   ttl?: Resolvable<number>;
+  blockDuration?: Resolvable<number>;
 }
 
 function setThrottlerMetadata(

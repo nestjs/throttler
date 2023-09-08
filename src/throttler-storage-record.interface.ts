@@ -5,9 +5,19 @@ export interface ThrottlerStorageRecord {
   totalHits: number;
 
   /**
-   * Amount of seconds when the `totalHits` should expire.
+   * Amount of seconds when the `ttl` should expire.
    */
   timeToExpire: number;
+
+  /**
+   * Define the request is blocked or not.
+   */
+  isBlocked: boolean;
+
+  /**
+   * Amount of seconds when the `totalHits` should expire.
+   */
+  timeToBlockExpire: number;
 }
 
 export const ThrottlerStorageRecord = Symbol('ThrottlerStorageRecord');
