@@ -169,7 +169,7 @@ export class ThrottlerBehindProxyGuard extends ThrottlerGuard {
   return new Promise<string>((resolve, reject) => {
     const tracker = request.ips.length > 0 ? request.ips[0] : request.ip; // individualize IP extraction to meet your own needs
     resolve(tracker);
-  }); 
+  });
   }
 }
 
@@ -243,6 +243,10 @@ The following options are valid for the object passed to the array of the `Throt
   <tr>
     <td><code>limit</code></td>
     <td>the maximum number of requests within the TTL limit</td>
+  </tr>
+  <tr>
+    <td><code>blockDuration</code></td>
+    <td>the number of milliseconds that request will be blocked for that time</td>
   </tr>
   <tr>
     <td><code>ignoreUserAgents</code></td>
