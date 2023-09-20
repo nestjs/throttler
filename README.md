@@ -227,13 +227,28 @@ export class GqlThrottlerGuard extends ThrottlerGuard {
 }
 ```
 
-However, when using GraphQL, it's important to configure the context correctly in the GraphQLModule to avoid any problems. To ensure proper context setup, add the following line of code in your GraphQLModule configuration:
+However, when using Apollo Express/Fastify or Mercurius, it's important to configure the context correctly in the GraphQLModule to avoid any problems.
+
+#### Apollo Server (for Express):
+
+For Apollo Server running on Express, you can set up the context in your GraphQLModule configuration as follows:
 
 ```typescript
 GraphQLModule.forRoot({
   // ... other GraphQL module options
   context: ({ req, res }) => ({ req, res }),
 });
+```
+
+#### Apollo Server (for Fastify) & Mercurius:
+
+When using Apollo Server with Fastify or Mercurius, you need to configure the context differently. You should use request and reply objects. Here's an example:
+
+```typescript
+GraphQLModule.forRoot({
+  // ... other GraphQL module options
+  context: (request, reply) => ({ request, reply }),
+})
 ```
 
 #### Configuration
