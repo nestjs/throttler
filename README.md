@@ -227,6 +227,15 @@ export class GqlThrottlerGuard extends ThrottlerGuard {
 }
 ```
 
+However, when using GraphQL, it's important to configure the context correctly in the GraphQLModule to avoid any problems. To ensure proper context setup, add the following line of code in your GraphQLModule configuration:
+
+```typescript
+GraphQLModule.forRoot({
+  // ... other GraphQL module options
+  context: ({ req, res }) => ({ req, res }),
+});
+```
+
 #### Configuration
 
 The following options are valid for the object passed to the array of the `ThrottlerModule`'s options:
