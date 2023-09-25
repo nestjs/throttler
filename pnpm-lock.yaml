@@ -74,8 +74,8 @@ devDependencies:
     specifier: 18.17.19
     version: 18.17.19
   '@types/supertest':
-    specifier: 2.0.12
-    version: 2.0.12
+    specifier: 2.0.13
+    version: 2.0.13
   '@typescript-eslint/eslint-plugin':
     specifier: 6.7.3
     version: 6.7.3(@typescript-eslint/parser@6.7.2)(eslint@8.50.0)(typescript@5.2.2)
@@ -2738,8 +2738,8 @@ packages:
       '@types/node': 18.17.19
     dev: true
 
-  /@types/supertest@2.0.12:
-    resolution: {integrity: sha512-X3HPWTwXRerBZS7Mo1k6vMVR1Z6zmJcDVn5O/31whe0tnjE4te6ZJSJGq1RiqHPjzPdMTfjCFogDJmwng9xHaQ==}
+  /@types/supertest@2.0.13:
+    resolution: {integrity: sha512-Vc/5/pRwSC055fU7Wu8erTj4gLpID9SdG2zRMuqaHLni3GTsrJ8gyB6MbFZZGLW6vQaGPhiUWRB6uWglv87MEg==}
     dependencies:
       '@types/superagent': 4.1.18
     dev: true
