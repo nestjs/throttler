@@ -67,7 +67,7 @@
     "@types/express": "4.17.18",
     "@types/express-serve-static-core": "4.17.37",
     "@types/jest": "29.5.5",
-    "@types/md5": "2.3.2",
+    "@types/md5": "2.3.3",
     "@types/node": "18.18.0",
     "@types/supertest": "2.0.13",
     "@typescript-eslint/eslint-plugin": "6.7.3",
