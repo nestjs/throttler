@@ -79,7 +79,7 @@ Once the module has been imported, you can then choose how you would like to bin
 ```typescript
 {
   provide: APP_GUARD,
-  useClass: ThrottlerGuard
+          useClass: ThrottlerGuard
 }
 ```
 
@@ -164,10 +164,10 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export class ThrottlerBehindProxyGuard extends ThrottlerGuard {
   protected getTracker(req: Record<string, any>): Promise<string> {
-  return new Promise<string>((resolve, reject) => {
-    const tracker = request.ips.length > 0 ? request.ips[0] : request.ip; // individualize IP extraction to meet your own needs
-    resolve(tracker);
-  }); 
+    return new Promise<string>((resolve, reject) => {
+      const tracker = req.ips.length > 0 ? req.ips[0] : req.ip; // individualize IP extraction to meet your own needs
+      resolve(tracker);
+    });
   }
 }
 
