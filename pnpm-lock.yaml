@@ -68,8 +68,8 @@ devDependencies:
     specifier: 29.5.6
     version: 29.5.6
   '@types/md5':
-    specifier: 2.3.3
-    version: 2.3.3
+    specifier: 2.3.4
+    version: 2.3.4
   '@types/node':
     specifier: 18.18.5
     version: 18.18.5
@@ -2653,8 +2653,8 @@ packages:
     resolution: {integrity: sha512-MqTGEo5bj5t157U6fA/BiDynNkn0YknVdh48CMPkTSpFTVmvao5UQmm7uEF6xBEo7qIMAlY/JSleYaE6VOdpaA==}
     dev: true
 
-  /@types/md5@2.3.3:
-    resolution: {integrity: sha512-4K40FjTW0tiIx9NfV+/DHJ56ih3fcdkDqBYz5CffKwJVWYho1FxzjkddGcgEEIs+fP2DqmQ3lujC5c4bUOESTQ==}
+  /@types/md5@2.3.4:
+    resolution: {integrity: sha512-e/L4hvpCK8GavKXmP02QlNilZOj8lpmZGGA9QGMMPZjCUoKgi1B4BvhXcbruIi6r+PqzpcjLfda/tocpHFKqDA==}
     dev: true
 
   /@types/mime@1.3.2:
