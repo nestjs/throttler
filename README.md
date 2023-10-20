@@ -1,7 +1,7 @@
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
 </p>
-
+<div id="top"></div>
 [travis-image]: https://api.travis-ci.org/nestjs/nest.svg?branch=master
 [travis-url]: https://travis-ci.org/nestjs/nest
 [linux-image]: https://img.shields.io/travis/nestjs/nest/master.svg?label=linux
@@ -378,3 +378,5 @@ Feel free to submit a PR with your custom storage provider being added to this l
 ## License
 
 Nest is [MIT licensed](LICENSE).
+
+<p align="right"><a href="#top">🔼 Back to top</a></p>
