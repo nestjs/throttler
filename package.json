@@ -75,7 +75,7 @@
     "apollo-server-fastify": "3.12.1",
     "conventional-changelog-cli": "4.1.0",
     "cz-conventional-changelog": "3.3.0",
-    "eslint": "8.51.0",
+    "eslint": "8.52.0",
     "eslint-config-prettier": "9.0.0",
     "eslint-plugin-import": "2.28.1",
     "graphql": "16.8.1",
