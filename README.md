@@ -1,7 +1,6 @@
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
 </p>
-<div id="top"></div>
 [travis-image]: https://api.travis-ci.org/nestjs/nest.svg?branch=master
 [travis-url]: https://travis-ci.org/nestjs/nest
 [linux-image]: https://img.shields.io/travis/nestjs/nest/master.svg?label=linux
@@ -38,6 +37,8 @@ $ npm i --save @nestjs/throttler
 `@nestjs/throttler@^1` is compatible with Nest v7 while `@nestjs/throttler@^2` is compatible with Nest v7 and Nest v8, but it is suggested to be used with only v8 in case of breaking changes against v7 that are unseen.
 
 For NestJS v10, please use version 4.1.0 or above
+
+<div id="toc"></div>
 
 ## Table of Contents
 
@@ -355,4 +356,4 @@ Feel free to submit a PR with your custom storage provider being added to this l
 
 Nest is [MIT licensed](LICENSE).
 
-<p align="right"><a href="#top">🔼 Back to top</a></p>
+<p align="right"><a href="#toc">🔼 Back to TOC</a></p>
