@@ -168,7 +168,7 @@ export class ThrottlerBehindProxyGuard extends ThrottlerGuard {
   return new Promise<string>((resolve, reject) => {
     const tracker = req.ips.length > 0 ? req.ips[0] : req.ip; // individualize IP extraction to meet your own needs
     resolve(tracker);
-  }); 
+  });
   }
 }
 
@@ -187,10 +187,15 @@ This module can work with websockets, but it requires some class extension. You 
 ```typescript
 @Injectable()
 export class WsThrottlerGuard extends ThrottlerGuard {
-  async handleRequest(context: ExecutionContext, limit: number, ttl: number): Promise<boolean> {
+  async handleRequest(
+    context: ExecutionContext,
+    limit: number,
+    ttl: number,
+    throttler: ThrottlerOptions,
+  ): Promise<boolean> {
     const client = context.switchToWs().getClient();
     const ip = client._socket.remoteAddress;
-    const key = this.generateKey(context, ip);
+    const key = this.generateKey(context, ip, throttler.name);
     const { totalHits } = await this.storageService.increment(key, ttl);
 
     if (totalHits > limit) {
@@ -247,7 +252,7 @@ When using Apollo Server with Fastify or Mercurius, you need to configure the co
 GraphQLModule.forRoot({
   // ... other GraphQL module options
   context: (request, reply) => ({ request, reply }),
-})
+});
 ```
 
 #### Configuration
