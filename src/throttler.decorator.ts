@@ -57,14 +57,11 @@ export const SkipThrottle = (
     propertyKey?: string | symbol,
     descriptor?: TypedPropertyDescriptor<any>,
   ) => {
+    const reflectionTarget = descriptor?.value ?? target;
     for (const key in skip) {
-      if (descriptor) {
-        Reflect.defineMetadata(THROTTLER_SKIP + key, skip[key], descriptor.value);
-        return descriptor;
-      }
-      Reflect.defineMetadata(THROTTLER_SKIP + key, skip[key], target);
-      return target;
+      Reflect.defineMetadata(THROTTLER_SKIP + key, skip[key], reflectionTarget);
     }
+    return descriptor ?? target;
   };
 };
 

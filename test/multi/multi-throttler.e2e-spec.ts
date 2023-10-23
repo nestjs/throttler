@@ -22,7 +22,7 @@ describe.each`
   adapter           | name
   ${ExpressAdapter} | ${'express'}
   ${FastifyAdapter} | ${'fastify'}
-`('Mutli-Throttler Named Usage - $name', ({ adapter }: { adapter: Type<AbstractHttpAdapter> }) => {
+`('Multi-Throttler Named Usage - $name', ({ adapter }: { adapter: Type<AbstractHttpAdapter> }) => {
   let app: INestApplication;
   beforeAll(async () => {
     const modRef = await Test.createTestingModule({
@@ -37,7 +37,7 @@ describe.each`
   });
 
   describe('Default Route: 1/s, 2/5s, 5/min', () => {
-    it('should receive an exception when firing 2 request swithin a second', async () => {
+    it('should receive an exception when firing 2 requests within a second', async () => {
       await spec()
         .get('/')
         .expectStatus(200)
@@ -78,7 +78,7 @@ describe.each`
     });
   });
   describe('skips', () => {
-    it('should skip theshort throttler', async () => {
+    it('should skip the short throttler', async () => {
       await spec().get('/skip-short').expectStatus(200).expectHeader(remainingHeader(), '1');
       await spec().get('/skip-short').expectStatus(200).expectHeader(remainingHeader(), '0');
     });
@@ -86,7 +86,12 @@ describe.each`
       await spec()
         .get('/skip-default-and-long')
         .expectStatus(200)
-        .expectHeader(remainingHeader(short), '0');
+        .expectHeader(remainingHeader(short), '0')
+        .expect((ctx) => {
+          const { headers } = ctx.res;
+          expect(headers[remainingHeader('default')]).toBeUndefined();
+          expect(headers[remainingHeader('long')]).toBeUndefined();
+        });
     });
   });
 });
