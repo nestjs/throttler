@@ -1,5 +1,11 @@
 ## 5.0.0
 
+## 5.0.1
+
+### Patch Changes
+
+- bc9e6b2: Correctly assign metadata for multiple throttlers passed to `@SkipThrottle()`
+
 ### Major Changes
 
 - 2f4f2a7: # FEATURES
