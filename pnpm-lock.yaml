@@ -17,8 +17,8 @@ devDependencies:
     specifier: 2.26.2
     version: 2.26.2
   '@commitlint/cli':
-    specifier: 18.1.0
-    version: 18.1.0
+    specifier: 18.2.0
+    version: 18.2.0(typescript@5.2.2)
   '@commitlint/config-angular':
     specifier: 18.1.0
     version: 18.1.0
@@ -1107,14 +1107,14 @@ packages:
     dev: true
     optional: true
 
-  /@commitlint/cli@18.1.0:
-    resolution: {integrity: sha512-ZT95pRNGD9fEEX1ih0yKyJ65U3Y88vLrJjK6hlSpLrJFioQNXTI4sSoOq7hHnOsJAmTsgEg5zxIY8qTzgEQtWg==}
+  /@commitlint/cli@18.2.0(typescript@5.2.2):
+    resolution: {integrity: sha512-F/DCG791kMFmWg5eIdogakuGeg4OiI2kD430ed1a1Hh3epvrJdeIAgcGADAMIOmF+m0S1+VlIYUKG2dvQQ1Izw==}
     engines: {node: '>=v18'}
     hasBin: true
     dependencies:
       '@commitlint/format': 18.1.0
       '@commitlint/lint': 18.1.0
-      '@commitlint/load': 18.1.0
+      '@commitlint/load': 18.2.0(typescript@5.2.2)
       '@commitlint/read': 18.1.0
       '@commitlint/types': 18.1.0
       execa: 5.1.1
@@ -1123,8 +1123,7 @@ packages:
       resolve-global: 1.0.0
       yargs: 17.7.2
     transitivePeerDependencies:
-      - '@swc/core'
-      - '@swc/wasm'
+      - typescript
     dev: true
 
   /@commitlint/config-angular-type-enum@18.1.0:
@@ -1214,6 +1213,27 @@ packages:
     transitivePeerDependencies:
       - '@swc/core'
       - '@swc/wasm'
+    dev: true
+    optional: true
+
+  /@commitlint/load@18.2.0(typescript@5.2.2):
+    resolution: {integrity: sha512-xjX3d3CRlOALwImhOsmLYZh14/+gW/KxsY7+bPKrzmGuFailf9K7ckhB071oYZVJdACnpY4hDYiosFyOC+MpAA==}
+    engines: {node: '>=v18'}
+    dependencies:
+      '@commitlint/config-validator': 18.1.0
+      '@commitlint/execute-rule': 18.1.0
+      '@commitlint/resolve-extends': 18.1.0
+      '@commitlint/types': 18.1.0
+      '@types/node': 18.18.6
+      chalk: 4.1.2
+      cosmiconfig: 8.3.4(typescript@5.2.2)
+      cosmiconfig-typescript-loader: 5.0.0(@types/node@18.18.6)(cosmiconfig@8.3.4)(typescript@5.2.2)
+      lodash.isplainobject: 4.0.6
+      lodash.merge: 4.6.2
+      lodash.uniq: 4.5.0
+      resolve-from: 5.0.0
+    transitivePeerDependencies:
+      - typescript
     dev: true
 
   /@commitlint/message@18.1.0:
@@ -4300,6 +4320,21 @@ packages:
       ts-node: 10.9.1(@types/node@18.18.6)(typescript@5.2.2)
       typescript: 5.2.2
     dev: true
+    optional: true
+
+  /cosmiconfig-typescript-loader@5.0.0(@types/node@18.18.6)(cosmiconfig@8.3.4)(typescript@5.2.2):
+    resolution: {integrity: sha512-+8cK7jRAReYkMwMiG+bxhcNKiHJDM6bR9FD/nGBXOWdMLuYawjF5cGrtLilJ+LGd3ZjCXnJjR5DkfWPoIVlqJA==}
+    engines: {node: '>=v16'}
+    peerDependencies:
+      '@types/node': '*'
+      cosmiconfig: '>=8.2'
+      typescript: '>=4'
+    dependencies:
+      '@types/node': 18.18.6
+      cosmiconfig: 8.3.4(typescript@5.2.2)
+      jiti: 1.20.0
+      typescript: 5.2.2
+    dev: true
 
   /cosmiconfig@7.1.0:
     resolution: {integrity: sha512-AdmX6xUzdNASswsFtmwSt7Vj8po9IuqXm0UXz7QKPuEUmPB4XyjGfaAr2PSuELMwkRMVH1EpIkX5bTZGRB3eCA==}
@@ -7020,6 +7055,11 @@ packages:
       - babel-plugin-macros
       - supports-color
       - ts-node
+    dev: true
+
+  /jiti@1.20.0:
+    resolution: {integrity: sha512-3TV69ZbrvV6U5DfQimop50jE9Dl6J8O1ja1dvBbMba/sZ3YBEQqJ2VZRoQPVnhlzjNtU1vaXRZVrVjU4qtm8yA==}
+    hasBin: true
     dev: true
 
   /js-tokens@4.0.0:
@@ -9866,6 +9906,7 @@ packages:
       v8-compile-cache-lib: 3.0.1
       yn: 3.1.1
     dev: true
+    optional: true
 
   /ts-node@10.9.1(@types/node@20.8.9)(typescript@5.2.2):
     resolution: {integrity: sha512-NtVysVPkxxrwFGUUxGYhfux8k78pQB3JqYBXlLRZgdGUqTO5wU/UyHop5p70iEbGhB7q5KmiZiU0Y3KlJrScEw==}
