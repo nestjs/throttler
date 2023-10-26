@@ -48,7 +48,7 @@
     "md5": "^2.2.1"
   },
   "devDependencies": {
-    "@apollo/server": "4.9.4",
+    "@apollo/server": "4.9.5",
     "@changesets/cli": "2.26.2",
     "@commitlint/cli": "18.2.0",
     "@commitlint/config-angular": "18.1.0",
