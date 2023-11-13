@@ -125,8 +125,8 @@ devDependencies:
     specifier: 3.0.0
     version: 3.0.0
   prettier:
-    specifier: 3.0.3
-    version: 3.0.3
+    specifier: 3.1.0
+    version: 3.1.0
   reflect-metadata:
     specifier: 0.1.13
     version: 0.1.13
@@ -1162,31 +1162,10 @@ packages:
       '@commitlint/types': 18.4.0
     dev: true
 
-  /@commitlint/load@18.4.0(typescript@5.2.2):
-    resolution: {integrity: sha512-7unGl1HGRNMgWrUPmj8OFkJyuNUMb6xA1i53/OAFKd9l+U3C4WTfoJe3t/TUz8vKZLCaDcWWR/b2cw5HveBBFg==}
-    engines: {node: '>=v18'}
-    requiresBuild: true
-    dependencies:
-      '@commitlint/config-validator': 18.4.0
-      '@commitlint/execute-rule': 18.4.0
-      '@commitlint/resolve-extends': 18.4.0
-      '@commitlint/types': 18.4.0
-      '@types/node': 18.18.6
-      chalk: 4.1.2
-      cosmiconfig: 8.3.4(typescript@5.2.2)
-      cosmiconfig-typescript-loader: 5.0.0(@types/node@18.18.6)(cosmiconfig@8.3.4)(typescript@5.2.2)
-      lodash.isplainobject: 4.0.6
-      lodash.merge: 4.6.2
-      lodash.uniq: 4.5.0
-      resolve-from: 5.0.0
-    transitivePeerDependencies:
-      - typescript
-    dev: true
-    optional: true
-
   /@commitlint/load@18.4.1(typescript@5.2.2):
     resolution: {integrity: sha512-o/plBiPJQgbSq/4ipDpsq4HCmURjBAEjr1EO/p2falr3VhwV0WGXTvb8NlihgI8xtSyO6lHvtycrE535GMLQbA==}
     engines: {node: '>=v18'}
+    requiresBuild: true
     dependencies:
       '@commitlint/config-validator': 18.4.0
       '@commitlint/execute-rule': 18.4.0
@@ -4272,25 +4251,10 @@ packages:
       vary: 1.1.2
     dev: true
 
-  /cosmiconfig-typescript-loader@5.0.0(@types/node@18.18.6)(cosmiconfig@8.3.4)(typescript@5.2.2):
-    resolution: {integrity: sha512-+8cK7jRAReYkMwMiG+bxhcNKiHJDM6bR9FD/nGBXOWdMLuYawjF5cGrtLilJ+LGd3ZjCXnJjR5DkfWPoIVlqJA==}
-    engines: {node: '>=v16'}
-    requiresBuild: true
-    peerDependencies:
-      '@types/node': '*'
-      cosmiconfig: '>=8.2'
-      typescript: '>=4'
-    dependencies:
-      '@types/node': 18.18.6
-      cosmiconfig: 8.3.4(typescript@5.2.2)
-      jiti: 1.20.0
-      typescript: 5.2.2
-    dev: true
-    optional: true
-
   /cosmiconfig-typescript-loader@5.0.0(@types/node@18.18.6)(cosmiconfig@8.3.6)(typescript@5.2.2):
     resolution: {integrity: sha512-+8cK7jRAReYkMwMiG+bxhcNKiHJDM6bR9FD/nGBXOWdMLuYawjF5cGrtLilJ+LGd3ZjCXnJjR5DkfWPoIVlqJA==}
     engines: {node: '>=v16'}
+    requiresBuild: true
     peerDependencies:
       '@types/node': '*'
       cosmiconfig: '>=8.2'
@@ -4422,7 +4386,7 @@ packages:
       longest: 2.0.1
       word-wrap: 1.2.5
     optionalDependencies:
-      '@commitlint/load': 18.4.0(typescript@5.2.2)
+      '@commitlint/load': 18.4.1(typescript@5.2.2)
     transitivePeerDependencies:
       - typescript
     dev: true
@@ -8493,8 +8457,8 @@ packages:
     hasBin: true
     dev: true
 
-  /prettier@3.0.3:
-    resolution: {integrity: sha512-L/4pUDMxcNa8R/EthV08Zt42WBO4h1rarVtK0K+QJG0X187OLo7l699jWw0GKuwzkPQ//jMFA/8Xm6Fh3J/DAg==}
+  /prettier@3.1.0:
+    resolution: {integrity: sha512-TQLvXjq5IAibjh8EpBIkNKxO749UEWABoiIZehEPiY4GNpVdhaFKqSTu+QrlU6D2dPAfubRmtJTi4K4YkQ5eXw==}
     engines: {node: '>=14'}
     hasBin: true
     dev: true
@@ -9009,7 +8973,7 @@ packages:
       '@semantic-release/npm': 10.0.5(semantic-release@21.1.1)
       '@semantic-release/release-notes-generator': 11.0.7(semantic-release@21.1.1)
       aggregate-error: 4.0.1
-      cosmiconfig: 8.3.4(typescript@5.2.2)
+      cosmiconfig: 8.3.6(typescript@5.2.2)
       debug: 4.3.4
       env-ci: 9.1.1
       execa: 8.0.1
