@@ -83,8 +83,8 @@ devDependencies:
     specifier: 6.11.0
     version: 6.11.0(eslint@8.53.0)(typescript@5.2.2)
   apollo-server-fastify:
-    specifier: 3.12.1
-    version: 3.12.1(fastify@3.29.5)(graphql@16.8.1)
+    specifier: 3.13.0
+    version: 3.13.0(fastify@3.29.5)(graphql@16.8.1)
   conventional-changelog-cli:
     specifier: 4.1.0
     version: 4.1.0
@@ -3224,10 +3224,9 @@ packages:
       '@apollo/protobufjs': 1.2.6
     dev: true
 
-  /apollo-server-core@3.12.1(graphql@16.8.1):
-    resolution: {integrity: sha512-9SF5WAkkV0FZQ2HVUWI9Jada1U0jg7e8NCN9EklbtvaCeUlOLyXyM+KCWuZ7+dqHxjshbtcwylPHutt3uzoNkw==}
+  /apollo-server-core@3.13.0(graphql@16.8.1):
+    resolution: {integrity: sha512-v/g6DR6KuHn9DYSdtQijz8dLOkP78I5JSVJzPkARhDbhpH74QNwrQ2PP2URAPPEDJ2EeZNQDX8PvbYkAKqg+kg==}
     engines: {node: '>=12.0'}
-    deprecated: The `apollo-server-core` package is part of Apollo Server v2 and v3, which are now deprecated (end-of-life October 22nd 2023 and October 22nd 2024, respectively). This package's functionality is now found in the `@apollo/server` package. See https://www.apollographql.com/docs/apollo-server/previous-versions/ for more details.
     peerDependencies:
       graphql: ^15.3.0 || ^16.0.0
     dependencies:
@@ -3253,7 +3252,7 @@ packages:
       lru-cache: 6.0.0
       node-abort-controller: 3.1.1
       sha.js: 2.4.11
-      uuid: 9.0.0
+      uuid: 9.0.1
       whatwg-mimetype: 3.0.0
     transitivePeerDependencies:
       - encoding
@@ -3279,17 +3278,16 @@ packages:
       graphql: 16.8.1
     dev: true
 
-  /apollo-server-fastify@3.12.1(fastify@3.29.5)(graphql@16.8.1):
-    resolution: {integrity: sha512-qpq5q0ITIkn8aWe2ZVC0RI64++X3iCI3rfZ4wU1fraoc05eCyM9E+oqHELkO7H84AQOwhlPpk5h0dNTpLxyHkw==}
+  /apollo-server-fastify@3.13.0(fastify@3.29.5)(graphql@16.8.1):
+    resolution: {integrity: sha512-M169+oWiwilHpSQqDXRJxAQMn1MC3llVupNLOkuFWMt7u7/+9obLJm6c8IVSbjLHqu1EQjekxzRl84Bv/K+uzA==}
     engines: {node: '>=12.0'}
-    deprecated: The `apollo-server-fastify` package is part of Apollo Server v2 and v3, which are now deprecated (end-of-life October 22nd 2023 and October 22nd 2024, respectively). This package's functionality is now found in the `@apollo/server` package. See https://www.apollographql.com/docs/apollo-server/previous-versions/ for more details.
     peerDependencies:
       fastify: ^3.17.0
       graphql: ^15.3.0 || ^16.0.0
     dependencies:
       '@fastify/accepts': 3.0.0
       '@fastify/cors': 7.0.0
-      apollo-server-core: 3.12.1(graphql@16.8.1)
+      apollo-server-core: 3.13.0(graphql@16.8.1)
       apollo-server-types: 3.8.0(graphql@16.8.1)
       fastify: 3.29.5
       graphql: 16.8.1
