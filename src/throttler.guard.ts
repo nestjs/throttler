@@ -7,8 +7,19 @@ import {
   ThrottlerOptions,
 } from './throttler-module-options.interface';
 import { ThrottlerStorage } from './throttler-storage.interface';
-import { THROTTLER_LIMIT, THROTTLER_SKIP, THROTTLER_TTL } from './throttler.constants';
-import { InjectThrottlerOptions, InjectThrottlerStorage } from './throttler.decorator';
+import {
+  THROTTLER_KEY_GENERATOR,
+  THROTTLER_LIMIT,
+  THROTTLER_SKIP,
+  THROTTLER_TRACKER,
+  THROTTLER_TTL,
+} from './throttler.constants';
+import {
+  InjectThrottlerOptions,
+  InjectThrottlerStorage,
+  ThrottlerGenerateKeyFunction,
+  ThrottlerGetTrackerFunction,
+} from './throttler.decorator';
 import { ThrottlerException, throttlerMessage } from './throttler.exception';
 import { ThrottlerLimitDetail } from './throttler.guard.interface';
 
@@ -20,7 +31,10 @@ export class ThrottlerGuard implements CanActivate {
   protected headerPrefix = 'X-RateLimit';
   protected errorMessage = throttlerMessage;
   protected throttlers: Array<ThrottlerOptions>;
-  protected commonOptions: Pick<ThrottlerOptions, 'skipIf' | 'ignoreUserAgents'>;
+  protected commonOptions: Pick<
+    ThrottlerOptions,
+    'skipIf' | 'ignoreUserAgents' | 'getTracker' | 'generateKey'
+  >;
   constructor(
     @InjectThrottlerOptions() protected readonly options: ThrottlerModuleOptions,
     @InjectThrottlerStorage() protected readonly storageService: ThrottlerStorage,
@@ -45,6 +59,8 @@ export class ThrottlerGuard implements CanActivate {
       this.commonOptions = {
         skipIf: this.options.skipIf,
         ignoreUserAgents: this.options.ignoreUserAgents,
+        getTracker: this.options.getTracker || this.getTracker,
+        generateKey: this.options.generateKey || this.generateKey,
       };
     }
   }
@@ -62,6 +78,7 @@ export class ThrottlerGuard implements CanActivate {
       return true;
     }
     const continues: boolean[] = [];
+
     for (const namedThrottler of this.throttlers) {
       // Return early if the current route should be skipped.
       const skip = this.reflector.getAllAndOverride<boolean>(THROTTLER_SKIP + namedThrottler.name, [
@@ -83,11 +100,27 @@ export class ThrottlerGuard implements CanActivate {
         THROTTLER_TTL + namedThrottler.name,
         [handler, classRef],
       );
+      const routeOrClassGetTracker = this.reflector.getAllAndOverride<ThrottlerGetTrackerFunction>(
+        THROTTLER_TRACKER + namedThrottler.name,
+        [handler, classRef],
+      );
+      const routeOrClassGetKeyGenerator =
+        this.reflector.getAllAndOverride<ThrottlerGenerateKeyFunction>(
+          THROTTLER_KEY_GENERATOR + namedThrottler.name,
+          [handler, classRef],
+        );
 
       // Check if specific limits are set at class or route level, otherwise use global options.
       const limit = await this.resolveValue(context, routeOrClassLimit || namedThrottler.limit);
       const ttl = await this.resolveValue(context, routeOrClassTtl || namedThrottler.ttl);
-      continues.push(await this.handleRequest(context, limit, ttl, namedThrottler));
+      const getTracker =
+        routeOrClassGetTracker || namedThrottler.getTracker || this.commonOptions.getTracker;
+      const generateKey =
+        routeOrClassGetKeyGenerator || namedThrottler.generateKey || this.commonOptions.generateKey;
+
+      continues.push(
+        await this.handleRequest(context, limit, ttl, getTracker, generateKey, namedThrottler),
+      );
     }
     return continues.every((cont) => cont);
   }
@@ -106,6 +139,8 @@ export class ThrottlerGuard implements CanActivate {
     context: ExecutionContext,
     limit: number,
     ttl: number,
+    getTracker: ThrottlerGetTrackerFunction,
+    generateKey: ThrottlerGenerateKeyFunction,
     throttler: ThrottlerOptions,
   ): Promise<boolean> {
     // Here we start to check the amount of requests being done against the ttl.
@@ -119,8 +154,8 @@ export class ThrottlerGuard implements CanActivate {
         }
       }
     }
-    const tracker = await this.getTracker(req);
-    const key = this.generateKey(context, tracker, throttler.name);
+    const tracker = await getTracker(req);
+    const key = generateKey(context, tracker, throttler.name);
     const { totalHits, timeToExpire } = await this.storageService.increment(key, ttl);
 
     const getThrottlerSuffix = (name: string) => (name === 'default' ? '' : `-${name}`);
@@ -189,6 +224,9 @@ export class ThrottlerGuard implements CanActivate {
     _context: ExecutionContext,
     _throttlerLimitDetail: ThrottlerLimitDetail,
   ): Promise<string> {
+    if (!Array.isArray(this.options)) {
+      return this.options.errorMessage || this.errorMessage;
+    }
     return this.errorMessage;
   }
 
