@@ -76,7 +76,7 @@
     "conventional-changelog-cli": "4.1.0",
     "cz-conventional-changelog": "3.3.0",
     "eslint": "8.55.0",
-    "eslint-config-prettier": "9.0.0",
+    "eslint-config-prettier": "9.1.0",
     "eslint-plugin-import": "2.29.0",
     "graphql": "16.8.1",
     "graphql-tools": "9.0.0",
