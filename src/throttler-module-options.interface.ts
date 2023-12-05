@@ -1,6 +1,5 @@
 import { ExecutionContext, ModuleMetadata, Type } from '@nestjs/common/interfaces';
 import { ThrottlerStorage } from './throttler-storage.interface';
-import { ThrottlerGenerateKeyFunction, ThrottlerGetTrackerFunction } from './throttler.decorator';
 
 export type Resolvable<T extends number | string | boolean> =
   | T
@@ -114,3 +113,11 @@ export interface ThrottlerAsyncOptions extends Pick<ModuleMetadata, 'imports'> {
    */
   inject?: any[];
 }
+
+export type ThrottlerGetTrackerFunction = (req: Record<string, any>) => Promise<string> | string;
+
+export type ThrottlerGenerateKeyFunction = (
+  context: ExecutionContext,
+  trackerString: string,
+  throttlerName: string,
+) => string;

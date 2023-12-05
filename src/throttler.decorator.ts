@@ -1,5 +1,9 @@
-import { ExecutionContext, Inject } from '@nestjs/common';
-import { Resolvable } from './throttler-module-options.interface';
+import { Inject } from '@nestjs/common';
+import {
+  Resolvable,
+  ThrottlerGenerateKeyFunction,
+  ThrottlerGetTrackerFunction,
+} from './throttler-module-options.interface';
 import {
   THROTTLER_KEY_GENERATOR,
   THROTTLER_LIMIT,
@@ -8,13 +12,6 @@ import {
   THROTTLER_TTL,
 } from './throttler.constants';
 import { getOptionsToken, getStorageToken } from './throttler.providers';
-
-export type ThrottlerGetTrackerFunction = (req: Record<string, any>) => Promise<string> | string;
-export type ThrottlerGenerateKeyFunction = (
-  context: ExecutionContext,
-  trackerString: string,
-  throttlerName: string,
-) => string;
 
 interface ThrottlerMethodOrControllerOptions {
   limit?: Resolvable<number>;

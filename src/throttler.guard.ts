@@ -3,6 +3,8 @@ import { Reflector } from '@nestjs/core';
 import * as md5 from 'md5';
 import {
   Resolvable,
+  ThrottlerGenerateKeyFunction,
+  ThrottlerGetTrackerFunction,
   ThrottlerModuleOptions,
   ThrottlerOptions,
 } from './throttler-module-options.interface';
@@ -14,12 +16,7 @@ import {
   THROTTLER_TRACKER,
   THROTTLER_TTL,
 } from './throttler.constants';
-import {
-  InjectThrottlerOptions,
-  InjectThrottlerStorage,
-  ThrottlerGenerateKeyFunction,
-  ThrottlerGetTrackerFunction,
-} from './throttler.decorator';
+import { InjectThrottlerOptions, InjectThrottlerStorage } from './throttler.decorator';
 import { ThrottlerException, throttlerMessage } from './throttler.exception';
 import { ThrottlerLimitDetail } from './throttler.guard.interface';
 
