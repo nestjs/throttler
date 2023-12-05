@@ -56,10 +56,12 @@ export class ThrottlerGuard implements CanActivate {
       this.commonOptions = {
         skipIf: this.options.skipIf,
         ignoreUserAgents: this.options.ignoreUserAgents,
-        getTracker: this.options.getTracker || this.getTracker,
-        generateKey: this.options.generateKey || this.generateKey,
+        getTracker: this.options.getTracker,
+        generateKey: this.options.generateKey,
       };
     }
+    this.commonOptions.getTracker ??= this.getTracker;
+    this.commonOptions.generateKey ??= this.generateKey;
   }
 
   /**
