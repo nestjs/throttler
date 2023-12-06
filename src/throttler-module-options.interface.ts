@@ -114,8 +114,14 @@ export interface ThrottlerAsyncOptions extends Pick<ModuleMetadata, 'imports'> {
   inject?: any[];
 }
 
+/**
+ * @publicApi
+ */
 export type ThrottlerGetTrackerFunction = (req: Record<string, any>) => Promise<string> | string;
 
+/**
+ * @publicApi
+ */
 export type ThrottlerGenerateKeyFunction = (
   context: ExecutionContext,
   trackerString: string,
