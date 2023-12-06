@@ -280,6 +280,14 @@ The following options are valid for the object passed to the array of the `Throt
     <td><code>skipIf</code></td>
     <td>a function that takes in the <code>ExecutionContext</code> and returns a <code>boolean</code> to short circuit the throttler logic. Like <code>@SkipThrottler()</code>, but based on the request</td>
   </tr>
+  <tr>
+    <td><code>getTracker</code></td>
+    <td>a function that takes in the <code>Request</code> and returns a <code>string</code> to override the default logic of the <code>getTracker</code> method</td>
+  </tr>
+   <tr>
+    <td><code>generateKey</code></td>
+    <td>a function that takes in the <code>ExecutionContext</code>, the tacker <code>string</code> and the throttler name as a <code>string</code> and returns a <code>string</code> to override the final key which will be used to store the rate limit value. This overrides the default logic of the <code>generateKey</code> method</td>
+  </tr>
 </table>
 
 If you need to set up storages instead, or want to use a some of the above options in a more global sense, applying to each throttler set, you can pass the options above via the `throttlers` option key and use the below table
@@ -300,6 +308,18 @@ If you need to set up storages instead, or want to use a some of the above optio
   <tr>
     <td><code>throttlers</code></td>
     <td>an array of throttler sets, defined using the table above</td>
+  </tr>
+  <tr>
+    <td><code>errorMessage</code></td>
+    <td>a <code>string</code> which overrides the default throttler error message</td>
+  </tr>
+  <tr>
+    <td><code>getTracker</code></td>
+    <td>a function that takes in the <code>Request</code> and returns a <code>string</code> to override the default logic of the <code>getTracker</code> method</td>
+  </tr>
+   <tr>
+    <td><code>generateKey</code></td>
+    <td>a function that takes in the <code>ExecutionContext</code>, the tacker <code>string</code> and the throttler name as a <code>string</code> and returns a <code>string</code> to override the final key which will be used to store the rate limit value. This overrides the default logic of the <code>generateKey</code> method</td>
   </tr>
 </table>
 
