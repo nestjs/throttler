@@ -118,7 +118,7 @@ export class ThrottlerGuard implements CanActivate {
         routeOrClassGetKeyGenerator || namedThrottler.generateKey || this.commonOptions.generateKey;
 
       continues.push(
-        await this.handleRequest(context, limit, ttl, getTracker, generateKey, namedThrottler),
+        await this.handleRequest(context, limit, ttl, namedThrottler, getTracker, generateKey),
       );
     }
     return continues.every((cont) => cont);
@@ -138,9 +138,9 @@ export class ThrottlerGuard implements CanActivate {
     context: ExecutionContext,
     limit: number,
     ttl: number,
+    throttler: ThrottlerOptions,
     getTracker: ThrottlerGetTrackerFunction,
     generateKey: ThrottlerGenerateKeyFunction,
-    throttler: ThrottlerOptions,
   ): Promise<boolean> {
     // Here we start to check the amount of requests being done against the ttl.
     const { req, res } = this.getRequestResponse(context);
