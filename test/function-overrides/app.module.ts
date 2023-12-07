@@ -3,6 +3,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { ThrottlerGuard, ThrottlerModule, seconds } from '../../src';
 import { FunctionOverridesThrottlerController } from './funciton-overrides-throttler.controller';
 import md5 = require('md5');
+import assert = require('assert');
 
 @Module({
   imports: [
@@ -16,8 +17,10 @@ import md5 = require('md5');
         name: 'custom',
         ttl: seconds(3),
         limit: 2,
-        getTracker: (req) => req.ip,
+        getTracker: () => 'customTrackerString',
         generateKey: (context: ExecutionContext, trackerString: string, throttlerName: string) => {
+          // check if tracker string is passed correctly
+          assert(trackerString === 'customTrackerString');
           // use the same key for all endpoints
           return md5(`${throttlerName}-${trackerString}`);
         },
