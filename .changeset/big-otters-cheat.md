@@ -2,4 +2,4 @@
 '@nestjs/throttler': minor
 ---
 
-enhance throttler definition customization possibilities
+Allow for throttler definitions to define their own trackers and key generators to allow for more customization of the rate limit process
