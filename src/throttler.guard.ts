@@ -60,8 +60,8 @@ export class ThrottlerGuard implements CanActivate {
         generateKey: this.options.generateKey,
       };
     }
-    this.commonOptions.getTracker ??= this.getTracker;
-    this.commonOptions.generateKey ??= this.generateKey;
+    this.commonOptions.getTracker ??= this.getTracker.bind(this);
+    this.commonOptions.generateKey ??= this.generateKey.bind(this);
   }
 
   /**
