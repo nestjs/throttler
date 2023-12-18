@@ -1,5 +1,11 @@
 ## 5.0.0
 
+## 5.1.1
+
+### Patch Changes
+
+- b06a208: Resolves a bug that cause 'this' to be undefined in the 'getTracker' and 'generateKey' methods of the custom ThrottlerGuard
+
 ## 5.1.0
 
 ### Minor Changes
