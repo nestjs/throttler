@@ -80,7 +80,7 @@
     "eslint-plugin-import": "2.29.1",
     "graphql": "16.8.1",
     "graphql-tools": "9.0.0",
-    "husky": "9.0.9",
+    "husky": "9.0.10",
     "jest": "29.7.0",
     "lint-staged": "15.2.1",
     "nodemon": "3.0.3",
