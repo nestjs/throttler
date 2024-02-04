@@ -86,7 +86,7 @@
     "nodemon": "3.0.3",
     "pactum": "^3.4.1",
     "pinst": "3.0.0",
-    "prettier": "3.2.4",
+    "prettier": "3.2.5",
     "reflect-metadata": "0.2.1",
     "rimraf": "5.0.5",
     "rxjs": "7.8.1",
