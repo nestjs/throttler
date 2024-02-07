@@ -32,8 +32,8 @@ devDependencies:
     specifier: 10.3.2
     version: 10.3.2(@nestjs/common@10.3.2)(@nestjs/platform-express@10.3.2)(@nestjs/websockets@10.3.2)(reflect-metadata@0.2.1)(rxjs@7.8.1)
   '@nestjs/graphql':
-    specifier: 12.0.11
-    version: 12.0.11(@nestjs/common@10.3.2)(@nestjs/core@10.3.2)(graphql@16.8.1)(reflect-metadata@0.2.1)
+    specifier: 12.1.0
+    version: 12.1.0(@nestjs/common@10.3.2)(@nestjs/core@10.3.2)(graphql@16.8.1)(reflect-metadata@0.2.1)
   '@nestjs/platform-express':
     specifier: 10.3.2
     version: 10.3.2(@nestjs/common@10.3.2)(@nestjs/core@10.3.2)
@@ -1398,6 +1398,17 @@ packages:
       tslib: 2.6.2
     dev: true
 
+  /@graphql-tools/merge@9.0.1(graphql@16.8.1):
+    resolution: {integrity: sha512-hIEExWO9fjA6vzsVjJ3s0cCQ+Q/BEeMVJZtMXd7nbaVefVy0YDyYlEkeoYYNV3NVVvu1G9lr6DM1Qd0DGo9Caw==}
+    engines: {node: '>=16.0.0'}
+    peerDependencies:
+      graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
+    dependencies:
+      '@graphql-tools/utils': 10.0.13(graphql@16.8.1)
+      graphql: 16.8.1
+      tslib: 2.6.2
+    dev: true
+
   /@graphql-tools/mock@8.7.20(graphql@16.8.1):
     resolution: {integrity: sha512-ljcHSJWjC/ZyzpXd5cfNhPI7YljRVvabKHPzKjEs5ElxWu2cdlLGvyNYepApXDsM/OJG/2xuhGM+9GWu5gEAPQ==}
     peerDependencies:
@@ -1418,6 +1429,19 @@ packages:
     dependencies:
       '@graphql-tools/merge': 9.0.0(graphql@16.8.1)
       '@graphql-tools/utils': 10.0.8(graphql@16.8.1)
+      graphql: 16.8.1
+      tslib: 2.6.2
+      value-or-promise: 1.0.12
+    dev: true
+
+  /@graphql-tools/schema@10.0.2(graphql@16.8.1):
+    resolution: {integrity: sha512-TbPsIZnWyDCLhgPGnDjt4hosiNU2mF/rNtSk5BVaXWnZqvKJ6gzJV4fcHcvhRIwtscDMW2/YTnK6dLVnk8pc4w==}
+    engines: {node: '>=16.0.0'}
+    peerDependencies:
+      graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
+    dependencies:
+      '@graphql-tools/merge': 9.0.1(graphql@16.8.1)
+      '@graphql-tools/utils': 10.0.13(graphql@16.8.1)
       graphql: 16.8.1
       tslib: 2.6.2
       value-or-promise: 1.0.12
@@ -1445,6 +1469,19 @@ packages:
       graphql: 16.8.1
       tslib: 2.6.2
       value-or-promise: 1.0.12
+    dev: true
+
+  /@graphql-tools/utils@10.0.13(graphql@16.8.1):
+    resolution: {integrity: sha512-fMILwGr5Dm2zefNItjQ6C2rauigklv69LIwppccICuGTnGaOp3DspLt/6Lxj72cbg5d9z60Sr+Egco3CJKLsNg==}
+    engines: {node: '>=16.0.0'}
+    peerDependencies:
+      graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
+    dependencies:
+      '@graphql-typed-document-node/core': 3.2.0(graphql@16.8.1)
+      cross-inspect: 1.0.0
+      dset: 3.1.2
+      graphql: 16.8.1
+      tslib: 2.6.2
     dev: true
 
   /@graphql-tools/utils@10.0.8(graphql@16.8.1):
@@ -1928,8 +1965,8 @@ packages:
       - encoding
     dev: true
 
-  /@nestjs/graphql@12.0.11(@nestjs/common@10.3.2)(@nestjs/core@10.3.2)(graphql@16.8.1)(reflect-metadata@0.2.1):
-    resolution: {integrity: sha512-iCyVs9+utCQt9ehMhUjQcEdjRN/MrcTBINd7P44O1fzGENuWMbt1Z8RCoZbeGi5iVPBY63HgYik+BnnICqmxZw==}
+  /@nestjs/graphql@12.1.0(@nestjs/common@10.3.2)(@nestjs/core@10.3.2)(graphql@16.8.1)(reflect-metadata@0.2.1):
+    resolution: {integrity: sha512-HM0z9n9uO2nOmNeBqQhR53dVv/uhdfjkDSjcb61FmQuXlTi2Nun42n5Ieee4wXFw60bznAdLs++dp7O+xxVTwQ==}
     peerDependencies:
       '@apollo/subgraph': ^2.0.0
       '@nestjs/common': ^9.3.8 || ^10.0.0
@@ -1937,8 +1974,8 @@ packages:
       class-transformer: '*'
       class-validator: '*'
       graphql: ^16.6.0
-      reflect-metadata: ^0.1.13
-      ts-morph: ^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0 || ^20.0.0
+      reflect-metadata: ^0.1.13 || ^0.2.0
+      ts-morph: ^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0 || ^20.0.0 || ^21.0.0
     peerDependenciesMeta:
       '@apollo/subgraph':
         optional: true
@@ -1949,12 +1986,12 @@ packages:
       ts-morph:
         optional: true
     dependencies:
-      '@graphql-tools/merge': 9.0.0(graphql@16.8.1)
-      '@graphql-tools/schema': 10.0.0(graphql@16.8.1)
-      '@graphql-tools/utils': 10.0.8(graphql@16.8.1)
+      '@graphql-tools/merge': 9.0.1(graphql@16.8.1)
+      '@graphql-tools/schema': 10.0.2(graphql@16.8.1)
+      '@graphql-tools/utils': 10.0.13(graphql@16.8.1)
       '@nestjs/common': 10.3.2(reflect-metadata@0.2.1)(rxjs@7.8.1)
       '@nestjs/core': 10.3.2(@nestjs/common@10.3.2)(@nestjs/platform-express@10.3.2)(@nestjs/websockets@10.3.2)(reflect-metadata@0.2.1)(rxjs@7.8.1)
-      '@nestjs/mapped-types': 2.0.2(@nestjs/common@10.3.2)(reflect-metadata@0.2.1)
+      '@nestjs/mapped-types': 2.0.4(@nestjs/common@10.3.2)(reflect-metadata@0.2.1)
       chokidar: 3.5.3
       fast-glob: 3.3.2
       graphql: 16.8.1
@@ -1966,14 +2003,14 @@ packages:
       subscriptions-transport-ws: 0.11.0(graphql@16.8.1)
       tslib: 2.6.2
       uuid: 9.0.1
-      ws: 8.14.2
+      ws: 8.16.0
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
     dev: true
 
-  /@nestjs/mapped-types@2.0.2(@nestjs/common@10.3.2)(reflect-metadata@0.2.1):
-    resolution: {integrity: sha512-V0izw6tWs6fTp9+KiiPUbGHWALy563Frn8X6Bm87ANLRuE46iuBMD5acKBDP5lKL/75QFvrzSJT7HkCbB0jTpg==}
+  /@nestjs/mapped-types@2.0.4(@nestjs/common@10.3.2)(reflect-metadata@0.2.1):
+    resolution: {integrity: sha512-xl+gUSp0B+ln1VSNoUftlglk8dfpUes3DHGxKZ5knuBxS5g2H/8p9/DSBOYWUfO5f4u9s6ffBPZ71WO+tbe5SA==}
     peerDependencies:
       '@nestjs/common': ^8.0.0 || ^9.0.0 || ^10.0.0
       class-transformer: ^0.4.0 || ^0.5.0
@@ -10331,19 +10368,6 @@ packages:
     peerDependencies:
       bufferutil: ^4.0.1
       utf-8-validate: ^5.0.2
-    peerDependenciesMeta:
-      bufferutil:
-        optional: true
-      utf-8-validate:
-        optional: true
-    dev: true
-
-  /ws@8.14.2:
-    resolution: {integrity: sha512-wEBG1ftX4jcglPxgFCMJmZ2PLtSbJ2Peg6TmpJFTbe9GZYOQCDPdMYu/Tm0/bGZkw8paZnJY45J4K2PZrLYq8g==}
-    engines: {node: '>=10.0.0'}
-    peerDependencies:
-      bufferutil: ^4.0.1
-      utf-8-validate: '>=5.0.2'
     peerDependenciesMeta:
       bufferutil:
         optional: true
