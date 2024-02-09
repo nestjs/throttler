@@ -1,6 +1,6 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import * as md5 from 'md5';
+import { md5 } from './hash';
 import {
   Resolvable,
   ThrottlerGenerateKeyFunction,
