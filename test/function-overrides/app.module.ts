@@ -1,7 +1,7 @@
 import { ExecutionContext, Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 import { ThrottlerGuard, ThrottlerModule, seconds } from '../../src';
-import { FunctionOverridesThrottlerController } from './funciton-overrides-throttler.controller';
+import { FunctionOverridesThrottlerController } from './function-overrides-throttler.controller';
 import md5 = require('md5');
 import assert = require('assert');
 
