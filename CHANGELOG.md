@@ -1,5 +1,11 @@
 ## 5.0.0
 
+## 5.1.2
+
+### Patch Changes
+
+- 7a431e5: Improve performance by replacing md5 npm package with Node.js crypto module.
+
 ## 5.1.1
 
 ### Patch Changes
