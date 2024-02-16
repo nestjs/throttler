@@ -2,7 +2,7 @@ import { Controller, Get } from '@nestjs/common';
 import { Throttle, seconds } from '../../../src';
 import { AppService } from '../app.service';
 
-@Throttle({ default: { limit: 2, ttl: seconds(10), blockDuration: seconds(20) } })
+@Throttle({ default: { limit: 2, ttl: seconds(10), blockDuration: seconds(5) } })
 @Controller('limit')
 export class LimitController {
   constructor(private readonly appService: AppService) {}
@@ -11,7 +11,7 @@ export class LimitController {
     return this.appService.success();
   }
 
-  @Throttle({ default: { limit: 5, ttl: seconds(10), blockDuration: seconds(20) } })
+  @Throttle({ default: { limit: 5, ttl: seconds(10), blockDuration: seconds(15) } })
   @Get('higher')
   getHigher() {
     return this.appService.success();
