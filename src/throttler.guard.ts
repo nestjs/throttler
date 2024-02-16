@@ -10,6 +10,7 @@ import {
 } from './throttler-module-options.interface';
 import { ThrottlerStorage } from './throttler-storage.interface';
 import {
+  THROTTLER_BLOCK_DURATION,
   THROTTLER_KEY_GENERATOR,
   THROTTLER_LIMIT,
   THROTTLER_SKIP,
@@ -99,6 +100,10 @@ export class ThrottlerGuard implements CanActivate {
         THROTTLER_TTL + namedThrottler.name,
         [handler, classRef],
       );
+      const routeOrClassBlockDuration = this.reflector.getAllAndOverride<Resolvable<number>>(
+        THROTTLER_BLOCK_DURATION + namedThrottler.name,
+        [handler, classRef],
+      );
       const routeOrClassGetTracker = this.reflector.getAllAndOverride<ThrottlerGetTrackerFunction>(
         THROTTLER_TRACKER + namedThrottler.name,
         [handler, classRef],
@@ -112,7 +117,11 @@ export class ThrottlerGuard implements CanActivate {
       // Check if specific limits are set at class or route level, otherwise use global options.
       const limit = await this.resolveValue(context, routeOrClassLimit || namedThrottler.limit);
       const ttl = await this.resolveValue(context, routeOrClassTtl || namedThrottler.ttl);
-      const blockDuration = (await this.resolveValue(context, namedThrottler.blockDuration)) || ttl;
+      const blockDuration =
+        (await this.resolveValue(
+          context,
+          routeOrClassBlockDuration || namedThrottler.blockDuration,
+        )) || ttl;
       const getTracker =
         routeOrClassGetTracker || namedThrottler.getTracker || this.commonOptions.getTracker;
       const generateKey =
