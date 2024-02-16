@@ -41,6 +41,14 @@ export interface ThrottlerOptions {
    * This can be based on the incoming context, or something like an env value.
    */
   skipIf?: (context: ExecutionContext) => boolean;
+  /**
+   * A method to override the default tracker string.
+   */
+  getTracker?: ThrottlerGetTrackerFunction;
+  /**
+   * A method to override the default key generator.
+   */
+  generateKey?: ThrottlerGenerateKeyFunction;
 }
 
 /**
@@ -58,6 +66,19 @@ export type ThrottlerModuleOptions =
        * The user agents that should be ignored (checked against the User-Agent header).
        */
       ignoreUserAgents?: RegExp[];
+      /**
+       * A method to override the default tracker string.
+       */
+      getTracker?: ThrottlerGetTrackerFunction;
+      /**
+       * A method to override the default key generator.
+       */
+      generateKey?: ThrottlerGenerateKeyFunction;
+      /**
+       * An optional message to override the default error message.
+       */
+      errorMessage?: string;
+
       /**
        * The storage class to use where all the record will be stored in.
        */
@@ -97,3 +118,17 @@ export interface ThrottlerAsyncOptions extends Pick<ModuleMetadata, 'imports'> {
    */
   inject?: any[];
 }
+
+/**
+ * @publicApi
+ */
+export type ThrottlerGetTrackerFunction = (req: Record<string, any>) => Promise<string> | string;
+
+/**
+ * @publicApi
+ */
+export type ThrottlerGenerateKeyFunction = (
+  context: ExecutionContext,
+  trackerString: string,
+  throttlerName: string,
+) => string;

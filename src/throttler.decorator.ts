@@ -1,12 +1,24 @@
 import { Inject } from '@nestjs/common';
-import { THROTTLER_LIMIT, THROTTLER_SKIP, THROTTLER_TTL } from './throttler.constants';
+import {
+  Resolvable,
+  ThrottlerGenerateKeyFunction,
+  ThrottlerGetTrackerFunction,
+} from './throttler-module-options.interface';
+import {
+  THROTTLER_KEY_GENERATOR,
+  THROTTLER_LIMIT,
+  THROTTLER_SKIP,
+  THROTTLER_TRACKER,
+  THROTTLER_TTL,
+} from './throttler.constants';
 import { getOptionsToken, getStorageToken } from './throttler.providers';
-import { Resolvable } from './throttler-module-options.interface';
 
 interface ThrottlerMethodOrControllerOptions {
   limit?: Resolvable<number>;
   ttl?: Resolvable<number>;
   blockDuration?: Resolvable<number>;
+  getTracker?: ThrottlerGetTrackerFunction;
+  generateKey?: ThrottlerGenerateKeyFunction;
 }
 
 function setThrottlerMetadata(
@@ -16,6 +28,8 @@ function setThrottlerMetadata(
   for (const name in options) {
     Reflect.defineMetadata(THROTTLER_TTL + name, options[name].ttl, target);
     Reflect.defineMetadata(THROTTLER_LIMIT + name, options[name].limit, target);
+    Reflect.defineMetadata(THROTTLER_TRACKER + name, options[name].getTracker, target);
+    Reflect.defineMetadata(THROTTLER_KEY_GENERATOR + name, options[name].generateKey, target);
   }
 }
 
@@ -58,14 +72,11 @@ export const SkipThrottle = (
     propertyKey?: string | symbol,
     descriptor?: TypedPropertyDescriptor<any>,
   ) => {
+    const reflectionTarget = descriptor?.value ?? target;
     for (const key in skip) {
-      if (descriptor) {
-        Reflect.defineMetadata(THROTTLER_SKIP + key, skip[key], descriptor.value);
-        return descriptor;
-      }
-      Reflect.defineMetadata(THROTTLER_SKIP + key, skip[key], target);
-      return target;
+      Reflect.defineMetadata(THROTTLER_SKIP + key, skip[key], reflectionTarget);
     }
+    return descriptor ?? target;
   };
 };
 

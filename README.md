@@ -1,7 +1,6 @@
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
 </p>
-
 [travis-image]: https://api.travis-ci.org/nestjs/nest.svg?branch=master
 [travis-url]: https://travis-ci.org/nestjs/nest
 [linux-image]: https://img.shields.io/travis/nestjs/nest/master.svg?label=linux
@@ -12,8 +11,6 @@
 <a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
 <a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
 <a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/dm/@nestjs/core.svg" alt="NPM Downloads" /></a>
-<a href="https://travis-ci.org/nestjs/nest"><img src="https://api.travis-ci.org/nestjs/nest.svg?branch=master" alt="Travis" /></a>
-<a href="https://travis-ci.org/nestjs/nest"><img src="https://img.shields.io/travis/nestjs/nest/master.svg?label=linux" alt="Linux" /></a>
 <a href="https://coveralls.io/github/nestjs/nest?branch=master"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#5" alt="Coverage" /></a>
 <a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
 <a href="https://opencollective.com/nest#backer"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
@@ -40,6 +37,8 @@ $ npm i --save @nestjs/throttler
 `@nestjs/throttler@^1` is compatible with Nest v7 while `@nestjs/throttler@^2` is compatible with Nest v7 and Nest v8, but it is suggested to be used with only v8 in case of breaking changes against v7 that are unseen.
 
 For NestJS v10, please use version 4.1.0 or above
+
+<div id="toc"></div>
 
 ## Table of Contents
 
@@ -95,7 +94,7 @@ There may come upon times where you want to set up multiple throttling definitio
   imports: [
     ThrottlerModule.forRoot([
       {
-        name: 'short'
+        name: 'short',
         ttl: 1000,
         limit: 3,
       },
@@ -167,7 +166,7 @@ import { Injectable } from '@nestjs/common';
 export class ThrottlerBehindProxyGuard extends ThrottlerGuard {
   protected getTracker(req: Record<string, any>): Promise<string> {
   return new Promise<string>((resolve, reject) => {
-    const tracker = request.ips.length > 0 ? request.ips[0] : request.ip; // individualize IP extraction to meet your own needs
+    const tracker = req.ips.length > 0 ? req.ips[0] : req.ip; // individualize IP extraction to meet your own needs
     resolve(tracker);
   });
   }
@@ -188,10 +187,15 @@ This module can work with websockets, but it requires some class extension. You 
 ```typescript
 @Injectable()
 export class WsThrottlerGuard extends ThrottlerGuard {
-  async handleRequest(context: ExecutionContext, limit: number, ttl: number): Promise<boolean> {
+  async handleRequest(
+    context: ExecutionContext,
+    limit: number,
+    ttl: number,
+    throttler: ThrottlerOptions,
+  ): Promise<boolean> {
     const client = context.switchToWs().getClient();
     const ip = client._socket.remoteAddress;
-    const key = this.generateKey(context, ip);
+    const key = this.generateKey(context, ip, throttler.name);
     const { totalHits } = await this.storageService.increment(key, ttl);
 
     if (totalHits > limit) {
@@ -227,6 +231,30 @@ export class GqlThrottlerGuard extends ThrottlerGuard {
 }
 ```
 
+However, when using Apollo Express/Fastify or Mercurius, it's important to configure the context correctly in the GraphQLModule to avoid any problems.
+
+#### Apollo Server (for Express):
+
+For Apollo Server running on Express, you can set up the context in your GraphQLModule configuration as follows:
+
+```typescript
+GraphQLModule.forRoot({
+  // ... other GraphQL module options
+  context: ({ req, res }) => ({ req, res }),
+});
+```
+
+#### Apollo Server (for Fastify) & Mercurius:
+
+When using Apollo Server with Fastify or Mercurius, you need to configure the context differently. You should use request and reply objects. Here's an example:
+
+```typescript
+GraphQLModule.forRoot({
+  // ... other GraphQL module options
+  context: (request, reply) => ({ request, reply }),
+});
+```
+
 #### Configuration
 
 The following options are valid for the object passed to the array of the `ThrottlerModule`'s options:
@@ -256,6 +284,14 @@ The following options are valid for the object passed to the array of the `Throt
     <td><code>skipIf</code></td>
     <td>a function that takes in the <code>ExecutionContext</code> and returns a <code>boolean</code> to short circuit the throttler logic. Like <code>@SkipThrottler()</code>, but based on the request</td>
   </tr>
+  <tr>
+    <td><code>getTracker</code></td>
+    <td>a function that takes in the <code>Request</code> and returns a <code>string</code> to override the default logic of the <code>getTracker</code> method</td>
+  </tr>
+   <tr>
+    <td><code>generateKey</code></td>
+    <td>a function that takes in the <code>ExecutionContext</code>, the tacker <code>string</code> and the throttler name as a <code>string</code> and returns a <code>string</code> to override the final key which will be used to store the rate limit value. This overrides the default logic of the <code>generateKey</code> method</td>
+  </tr>
 </table>
 
 If you need to set up storages instead, or want to use a some of the above options in a more global sense, applying to each throttler set, you can pass the options above via the `throttlers` option key and use the below table
@@ -276,6 +312,18 @@ If you need to set up storages instead, or want to use a some of the above optio
   <tr>
     <td><code>throttlers</code></td>
     <td>an array of throttler sets, defined using the table above</td>
+  </tr>
+  <tr>
+    <td><code>errorMessage</code></td>
+    <td>a <code>string</code> which overrides the default throttler error message</td>
+  </tr>
+  <tr>
+    <td><code>getTracker</code></td>
+    <td>a function that takes in the <code>Request</code> and returns a <code>string</code> to override the default logic of the <code>getTracker</code> method</td>
+  </tr>
+   <tr>
+    <td><code>generateKey</code></td>
+    <td>a function that takes in the <code>ExecutionContext</code>, the tacker <code>string</code> and the throttler name as a <code>string</code> and returns a <code>string</code> to override the final key which will be used to store the rate limit value. This overrides the default logic of the <code>generateKey</code> method</td>
   </tr>
 </table>
 
@@ -360,3 +408,5 @@ Feel free to submit a PR with your custom storage provider being added to this l
 ## License
 
 Nest is [MIT licensed](LICENSE).
+
+<p align="right"><a href="#toc">🔼 Back to TOC</a></p>

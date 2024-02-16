@@ -1,5 +1,29 @@
 ## 5.0.0
 
+## 5.1.2
+
+### Patch Changes
+
+- 7a431e5: Improve performance by replacing md5 npm package with Node.js crypto module.
+
+## 5.1.1
+
+### Patch Changes
+
+- b06a208: Resolves a bug that cause 'this' to be undefined in the 'getTracker' and 'generateKey' methods of the custom ThrottlerGuard
+
+## 5.1.0
+
+### Minor Changes
+
+- 903d187: Allow for throttler definitions to define their own trackers and key generators to allow for more customization of the rate limit process
+
+## 5.0.1
+
+### Patch Changes
+
+- bc9e6b2: Correctly assign metadata for multiple throttlers passed to `@SkipThrottle()`
+
 ### Major Changes
 
 - 2f4f2a7: # FEATURES
