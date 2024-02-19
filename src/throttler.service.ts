@@ -37,7 +37,7 @@ export class ThrottlerStorageService implements ThrottlerStorage, OnApplicationS
       this.storage[key].totalHits[throttlerName]--;
       clearTimeout(timeoutId);
       this.timeoutIds[throttlerName] = this.timeoutIds[throttlerName].filter(
-        (id) => id != timeoutId,
+        (id) => id !== timeoutId,
       );
     }, ttlMilliseconds);
     this.timeoutIds[throttlerName].push(timeoutId);

@@ -19,7 +19,7 @@ import {
 } from './throttler.constants';
 import { InjectThrottlerOptions, InjectThrottlerStorage } from './throttler.decorator';
 import { ThrottlerException, throttlerMessage } from './throttler.exception';
-import { ThrottlerLimitDetail } from './throttler.guard.interface';
+import { ThrottlerLimitDetail, ThrottlerRequest } from './throttler.guard.interface';
 
 /**
  * @publicApi
@@ -117,25 +117,24 @@ export class ThrottlerGuard implements CanActivate {
       // Check if specific limits are set at class or route level, otherwise use global options.
       const limit = await this.resolveValue(context, routeOrClassLimit || namedThrottler.limit);
       const ttl = await this.resolveValue(context, routeOrClassTtl || namedThrottler.ttl);
-      const blockDuration =
-        (await this.resolveValue(
-          context,
-          routeOrClassBlockDuration || namedThrottler.blockDuration,
-        )) || ttl;
+      const blockDuration = await this.resolveValue(
+        context,
+        routeOrClassBlockDuration || namedThrottler.blockDuration || ttl,
+      );
       const getTracker =
         routeOrClassGetTracker || namedThrottler.getTracker || this.commonOptions.getTracker;
       const generateKey =
         routeOrClassGetKeyGenerator || namedThrottler.generateKey || this.commonOptions.generateKey;
       continues.push(
-        await this.handleRequest(
+        await this.handleRequest({
           context,
           limit,
           ttl,
-          namedThrottler,
+          throttler: namedThrottler,
           blockDuration,
           getTracker,
           generateKey,
-        ),
+        }),
       );
     }
     return continues.every((cont) => cont);
@@ -151,15 +150,9 @@ export class ThrottlerGuard implements CanActivate {
    * @see https://tools.ietf.org/id/draft-polli-ratelimit-headers-00.html#header-specifications
    * @throws {ThrottlerException}
    */
-  protected async handleRequest(
-    context: ExecutionContext,
-    limit: number,
-    ttl: number,
-    throttler: ThrottlerOptions,
-    blockDuration: number,
-    getTracker: ThrottlerGetTrackerFunction,
-    generateKey: ThrottlerGenerateKeyFunction,
-  ): Promise<boolean> {
+  protected async handleRequest(requestProps: ThrottlerRequest): Promise<boolean> {
+    const { context, limit, ttl, throttler, blockDuration, getTracker, generateKey } = requestProps;
+
     // Here we start to check the amount of requests being done against the ttl.
     const { req, res } = this.getRequestResponse(context);
     const ignoreUserAgents = throttler.ignoreUserAgents ?? this.commonOptions.ignoreUserAgents;
