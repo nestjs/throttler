@@ -53,7 +53,7 @@ export interface ThrottlerRequest {
   throttler: ThrottlerOptions;
 
   /**
-   * The number of millisecond the request will be blocked.
+   * The number of milliseconds the request will be blocked.
    */
   blockDuration: number;
 

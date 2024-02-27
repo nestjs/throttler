@@ -27,7 +27,7 @@ export interface ThrottlerOptions {
   ttl: Resolvable<number>;
 
   /**
-   * The number of millisecond the request will be blocked.
+   * The number of milliseconds the request will be blocked.
    */
   blockDuration?: Resolvable<number>;
 
