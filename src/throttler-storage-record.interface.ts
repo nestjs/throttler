@@ -10,7 +10,7 @@ export interface ThrottlerStorageRecord {
   timeToExpire: number;
 
   /**
-   * Define the request is blocked or not.
+   * Define whether the request is blocked or not.
    */
   isBlocked: boolean;
 

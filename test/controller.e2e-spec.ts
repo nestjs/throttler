@@ -147,7 +147,6 @@ describe.each`
           'retry-after': /^\d+$/,
         });
         expect(errRes.status).toBe(429);
-        console.log(`waiting ${blockDuration / 1000} seconds`);
         await setTimeout(blockDuration);
         const response = await httPromise(appUrl + '/default');
         expect(response.data).toEqual({ success: true });

@@ -43,17 +43,17 @@ export interface ThrottlerRequest {
   limit: number;
 
   /**
-   * The number of milliseconds the limit of requests are allowed
+   * The number of milliseconds that each request will last in storage.
    */
   ttl: number;
 
   /**
-   * Incoming options of the throttler
+   * Incoming options of the throttler.
    */
   throttler: ThrottlerOptions;
 
   /**
-   * The number of millisecond the request will be blocked
+   * The number of millisecond the request will be blocked.
    */
   blockDuration: number;
 

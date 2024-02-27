@@ -5,12 +5,12 @@ export interface ThrottlerStorageOptions {
   totalHits: Record<string, number>;
 
   /**
-   * Unix timestamp in milliseconds that indicates `ttl` lifetime
+   * Unix timestamp in milliseconds that indicates `ttl` lifetime.
    */
   expiresAt: number;
 
   /**
-   * Define the request is blocked or not.
+   * Define whether the request is blocked or not.
    */
   isBlocked: boolean;
 
