@@ -86,7 +86,7 @@
     "reflect-metadata": "0.2.1",
     "rimraf": "5.0.5",
     "rxjs": "7.8.1",
-    "socket.io": "4.7.4",
+    "socket.io": "4.7.5",
     "supertest": "6.3.4",
     "ts-jest": "29.1.2",
     "ts-loader": "9.5.1",
