@@ -112,7 +112,7 @@ devDependencies:
     version: 3.1.0
   pactum:
     specifier: ^3.4.1
-    version: 3.6.4
+    version: 3.6.5
   pinst:
     specifier: 3.0.0
     version: 3.0.0
@@ -222,8 +222,8 @@ packages:
       graphql: 16.8.1
     dev: true
 
-  /@apollo/client@3.9.9(graphql@16.8.1):
-    resolution: {integrity: sha512-/sMecU/M0WK9knrguts1lSLV8xFKzIgOMVb4mi6MOxgJXjliDB8PvOtmXhTqh2cVMMR4TzXgOnb+af/690zlQw==}
+  /@apollo/client@3.9.10(graphql@16.8.1):
+    resolution: {integrity: sha512-w8i/Lk1P0vvWZF0Xb00XPonn79/0rgRJ1vopBlVudVuy9QP29/NZXK0rI2xJIN6VrKuEqJZaVGJC+7k23I2sfA==}
     requiresBuild: true
     peerDependencies:
       graphql: ^15.0.0 || ^16.0.0
@@ -2611,7 +2611,7 @@ packages:
   /@types/eslint-scope@3.7.7:
     resolution: {integrity: sha512-MzMFlSLBqNF2gcHWO0G1vP/YQyfvrxZ0bF+u7mzUdZ1/xK4A4sru+nraZz5i3iEIk1l1uyicaDVTB4QbbEkAYg==}
     dependencies:
-      '@types/eslint': 8.56.6
+      '@types/eslint': 8.56.7
       '@types/estree': 1.0.5
     dev: true
 
@@ -2622,8 +2622,8 @@ packages:
       '@types/json-schema': 7.0.15
     dev: true
 
-  /@types/eslint@8.56.6:
-    resolution: {integrity: sha512-ymwc+qb1XkjT/gfoQwxIeHZ6ixH23A+tCT2ADSA/DPVKzAjwYkTXBMCQ/f6fe4wEa85Lhp26VPeUxI7wMhAi7A==}
+  /@types/eslint@8.56.7:
+    resolution: {integrity: sha512-SjDvI/x3zsZnOkYZ3lCt9lOZWZLB2jIlNKz+LBgCtDurK0JZcwucxYHn1w2BJkD34dgX9Tjnak0txtq4WTggEA==}
     dependencies:
       '@types/estree': 1.0.5
       '@types/json-schema': 7.0.15
@@ -3829,7 +3829,7 @@ packages:
     hasBin: true
     dependencies:
       caniuse-lite: 1.0.30001603
-      electron-to-chromium: 1.4.722
+      electron-to-chromium: 1.4.723
       node-releases: 2.0.14
       update-browserslist-db: 1.0.13(browserslist@4.23.0)
     dev: true
@@ -4762,8 +4762,8 @@ packages:
     resolution: {integrity: sha512-FFa8QKjQK/A5QuFr2167myhMesGrhlOBD+3cYNxO9/S4XzHEXesyTD/1/xF644gC8buFPz3ca6G1LOQD0tZrrg==}
     dev: true
 
-  /electron-to-chromium@1.4.722:
-    resolution: {integrity: sha512-5nLE0TWFFpZ80Crhtp4pIp8LXCztjYX41yUcV6b+bKR2PqzjskTMOOlBi1VjBHlvHwS+4gar7kNKOrsbsewEZQ==}
+  /electron-to-chromium@1.4.723:
+    resolution: {integrity: sha512-rxFVtrMGMFROr4qqU6n95rUi9IlfIm+lIAt+hOToy/9r6CDv0XiEcQdC3VP71y1pE5CFTzKV0RvxOGYCPWWHPw==}
     dev: true
 
   /emittery@0.13.1:
@@ -6072,7 +6072,7 @@ packages:
       graphql: 16.8.1
       tslib: 2.6.2
     optionalDependencies:
-      '@apollo/client': 3.9.9(graphql@16.8.1)
+      '@apollo/client': 3.9.10(graphql@16.8.1)
     transitivePeerDependencies:
       - '@types/react'
       - graphql-ws
@@ -8371,8 +8371,8 @@ packages:
     resolution: {integrity: sha512-RqwewcUje6vhcYQGbPfdSXkcp/Vtwn4WmmTWLSmqp0CGxBroCEqRg3JMIjkjQTZCd2VmG+tTcQw+n4P/iuqv3Q==}
     dev: true
 
-  /pactum@3.6.4:
-    resolution: {integrity: sha512-HbOj0ELuC1WHYbIqCbI25kPc6brq5EauPVWCVJV7gSqEjMZyNEJXFYR0GRpLVUcNrAGExklOus9KItBKij1uIg==}
+  /pactum@3.6.5:
+    resolution: {integrity: sha512-ZP9NCOKWjLR9WfeLqngR6S3XZrnrWQFSAvM0KlH66GCeizySrR9eTl00awqoL0V5EixCLXVSHccGe5jkgKBB+w==}
     engines: {node: '>=10'}
     dependencies:
       '@exodus/schemasafe': 1.3.0
