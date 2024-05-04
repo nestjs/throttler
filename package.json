@@ -69,7 +69,7 @@
     "@typescript-eslint/eslint-plugin": "7.8.0",
     "@typescript-eslint/parser": "7.8.0",
     "apollo-server-fastify": "3.13.0",
-    "conventional-changelog-cli": "4.1.0",
+    "conventional-changelog-cli": "5.0.0",
     "cz-conventional-changelog": "3.3.0",
     "eslint": "8.57.0",
     "eslint-config-prettier": "9.1.0",
