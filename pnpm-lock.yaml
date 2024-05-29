@@ -115,7 +115,7 @@ importers:
         version: 3.1.2
       pactum:
         specifier: ^3.4.1
-        version: 3.6.9
+        version: 3.7.0
       pinst:
         specifier: 3.0.0
         version: 3.0.0
@@ -1197,8 +1197,8 @@ packages:
     peerDependencies:
       semantic-release: '>=18.0.0'
 
-  '@semantic-release/github@10.0.4':
-    resolution: {integrity: sha512-eHCfW3jlzax5OKd5nTovlvoCdg+b9YBa31M2JGT1KmzmJR3TIalu2ahVU+V/xATVeOx+S8fbCiPnBBgMlzH5Vw==}
+  '@semantic-release/github@10.0.5':
+    resolution: {integrity: sha512-hmuCDkfru/Uc9+ZBNOSremAupu6BCslvOVDiG0wYcL8TQodCycp6uvwDyeym1H0M4l3ob9c0s0xMBiZjjXQ2yA==}
     engines: {node: '>=20.8.1'}
     peerDependencies:
       semantic-release: '>=20.1.0'
@@ -4359,8 +4359,8 @@ packages:
   pactum-matchers@1.1.7:
     resolution: {integrity: sha512-RqwewcUje6vhcYQGbPfdSXkcp/Vtwn4WmmTWLSmqp0CGxBroCEqRg3JMIjkjQTZCd2VmG+tTcQw+n4P/iuqv3Q==}
 
-  pactum@3.6.9:
-    resolution: {integrity: sha512-xONk4kobahE2bZAFelTWxZbx1SdCT7TxHUjatc7YZc6Du5AvXYVcLJ/tkGfUGwtuPYzLVHzXcUaQ59S11Ld9PA==}
+  pactum@3.7.0:
+    resolution: {integrity: sha512-zYw+84hb/rQZ2/mEw2xla/qowLnOvlIvbTYeAhQS2pu3ZAyx+pXJLntcCqZ0QI9PUWwx8HqCzm2qBclZTtZUzw==}
     engines: {node: '>=10'}
 
   parent-module@1.0.1:
@@ -5408,6 +5408,10 @@ packages:
 
   type-fest@4.18.2:
     resolution: {integrity: sha512-+suCYpfJLAe4OXS6+PPXjW3urOS4IoP9waSiLuXfLgqZODKw/aWwASvzqE886wA0kQgGy0mIWyhd87VpqIy6Xg==}
+    engines: {node: '>=16'}
+
+  type-fest@4.18.3:
+    resolution: {integrity: sha512-Q08/0IrpvM+NMY9PA2rti9Jb+JejTddwmwmVQGskAlhtcrw1wsRzoR6ode6mR+OAabNa75w/dxedSUY2mlphaQ==}
     engines: {node: '>=16'}
 
   type-is@1.6.18:
@@ -7227,7 +7231,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@semantic-release/github@10.0.4(semantic-release@23.0.8(typescript@5.4.5))':
+  '@semantic-release/github@10.0.5(semantic-release@23.0.8(typescript@5.4.5))':
     dependencies:
       '@octokit/core': 6.1.2
       '@octokit/plugin-paginate-rest': 11.3.0(@octokit/core@6.1.2)
@@ -10926,7 +10930,7 @@ snapshots:
 
   pactum-matchers@1.1.7: {}
 
-  pactum@3.6.9:
+  pactum@3.7.0:
     dependencies:
       '@exodus/schemasafe': 1.3.0
       deep-override: 1.0.2
@@ -11179,7 +11183,7 @@ snapshots:
     dependencies:
       find-up-simple: 1.0.0
       read-pkg: 9.0.1
-      type-fest: 4.18.2
+      type-fest: 4.18.3
 
   read-pkg-up@7.0.1:
     dependencies:
@@ -11396,7 +11400,7 @@ snapshots:
     dependencies:
       '@semantic-release/commit-analyzer': 12.0.0(semantic-release@23.0.8(typescript@5.4.5))
       '@semantic-release/error': 4.0.0
-      '@semantic-release/github': 10.0.4(semantic-release@23.0.8(typescript@5.4.5))
+      '@semantic-release/github': 10.0.5(semantic-release@23.0.8(typescript@5.4.5))
       '@semantic-release/npm': 12.0.1(semantic-release@23.0.8(typescript@5.4.5))
       '@semantic-release/release-notes-generator': 13.0.0(semantic-release@23.0.8(typescript@5.4.5))
       aggregate-error: 5.0.0
@@ -12028,6 +12032,8 @@ snapshots:
   type-fest@2.19.0: {}
 
   type-fest@4.18.2: {}
+
+  type-fest@4.18.3: {}
 
   type-is@1.6.18:
     dependencies:
