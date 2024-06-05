@@ -224,7 +224,11 @@ export class ThrottlerGuard implements CanActivate {
     _throttlerLimitDetail: ThrottlerLimitDetail,
   ): Promise<string> {
     if (!Array.isArray(this.options)) {
-      return this.options.errorMessage || this.errorMessage;
+      if (!this.options.errorMessage) return this.errorMessage;
+
+      return typeof this.options.errorMessage === 'function'
+        ? this.options.errorMessage(_context, _throttlerLimitDetail)
+        : this.options.errorMessage;
     }
     return this.errorMessage;
   }

@@ -1,5 +1,6 @@
 import { ExecutionContext, ModuleMetadata, Type } from '@nestjs/common/interfaces';
 import { ThrottlerStorage } from './throttler-storage.interface';
+import { ThrottlerLimitDetail } from './throttler.guard.interface';
 
 export type Resolvable<T extends number | string | boolean> =
   | T
@@ -72,7 +73,9 @@ export type ThrottlerModuleOptions =
       /**
        * An optional message to override the default error message.
        */
-      errorMessage?: string;
+      errorMessage?:
+        | string
+        | ((context: ExecutionContext, throttlerLimitDetail: ThrottlerLimitDetail) => string);
 
       /**
        * The storage class to use where all the record will be stored in.
