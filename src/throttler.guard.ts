@@ -32,6 +32,7 @@ export class ThrottlerGuard implements CanActivate {
     ThrottlerOptions,
     'skipIf' | 'ignoreUserAgents' | 'getTracker' | 'generateKey'
   >;
+
   constructor(
     @InjectThrottlerOptions() protected readonly options: ThrottlerModuleOptions,
     @InjectThrottlerStorage() protected readonly storageService: ThrottlerStorage,
@@ -220,14 +221,14 @@ export class ThrottlerGuard implements CanActivate {
   }
 
   protected async getErrorMessage(
-    _context: ExecutionContext,
-    _throttlerLimitDetail: ThrottlerLimitDetail,
+    context: ExecutionContext,
+    throttlerLimitDetail: ThrottlerLimitDetail,
   ): Promise<string> {
     if (!Array.isArray(this.options)) {
       if (!this.options.errorMessage) return this.errorMessage;
 
       return typeof this.options.errorMessage === 'function'
-        ? this.options.errorMessage(_context, _throttlerLimitDetail)
+        ? this.options.errorMessage(context, throttlerLimitDetail)
         : this.options.errorMessage;
     }
     return this.errorMessage;
