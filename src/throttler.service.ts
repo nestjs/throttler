@@ -8,25 +8,19 @@ import { ThrottlerStorage } from './throttler-storage.interface';
  */
 @Injectable()
 export class ThrottlerStorageService implements ThrottlerStorage, OnApplicationShutdown {
-  private _map: Map<string, ThrottlerStorageOptions> = new Map();
+  private _storage: Map<string, ThrottlerStorageOptions> = new Map();
   private timeoutIds: NodeJS.Timeout[] = [];
 
   get storage(): Record<string, ThrottlerStorageOptions> {
-    return Object.fromEntries(this.map);
-    // If need to increase performance with loss of access to Map data.
-    // Detailed behavior: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map#setting_object_properties
-    // return this._map as unknown as Record<string, ThrottlerStorageOptions>;
-  }
-
-  private get map(): Map<string, ThrottlerStorageOptions> {
-    return this._map;
+    // TODO(v6): change return type to Map
+    return Object.fromEntries(this._storage);
   }
 
   /**
    * Get the expiration time in seconds from a single record.
    */
   private getExpirationTime(key: string): number {
-    return Math.floor((this.map.get(key).expiresAt - Date.now()) / 1000);
+    return Math.floor((this._storage.get(key).expiresAt - Date.now()) / 1000);
   }
 
   /**
@@ -34,7 +28,7 @@ export class ThrottlerStorageService implements ThrottlerStorage, OnApplicationS
    */
   private setExpirationTime(key: string, ttlMilliseconds: number): void {
     const timeoutId = setTimeout(() => {
-      this.map.get(key).totalHits--;
+      this._storage.get(key).totalHits--;
       clearTimeout(timeoutId);
       this.timeoutIds = this.timeoutIds.filter((id) => id != timeoutId);
     }, ttlMilliseconds);
@@ -43,23 +37,23 @@ export class ThrottlerStorageService implements ThrottlerStorage, OnApplicationS
 
   async increment(key: string, ttl: number): Promise<ThrottlerStorageRecord> {
     const ttlMilliseconds = ttl;
-    if (!this.map.has(key)) {
-      this.map.set(key, { totalHits: 0, expiresAt: Date.now() + ttlMilliseconds });
+    if (!this._storage.has(key)) {
+      this._storage.set(key, { totalHits: 0, expiresAt: Date.now() + ttlMilliseconds });
     }
 
     let timeToExpire = this.getExpirationTime(key);
 
     // Reset the timeToExpire once it has been expired.
     if (timeToExpire <= 0) {
-      this.map.get(key).expiresAt = Date.now() + ttlMilliseconds;
+      this._storage.get(key).expiresAt = Date.now() + ttlMilliseconds;
       timeToExpire = this.getExpirationTime(key);
     }
 
-    this.map.get(key).totalHits++;
+    this._storage.get(key).totalHits++;
     this.setExpirationTime(key, ttlMilliseconds);
 
     return {
-      totalHits: this.map.get(key).totalHits,
+      totalHits: this._storage.get(key).totalHits,
       timeToExpire,
     };
   }
