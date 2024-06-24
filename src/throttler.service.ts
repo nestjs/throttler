@@ -8,18 +8,25 @@ import { ThrottlerStorage } from './throttler-storage.interface';
  */
 @Injectable()
 export class ThrottlerStorageService implements ThrottlerStorage, OnApplicationShutdown {
-  private _storage: Record<string, ThrottlerStorageOptions> = {};
+  private _map: Map<string, ThrottlerStorageOptions> = new Map();
   private timeoutIds: NodeJS.Timeout[] = [];
 
   get storage(): Record<string, ThrottlerStorageOptions> {
-    return this._storage;
+    return Object.fromEntries(this.map);
+    // If need to increase performance with loss of access to Map data.
+    // Detailed behavior: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map#setting_object_properties
+    // return this._map as unknown as Record<string, ThrottlerStorageOptions>;
+  }
+
+  private get map(): Map<string, ThrottlerStorageOptions> {
+    return this._map;
   }
 
   /**
    * Get the expiration time in seconds from a single record.
    */
   private getExpirationTime(key: string): number {
-    return Math.floor((this.storage[key].expiresAt - Date.now()) / 1000);
+    return Math.floor((this.map.get(key).expiresAt - Date.now()) / 1000);
   }
 
   /**
@@ -27,7 +34,7 @@ export class ThrottlerStorageService implements ThrottlerStorage, OnApplicationS
    */
   private setExpirationTime(key: string, ttlMilliseconds: number): void {
     const timeoutId = setTimeout(() => {
-      this.storage[key].totalHits--;
+      this.map.get(key).totalHits--;
       clearTimeout(timeoutId);
       this.timeoutIds = this.timeoutIds.filter((id) => id != timeoutId);
     }, ttlMilliseconds);
@@ -36,23 +43,23 @@ export class ThrottlerStorageService implements ThrottlerStorage, OnApplicationS
 
   async increment(key: string, ttl: number): Promise<ThrottlerStorageRecord> {
     const ttlMilliseconds = ttl;
-    if (!this.storage[key]) {
-      this.storage[key] = { totalHits: 0, expiresAt: Date.now() + ttlMilliseconds };
+    if (!this.map.has(key)) {
+      this.map.set(key, { totalHits: 0, expiresAt: Date.now() + ttlMilliseconds });
     }
 
     let timeToExpire = this.getExpirationTime(key);
 
     // Reset the timeToExpire once it has been expired.
     if (timeToExpire <= 0) {
-      this.storage[key].expiresAt = Date.now() + ttlMilliseconds;
+      this.map.get(key).expiresAt = Date.now() + ttlMilliseconds;
       timeToExpire = this.getExpirationTime(key);
     }
 
-    this.storage[key].totalHits++;
+    this.map.get(key).totalHits++;
     this.setExpirationTime(key, ttlMilliseconds);
 
     return {
-      totalHits: this.storage[key].totalHits,
+      totalHits: this.map.get(key).totalHits,
       timeToExpire,
     };
   }
