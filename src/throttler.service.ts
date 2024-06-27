@@ -40,13 +40,9 @@ export class ThrottlerStorageService implements ThrottlerStorage, OnApplicationS
       this.storage[key] = { totalHits: 0, expiresAt: Date.now() + ttlMilliseconds };
     }
 
-    let timeToExpire = this.getExpirationTime(key);
-
     // Reset the timeToExpire once it has been expired.
-    if (timeToExpire <= 0) {
-      this.storage[key].expiresAt = Date.now() + ttlMilliseconds;
-      timeToExpire = this.getExpirationTime(key);
-    }
+    this.storage[key].expiresAt = Date.now() + ttlMilliseconds;
+    const timeToExpire = this.getExpirationTime(key);
 
     this.storage[key].totalHits++;
     this.setExpirationTime(key, ttlMilliseconds);
