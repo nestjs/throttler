@@ -1,5 +1,11 @@
 ## 5.0.0
 
+## 5.2.0
+
+### Minor Changes
+
+- 16467c1: Add dynamic error messages based on context and ThrottlerLimitDetail
+
 ## 5.1.2
 
 ### Patch Changes

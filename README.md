@@ -315,7 +315,7 @@ If you need to set up storages instead, or want to use a some of the above optio
   </tr>
   <tr>
     <td><code>errorMessage</code></td>
-    <td>a <code>string</code> which overrides the default throttler error message</td>
+    <td>a <code>string</code> OR a function that takes in the <code>ExecutionContext</code> and the <code>ThrottlerLimitDetail</code> and returns a <code>string</code> which overrides the default throttler error message</td>
   </tr>
   <tr>
     <td><code>getTracker</code></td>
