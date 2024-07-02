@@ -9,7 +9,7 @@ import { ThrottlerStorage } from './throttler-storage.interface';
 @Injectable()
 export class ThrottlerStorageService implements ThrottlerStorage, OnApplicationShutdown {
   private _storage: Record<string, ThrottlerStorageOptions> = {};
-  private timeoutIds: NodeJS.Timeout[] = [];
+  private timeoutIds: Record<string, NodeJS.Timeout[]> = {};
 
   get storage(): Record<string, ThrottlerStorageOptions> {
     return this._storage;
@@ -23,21 +23,74 @@ export class ThrottlerStorageService implements ThrottlerStorage, OnApplicationS
   }
 
   /**
-   * Set the expiration time for a given key.
+   * Get the block expiration time in seconds from a single record.
    */
-  private setExpirationTime(key: string, ttlMilliseconds: number): void {
-    const timeoutId = setTimeout(() => {
-      this.storage[key].totalHits--;
-      clearTimeout(timeoutId);
-      this.timeoutIds = this.timeoutIds.filter((id) => id != timeoutId);
-    }, ttlMilliseconds);
-    this.timeoutIds.push(timeoutId);
+  private getBlockExpirationTime(key: string): number {
+    return Math.floor((this.storage[key].blockExpiresAt - Date.now()) / 1000);
   }
 
-  async increment(key: string, ttl: number): Promise<ThrottlerStorageRecord> {
+  /**
+   * Set the expiration time for a given key.
+   */
+  private setExpirationTime(key: string, ttlMilliseconds: number, throttlerName: string): void {
+    const timeoutId = setTimeout(() => {
+      this.storage[key].totalHits[throttlerName]--;
+      clearTimeout(timeoutId);
+      this.timeoutIds[throttlerName] = this.timeoutIds[throttlerName].filter(
+        (id) => id !== timeoutId,
+      );
+    }, ttlMilliseconds);
+    this.timeoutIds[throttlerName].push(timeoutId);
+  }
+
+  /**
+   * Clear the expiration time related to the throttle
+   */
+  private clearExpirationTimes(throttlerName: string) {
+    this.timeoutIds[throttlerName].forEach(clearTimeout);
+    this.timeoutIds[throttlerName] = [];
+  }
+
+  /**
+   * Reset the request blockage
+   */
+  private resetBlockdRequest(key: string, throttlerName: string) {
+    this.storage[key].isBlocked = false;
+    this.storage[key].totalHits[throttlerName] = 0;
+    this.clearExpirationTimes(throttlerName);
+  }
+
+  /**
+   * Increase the `totalHit` count and sent it to decrease queue
+   */
+  private fireHitCount(key: string, throttlerName: string, ttl: number) {
+    this.storage[key].totalHits[throttlerName]++;
+    this.setExpirationTime(key, ttl, throttlerName);
+  }
+
+  async increment(
+    key: string,
+    ttl: number,
+    limit: number,
+    blockDuration: number,
+    throttlerName: string,
+  ): Promise<ThrottlerStorageRecord> {
     const ttlMilliseconds = ttl;
+    const blockDurationMilliseconds = blockDuration;
+
+    if (!this.timeoutIds[throttlerName]) {
+      this.timeoutIds[throttlerName] = [];
+    }
+
     if (!this.storage[key]) {
-      this.storage[key] = { totalHits: 0, expiresAt: Date.now() + ttlMilliseconds };
+      this.storage[key] = {
+        totalHits: {
+          [throttlerName]: 0,
+        },
+        expiresAt: Date.now() + ttlMilliseconds,
+        blockExpiresAt: 0,
+        isBlocked: false,
+      };
     }
 
     let timeToExpire = this.getExpirationTime(key);
@@ -48,16 +101,36 @@ export class ThrottlerStorageService implements ThrottlerStorage, OnApplicationS
       timeToExpire = this.getExpirationTime(key);
     }
 
-    this.storage[key].totalHits++;
-    this.setExpirationTime(key, ttlMilliseconds);
+    if (!this.storage[key].isBlocked) {
+      this.fireHitCount(key, throttlerName, ttlMilliseconds);
+    }
+
+    // Reset the blockExpiresAt once it gets blocked
+    if (this.storage[key].totalHits[throttlerName] > limit && !this.storage[key].isBlocked) {
+      this.storage[key].isBlocked = true;
+      this.storage[key].blockExpiresAt = Date.now() + blockDurationMilliseconds;
+    }
+
+    const timeToBlockExpire = this.getBlockExpirationTime(key);
+
+    // Reset time blocked request
+    if (timeToBlockExpire <= 0 && this.storage[key].isBlocked) {
+      this.resetBlockdRequest(key, throttlerName);
+      this.fireHitCount(key, throttlerName, ttlMilliseconds);
+    }
 
     return {
-      totalHits: this.storage[key].totalHits,
+      totalHits: this.storage[key].totalHits[throttlerName],
       timeToExpire,
+      isBlocked: this.storage[key].isBlocked,
+      timeToBlockExpire: timeToBlockExpire,
     };
   }
 
   onApplicationShutdown() {
-    this.timeoutIds.forEach(clearTimeout);
+    const throttleNames = Object.keys(this.timeoutIds);
+    throttleNames.forEach((key) => {
+      this.timeoutIds[key].forEach(clearTimeout);
+    });
   }
 }

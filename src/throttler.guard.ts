@@ -10,6 +10,7 @@ import {
 } from './throttler-module-options.interface';
 import { ThrottlerStorage } from './throttler-storage.interface';
 import {
+  THROTTLER_BLOCK_DURATION,
   THROTTLER_KEY_GENERATOR,
   THROTTLER_LIMIT,
   THROTTLER_SKIP,
@@ -18,7 +19,7 @@ import {
 } from './throttler.constants';
 import { InjectThrottlerOptions, InjectThrottlerStorage } from './throttler.decorator';
 import { ThrottlerException, throttlerMessage } from './throttler.exception';
-import { ThrottlerLimitDetail } from './throttler.guard.interface';
+import { ThrottlerLimitDetail, ThrottlerRequest } from './throttler.guard.interface';
 
 /**
  * @publicApi
@@ -100,6 +101,10 @@ export class ThrottlerGuard implements CanActivate {
         THROTTLER_TTL + namedThrottler.name,
         [handler, classRef],
       );
+      const routeOrClassBlockDuration = this.reflector.getAllAndOverride<Resolvable<number>>(
+        THROTTLER_BLOCK_DURATION + namedThrottler.name,
+        [handler, classRef],
+      );
       const routeOrClassGetTracker = this.reflector.getAllAndOverride<ThrottlerGetTrackerFunction>(
         THROTTLER_TRACKER + namedThrottler.name,
         [handler, classRef],
@@ -113,13 +118,24 @@ export class ThrottlerGuard implements CanActivate {
       // Check if specific limits are set at class or route level, otherwise use global options.
       const limit = await this.resolveValue(context, routeOrClassLimit || namedThrottler.limit);
       const ttl = await this.resolveValue(context, routeOrClassTtl || namedThrottler.ttl);
+      const blockDuration = await this.resolveValue(
+        context,
+        routeOrClassBlockDuration || namedThrottler.blockDuration || ttl,
+      );
       const getTracker =
         routeOrClassGetTracker || namedThrottler.getTracker || this.commonOptions.getTracker;
       const generateKey =
         routeOrClassGetKeyGenerator || namedThrottler.generateKey || this.commonOptions.generateKey;
-
       continues.push(
-        await this.handleRequest(context, limit, ttl, namedThrottler, getTracker, generateKey),
+        await this.handleRequest({
+          context,
+          limit,
+          ttl,
+          throttler: namedThrottler,
+          blockDuration,
+          getTracker,
+          generateKey,
+        }),
       );
     }
     return continues.every((cont) => cont);
@@ -135,14 +151,9 @@ export class ThrottlerGuard implements CanActivate {
    * @see https://tools.ietf.org/id/draft-polli-ratelimit-headers-00.html#header-specifications
    * @throws {ThrottlerException}
    */
-  protected async handleRequest(
-    context: ExecutionContext,
-    limit: number,
-    ttl: number,
-    throttler: ThrottlerOptions,
-    getTracker: ThrottlerGetTrackerFunction,
-    generateKey: ThrottlerGenerateKeyFunction,
-  ): Promise<boolean> {
+  protected async handleRequest(requestProps: ThrottlerRequest): Promise<boolean> {
+    const { context, limit, ttl, throttler, blockDuration, getTracker, generateKey } = requestProps;
+
     // Here we start to check the amount of requests being done against the ttl.
     const { req, res } = this.getRequestResponse(context);
     const ignoreUserAgents = throttler.ignoreUserAgents ?? this.commonOptions.ignoreUserAgents;
@@ -156,13 +167,14 @@ export class ThrottlerGuard implements CanActivate {
     }
     const tracker = await getTracker(req);
     const key = generateKey(context, tracker, throttler.name);
-    const { totalHits, timeToExpire } = await this.storageService.increment(key, ttl);
+    const { totalHits, timeToExpire, isBlocked, timeToBlockExpire } =
+      await this.storageService.increment(key, ttl, limit, blockDuration, throttler.name);
 
     const getThrottlerSuffix = (name: string) => (name === 'default' ? '' : `-${name}`);
 
     // Throw an error when the user reached their limit.
-    if (totalHits > limit) {
-      res.header(`Retry-After${getThrottlerSuffix(throttler.name)}`, timeToExpire);
+    if (isBlocked) {
+      res.header(`Retry-After${getThrottlerSuffix(throttler.name)}`, timeToBlockExpire);
       await this.throwThrottlingException(context, {
         limit,
         ttl,
@@ -170,6 +182,8 @@ export class ThrottlerGuard implements CanActivate {
         tracker,
         totalHits,
         timeToExpire,
+        isBlocked,
+        timeToBlockExpire,
       });
     }
 

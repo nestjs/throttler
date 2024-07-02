@@ -18,10 +18,32 @@ class ThrottlerStorageServiceMock implements ThrottlerStorage {
     return Math.floor((this.storage[key].expiresAt - Date.now()) / 1000);
   }
 
-  async increment(key: string, ttl: number): Promise<ThrottlerStorageRecord> {
-    const ttlMilliseconds = ttl * 1000;
+  private getBlockExpirationTime(key: string): number {
+    return Math.floor((this.storage[key].blockExpiresAt - Date.now()) / 1000);
+  }
+
+  private fireHitCount(key: string, throttlerName: string) {
+    this.storage[key].totalHits[throttlerName]++;
+  }
+
+  async increment(
+    key: string,
+    ttl: number,
+    limit: number,
+    blockDuration: number,
+    throttlerName: string,
+  ): Promise<ThrottlerStorageRecord> {
+    const ttlMilliseconds = ttl;
+    const blockDurationMilliseconds = blockDuration;
     if (!this.storage[key]) {
-      this.storage[key] = { totalHits: 0, expiresAt: Date.now() + ttlMilliseconds };
+      this.storage[key] = {
+        totalHits: {
+          [throttlerName]: 0,
+        },
+        expiresAt: Date.now() + ttlMilliseconds,
+        blockExpiresAt: 0,
+        isBlocked: false,
+      };
     }
 
     let timeToExpire = this.getExpirationTime(key);
@@ -32,11 +54,27 @@ class ThrottlerStorageServiceMock implements ThrottlerStorage {
       timeToExpire = this.getExpirationTime(key);
     }
 
-    this.storage[key].totalHits++;
+    if (!this.storage[key].isBlocked) {
+      this.fireHitCount(key, throttlerName);
+    }
+
+    // Reset the blockExpiresAt once it gets blocked
+    if (this.storage[key].totalHits[throttlerName] > limit && !this.storage[key].isBlocked) {
+      this.storage[key].isBlocked = true;
+      this.storage[key].blockExpiresAt = Date.now() + blockDurationMilliseconds;
+    }
+
+    const timeToBlockExpire = this.getBlockExpirationTime(key);
+
+    if (timeToBlockExpire <= 0 && this.storage[key].isBlocked) {
+      this.fireHitCount(key, throttlerName);
+    }
 
     return {
-      totalHits: this.storage[key].totalHits,
+      totalHits: this.storage[key].totalHits[throttlerName],
       timeToExpire,
+      isBlocked: this.storage[key].isBlocked,
+      timeToBlockExpire: timeToBlockExpire,
     };
   }
 }
@@ -50,28 +88,28 @@ function contextMockFactory(
     getClass: () => ThrottlerStorageServiceMock as any,
     getHandler: () => handler,
     switchToRpc: () => ({
-      getContext: () => ({} as any),
-      getData: () => ({} as any),
+      getContext: () => ({}) as any,
+      getData: () => ({}) as any,
     }),
     getArgs: () => [] as any,
-    getArgByIndex: () => ({} as any),
+    getArgByIndex: () => ({}) as any,
     getType: () => type as any,
   };
   switch (type) {
     case 'ws':
-      executionPartial.switchToHttp = () => ({} as any);
+      executionPartial.switchToHttp = () => ({}) as any;
       executionPartial.switchToWs = () => mockFunc as any;
       break;
     case 'http':
-      executionPartial.switchToWs = () => ({} as any);
+      executionPartial.switchToWs = () => ({}) as any;
       executionPartial.switchToHttp = () => mockFunc as any;
       break;
     case 'graphql':
-      executionPartial.switchToWs = () => ({} as any);
+      executionPartial.switchToWs = () => ({}) as any;
       executionPartial.switchToHttp = () =>
         ({
-          getNext: () => ({} as any),
-        } as any);
+          getNext: () => ({}) as any,
+        }) as any;
       executionPartial.getArgByIndex = () => mockFunc as any;
       break;
   }

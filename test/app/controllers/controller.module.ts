@@ -11,6 +11,7 @@ import { LimitController } from './limit.controller';
       {
         limit: 5,
         ttl: seconds(60),
+        blockDuration: seconds(20),
         ignoreUserAgents: [/throttler-test/g],
       },
     ]),

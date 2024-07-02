@@ -7,6 +7,9 @@ import { ThrottlerGuard } from '../src';
 import { THROTTLER_OPTIONS } from '../src/throttler.constants';
 import { ControllerModule } from './app/controllers/controller.module';
 import { httPromise } from './utility/httpromise';
+import { setTimeout } from 'node:timers/promises';
+
+jest.setTimeout(45000);
 
 describe.each`
   adapter                 | adapterName
@@ -79,12 +82,22 @@ describe.each`
      */
     describe('LimitController', () => {
       it.each`
-        method   | url          | limit
-        ${'GET'} | ${''}        | ${2}
-        ${'GET'} | ${'/higher'} | ${5}
+        method   | url          | limit | blockDuration
+        ${'GET'} | ${''}        | ${2}  | ${5000}
+        ${'GET'} | ${'/higher'} | ${5}  | ${15000}
       `(
         '$method $url',
-        async ({ method, url, limit }: { method: 'GET'; url: string; limit: number }) => {
+        async ({
+          method,
+          url,
+          limit,
+          blockDuration,
+        }: {
+          method: 'GET';
+          url: string;
+          limit: number;
+          blockDuration: number;
+        }) => {
           for (let i = 0; i < limit; i++) {
             const response = await httPromise(appUrl + '/limit' + url, method);
             expect(response.data).toEqual({ success: true });
@@ -100,6 +113,14 @@ describe.each`
             'retry-after': /^\d+$/,
           });
           expect(errRes.status).toBe(429);
+          await setTimeout(blockDuration);
+          const response = await httPromise(appUrl + '/limit' + url, method);
+          expect(response.data).toEqual({ success: true });
+          expect(response.headers).toMatchObject({
+            'x-ratelimit-limit': limit.toString(),
+            'x-ratelimit-remaining': (limit - 1).toString(),
+            'x-ratelimit-reset': /^\d+$/,
+          });
         },
       );
     });
@@ -108,11 +129,29 @@ describe.each`
      */
     describe('DefaultController', () => {
       it('GET /default', async () => {
+        const limit = 5;
+        const blockDuration = 20000; // 20 second
+        for (let i = 0; i < limit; i++) {
+          const response = await httPromise(appUrl + '/default');
+          expect(response.data).toEqual({ success: true });
+          expect(response.headers).toMatchObject({
+            'x-ratelimit-limit': limit.toString(),
+            'x-ratelimit-remaining': (limit - (i + 1)).toString(),
+            'x-ratelimit-reset': /^\d+$/,
+          });
+        }
+        const errRes = await httPromise(appUrl + '/default');
+        expect(errRes.data).toMatchObject({ statusCode: 429, message: /ThrottlerException/ });
+        expect(errRes.headers).toMatchObject({
+          'retry-after': /^\d+$/,
+        });
+        expect(errRes.status).toBe(429);
+        await setTimeout(blockDuration);
         const response = await httPromise(appUrl + '/default');
         expect(response.data).toEqual({ success: true });
         expect(response.headers).toMatchObject({
-          'x-ratelimit-limit': '5',
-          'x-ratelimit-remaining': '4',
+          'x-ratelimit-limit': limit.toString(),
+          'x-ratelimit-remaining': (limit - 1).toString(),
           'x-ratelimit-reset': /^\d+$/,
         });
       });

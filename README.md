@@ -273,6 +273,10 @@ The following options are valid for the object passed to the array of the `Throt
     <td>the maximum number of requests within the TTL limit</td>
   </tr>
   <tr>
+    <td><code>blockDuration</code></td>
+    <td>the number of milliseconds that request will be blocked for that time</td>
+  </tr>
+  <tr>
     <td><code>ignoreUserAgents</code></td>
     <td>an array of regular expressions of user-agents to ignore when it comes to throttling requests</td>
   </tr>
