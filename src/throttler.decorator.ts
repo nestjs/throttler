@@ -5,6 +5,7 @@ import {
   ThrottlerGetTrackerFunction,
 } from './throttler-module-options.interface';
 import {
+  THROTTLER_BLOCK_DURATION,
   THROTTLER_KEY_GENERATOR,
   THROTTLER_LIMIT,
   THROTTLER_SKIP,
@@ -16,6 +17,7 @@ import { getOptionsToken, getStorageToken } from './throttler.providers';
 interface ThrottlerMethodOrControllerOptions {
   limit?: Resolvable<number>;
   ttl?: Resolvable<number>;
+  blockDuration?: Resolvable<number>;
   getTracker?: ThrottlerGetTrackerFunction;
   generateKey?: ThrottlerGenerateKeyFunction;
 }
@@ -27,6 +29,7 @@ function setThrottlerMetadata(
   for (const name in options) {
     Reflect.defineMetadata(THROTTLER_TTL + name, options[name].ttl, target);
     Reflect.defineMetadata(THROTTLER_LIMIT + name, options[name].limit, target);
+    Reflect.defineMetadata(THROTTLER_BLOCK_DURATION + name, options[name].blockDuration, target);
     Reflect.defineMetadata(THROTTLER_TRACKER + name, options[name].getTracker, target);
     Reflect.defineMetadata(THROTTLER_KEY_GENERATOR + name, options[name].generateKey, target);
   }
