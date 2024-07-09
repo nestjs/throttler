@@ -2,7 +2,7 @@ export interface ThrottlerStorageOptions {
   /**
    * Amount of requests done by a specific user (partially based on IP).
    */
-  totalHits: Record<string, number>;
+  totalHits: Map<string, number>;
 
   /**
    * Unix timestamp in milliseconds that indicates `ttl` lifetime.
