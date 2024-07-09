@@ -1,4 +1,10 @@
+import { ExecutionContext } from '@nestjs/common';
 import { ThrottlerStorageRecord } from './throttler-storage-record.interface';
+import {
+  ThrottlerGenerateKeyFunction,
+  ThrottlerGetTrackerFunction,
+  ThrottlerOptions,
+} from './throttler-module-options.interface';
 
 /**
  * Interface describing the details of a rate limit applied by the ThrottlerGuard.
@@ -23,4 +29,41 @@ export interface ThrottlerLimitDetail extends ThrottlerStorageRecord {
    * A string representation of the tracker object used to keep track of the incoming requests and apply the rate limit.
    */
   tracker: string;
+}
+
+export interface ThrottlerRequest {
+  /**
+   * Interface describing details about the current request pipeline.
+   */
+  context: ExecutionContext;
+
+  /**
+   * The amount of requests that are allowed within the ttl's time window.
+   */
+  limit: number;
+
+  /**
+   * The number of milliseconds that each request will last in storage.
+   */
+  ttl: number;
+
+  /**
+   * Incoming options of the throttler.
+   */
+  throttler: ThrottlerOptions;
+
+  /**
+   * The number of milliseconds the request will be blocked.
+   */
+  blockDuration: number;
+
+  /**
+   * A method to override the default tracker string.
+   */
+  getTracker: ThrottlerGetTrackerFunction;
+
+  /**
+   * A method to override the default key generator.
+   */
+  generateKey: ThrottlerGenerateKeyFunction;
 }
