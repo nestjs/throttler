@@ -9,8 +9,8 @@ import { ThrottlerException } from './throttler.exception';
 import { ThrottlerGuard } from './throttler.guard';
 
 class ThrottlerStorageServiceMock implements ThrottlerStorage {
-  private _storage: Record<string, ThrottlerStorageOptions> = {};
-  get storage(): Record<string, ThrottlerStorageOptions> {
+  private _storage: Map<string, ThrottlerStorageOptions> = new Map();
+  get storage(): Map<string, ThrottlerStorageOptions> {
     return this._storage;
   }
 
