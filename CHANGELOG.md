@@ -1,5 +1,12 @@
 ## 5.0.0
 
+## 6.0.0
+
+### Major Changes
+
+- 93b62d2: A time will be provided to block the request separately from the ttl. There is a breaking change at the library level. Storage library owners will be affected by this breaking change
+- 9b3f9cd: - e17a5dc: The storage has been updated to utilize Map instead of a simple object for key-value storage. This enhancement offers improved performance, especially for scenarios involving frequent additions and deletions of keys. There is a breaking change at the library level. Storage library owners will be affected by this breaking change
+
 ## 5.2.0
 
 ### Minor Changes
