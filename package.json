@@ -39,7 +39,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json --detectOpenHandles",
     "test:e2e:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --config test/jest-e2e.json --runInBand",
     "test:e2e:dev": "yarn test:e2e --watchAll",
-    "postinstall": "husky install",
+    "prepare": "husky",
     "postpublish": "pinst --enable",
     "prepublishOnly": "pinst --disable",
     "release": "changeset publish"
