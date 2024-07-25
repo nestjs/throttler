@@ -1,4 +1,1 @@
-#!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
-
-./node_modules/.bin/commitlint -g .commitlintrc.json --edit $1
+commitlint -g .commitlintrc.json --edit $1
