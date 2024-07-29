@@ -67,7 +67,7 @@ export class ThrottlerStorageService implements ThrottlerStorage {
     return {
       isBlocked: false,
       timeToBlockExpire: 0,
-      totalHits: hits,
+      totalHits: hits + 1,
       timeToExpire: 0,
     };
   }
