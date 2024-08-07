@@ -19,14 +19,14 @@ export class ThrottlerStorageService implements ThrottlerStorage, OnApplicationS
    * Get the expiration time in seconds from a single record.
    */
   private getExpirationTime(key: string): number {
-    return Math.floor((this.storage.get(key).expiresAt - Date.now()) / 1000);
+    return Math.ceil((this.storage.get(key).expiresAt - Date.now()) / 1000);
   }
 
   /**
    * Get the block expiration time in seconds from a single record.
    */
   private getBlockExpirationTime(key: string): number {
-    return Math.floor((this.storage.get(key).blockExpiresAt - Date.now()) / 1000);
+    return Math.ceil((this.storage.get(key).blockExpiresAt - Date.now()) / 1000);
   }
 
   /**
