@@ -1,5 +1,11 @@
 ## 5.0.0
 
+## 6.1.1
+
+### Patch Changes
+
+- ef69348: Update the readme for websockets
+
 ## 6.1.0
 
 ### Minor Changes
