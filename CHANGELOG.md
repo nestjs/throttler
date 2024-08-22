@@ -1,5 +1,11 @@
 ## 5.0.0
 
+## 6.2.1
+
+### Patch Changes
+
+- fbf27c6: Add the guard interfaces for export for public use
+
 ## 6.2.0
 
 ### Minor Changes
