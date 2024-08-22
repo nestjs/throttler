@@ -1,6 +1,6 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { md5 } from './hash';
+import { sha256 } from './hash';
 import {
   Resolvable,
   ThrottlerGenerateKeyFunction,
@@ -217,7 +217,7 @@ export class ThrottlerGuard implements CanActivate {
    */
   protected generateKey(context: ExecutionContext, suffix: string, name: string): string {
     const prefix = `${context.getClass().name}-${context.getHandler().name}-${name}`;
-    return md5(`${prefix}-${suffix}`);
+    return sha256(`${prefix}-${suffix}`);
   }
 
   /**
