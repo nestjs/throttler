@@ -1,5 +1,11 @@
 ## 5.0.0
 
+## 6.2.0
+
+### Minor Changes
+
+- 3d1a9a5: Swap MD5 hash for SHA256 to better support OpenSSL 3.0 and future iterations
+
 ## 6.1.1
 
 ### Patch Changes
