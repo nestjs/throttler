@@ -46,7 +46,7 @@
   },
   "devDependencies": {
     "@apollo/server": "4.11.0",
-    "@changesets/cli": "2.27.8",
+    "@changesets/cli": "2.27.9",
     "@commitlint/cli": "19.5.0",
     "@commitlint/config-angular": "19.5.0",
     "@nestjs/cli": "10.4.5",
