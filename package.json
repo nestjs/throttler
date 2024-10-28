@@ -57,7 +57,7 @@
     "@nestjs/platform-fastify": "10.4.6",
     "@nestjs/platform-socket.io": "10.4.6",
     "@nestjs/platform-ws": "10.4.6",
-    "@nestjs/schematics": "10.2.2",
+    "@nestjs/schematics": "10.2.3",
     "@nestjs/testing": "10.4.6",
     "@nestjs/websockets": "10.4.6",
     "@semantic-release/git": "10.0.1",
