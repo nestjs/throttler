@@ -21,8 +21,8 @@ importers:
         specifier: 19.6.0
         version: 19.6.0
       '@nestjs/cli':
-        specifier: 10.4.7
-        version: 10.4.7
+        specifier: 10.4.8
+        version: 10.4.8
       '@nestjs/common':
         specifier: 10.4.8
         version: 10.4.8(reflect-metadata@0.2.2)(rxjs@7.8.1)
@@ -920,8 +920,8 @@ packages:
   '@manypkg/get-packages@1.1.3':
     resolution: {integrity: sha512-fo+QhuU3qE/2TQMQmbVMqaQ6EWbMhi4ABWP+O4AM1NqPBuy0OrApV5LO6BrrgnhtAHS2NH6RrVk9OL181tTi8A==}
 
-  '@nestjs/cli@10.4.7':
-    resolution: {integrity: sha512-4wJTtBJsbvjLIzXl+Qj6DYHv4J7abotuXyk7bes5erL79y+KBT61LulL56SqilzmNnHOAVbXcSXOn9S2aWUn6A==}
+  '@nestjs/cli@10.4.8':
+    resolution: {integrity: sha512-BQ/MIXcO2TjLVR9ZCN1MRQqijgCI7taueLdxowLS9UmAHbN7iZcQt307NTC6SFt8uVJg2CrLanD60M/Pr0ZMoQ==}
     engines: {node: '>= 16.14'}
     hasBin: true
     peerDependencies:
@@ -2919,9 +2919,8 @@ packages:
   glob-to-regexp@0.4.1:
     resolution: {integrity: sha512-lkX1HJXwyMcprw/5YUZc2s7DrpAiHB21/V+E1rHUrVNokkvB6bqMzT0VfV6/86ZNabt1k14YOIaT7nDvOX3Iiw==}
 
-  glob@10.4.2:
-    resolution: {integrity: sha512-GwMlUF6PkPo3Gk21UxkCohOv0PLcIXVtKyLlpEI28R/cO/4eNOdmLk3CMW1wROV/WR/EsZOWAfBbBOqYvs88/w==}
-    engines: {node: '>=16 || 14 >=14.18'}
+  glob@10.4.5:
+    resolution: {integrity: sha512-7Bv8RF0k6xjo7d4A/PxYLbUCfb6c+Vpd2/mB2yRDlew7Jb5hEXiCD9ibfO7wpk8i4sevK6DFny9h7EYbM3/sHg==}
     hasBin: true
 
   glob@11.0.0:
@@ -5122,8 +5121,8 @@ packages:
       '@swc/wasm':
         optional: true
 
-  tsconfig-paths-webpack-plugin@4.1.0:
-    resolution: {integrity: sha512-xWFISjviPydmtmgeUAuXp4N1fky+VCtfhOkDUFIv5ea7p4wuTomI4QTrXvFBX2S4jZsmyTSrStQl+E+4w+RzxA==}
+  tsconfig-paths-webpack-plugin@4.2.0:
+    resolution: {integrity: sha512-zbem3rfRS8BgeNK50Zz5SIQgXzLafiHjOwUAvk/38/o1jHn/V5QAgVUcz884or7WYcPaH3N2CIfUc2u0ul7UcA==}
     engines: {node: '>=10.13.0'}
 
   tsconfig-paths@3.15.0:
@@ -6620,7 +6619,7 @@ snapshots:
       globby: 11.1.0
       read-yaml-file: 1.1.0
 
-  '@nestjs/cli@10.4.7':
+  '@nestjs/cli@10.4.8':
     dependencies:
       '@angular-devkit/core': 17.3.11(chokidar@3.6.0)
       '@angular-devkit/schematics': 17.3.11(chokidar@3.6.0)
@@ -6631,13 +6630,13 @@ snapshots:
       cli-table3: 0.6.5
       commander: 4.1.1
       fork-ts-checker-webpack-plugin: 9.0.2(typescript@5.6.3)(webpack@5.96.1)
-      glob: 10.4.2
+      glob: 10.4.5
       inquirer: 8.2.6
       node-emoji: 1.11.0
       ora: 5.4.1
       tree-kill: 1.2.2
       tsconfig-paths: 4.2.0
-      tsconfig-paths-webpack-plugin: 4.1.0
+      tsconfig-paths-webpack-plugin: 4.2.0
       typescript: 5.6.3
       webpack: 5.96.1
       webpack-node-externals: 3.0.0
@@ -9029,7 +9028,7 @@ snapshots:
 
   glob-to-regexp@0.4.1: {}
 
-  glob@10.4.2:
+  glob@10.4.5:
     dependencies:
       foreground-child: 3.2.1
       jackspeak: 3.4.3
@@ -11369,10 +11368,11 @@ snapshots:
       v8-compile-cache-lib: 3.0.1
       yn: 3.1.1
 
-  tsconfig-paths-webpack-plugin@4.1.0:
+  tsconfig-paths-webpack-plugin@4.2.0:
     dependencies:
       chalk: 4.1.2
       enhanced-resolve: 5.17.1
+      tapable: 2.2.1
       tsconfig-paths: 4.2.0
 
   tsconfig-paths@3.15.0:
