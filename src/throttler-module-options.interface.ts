@@ -125,7 +125,10 @@ export interface ThrottlerAsyncOptions extends Pick<ModuleMetadata, 'imports'> {
 /**
  * @publicApi
  */
-export type ThrottlerGetTrackerFunction = (req: Record<string, any>) => Promise<string> | string;
+export type ThrottlerGetTrackerFunction = (
+  req: Record<string, any>,
+  context: ExecutionContext,
+) => Promise<string> | string;
 
 /**
  * @publicApi
