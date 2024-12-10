@@ -1,5 +1,11 @@
 ## 5.0.0
 
+## 6.3.0
+
+### Minor Changes
+
+- fc93f3a: pass context to getTraker as a second arg
+
 ## 6.2.1
 
 ### Patch Changes
