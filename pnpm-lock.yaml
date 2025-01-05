@@ -9,8 +9,8 @@ importers:
   .:
     devDependencies:
       '@apollo/server':
-        specifier: 4.11.2
-        version: 4.11.2(graphql@16.10.0)
+        specifier: 4.11.3
+        version: 4.11.3(graphql@16.10.0)
       '@changesets/cli':
         specifier: 2.27.11
         version: 2.27.11
@@ -216,8 +216,8 @@ packages:
     peerDependencies:
       graphql: 14.x || 15.x || 16.x
 
-  '@apollo/server@4.11.2':
-    resolution: {integrity: sha512-WUTHY7DDek8xAMn4Woa9Bl8duQUDzRYQkosX/d1DtCsBWESZyApR7ndnI5d6+W4KSTtqBHhJFkusEI7CWuIJXg==}
+  '@apollo/server@4.11.3':
+    resolution: {integrity: sha512-mW8idE2q0/BN14mimfJU5DAnoPHZRrAWgwsVLBEdACds+mxapIYxIbI6AH4AsOpxfrpvHts3PCYDbopy1XPW1g==}
     engines: {node: '>=14.16.0'}
     peerDependencies:
       graphql: ^16.6.0
@@ -225,8 +225,8 @@ packages:
   '@apollo/usage-reporting-protobuf@4.1.1':
     resolution: {integrity: sha512-u40dIUePHaSKVshcedO7Wp+mPiZsaU6xjv9J+VyxpoU/zL6Jle+9zWeG98tr/+SZ0nZ4OXhrbb8SNr0rAPpIDA==}
 
-  '@apollo/utils.createhash@2.0.1':
-    resolution: {integrity: sha512-fQO4/ZOP8LcXWvMNhKiee+2KuKyqIcfHrICA+M4lj/h/Lh1H10ICcUtk6N/chnEo5HXu0yejg64wshdaiFitJg==}
+  '@apollo/utils.createhash@2.0.2':
+    resolution: {integrity: sha512-UkS3xqnVFLZ3JFpEmU/2cM2iKJotQXMoSTgxXsfQgXLC5gR1WaepoXagmYnPSA7Q/2cmnyTYK5OgAgoC4RULPg==}
     engines: {node: '>=14'}
 
   '@apollo/utils.dropunuseddefinitions@1.1.0':
@@ -2642,10 +2642,6 @@ packages:
     resolution: {integrity: sha512-2Zks0hf1VLFYI1kbh0I5jP3KHHyCHpkfyHBzsSXRFgl/Bg9mWYfMW8oD+PdMPlEwy5HNsR9JutYy6pMeOh61nw==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
 
-  express@4.21.1:
-    resolution: {integrity: sha512-YSFlK1Ee0/GC8QaO91tHcDxJiE/X4FbpAyQWkxAvG6AXCuR65YzK8ua6D9hvi/TzUfZMpc+BwuM1IPw8fmQBiQ==}
-    engines: {node: '>= 0.10.0'}
-
   express@4.21.2:
     resolution: {integrity: sha512-28HqgMZAmih1Czt9ny7qr6ek2qddF4FclbMzwhCREB6OFfH+rXAnuNCwo1/wFvrtbgsQDb4kSbX9de9lFbrXnA==}
     engines: {node: '>= 0.10.0'}
@@ -4328,9 +4324,6 @@ packages:
     resolution: {integrity: sha512-ypGJsmGtdXUOeM5u93TyeIEfEhM6s+ljAhrk5vAvSx8uyY/02OvrZnA0YNGUrPXfpJMgI1ODd3nwz8Npx4O4cg==}
     engines: {node: 20 || >=22}
 
-  path-to-regexp@0.1.10:
-    resolution: {integrity: sha512-7lf7qcQidTku0Gu3YDPc8DJ1q7OOucfa/BSsIwjuh56VU7katFvuM8hULfkwB3Fns/rsVF7PwPKVw1sl5KQS9w==}
-
   path-to-regexp@0.1.12:
     resolution: {integrity: sha512-RA1GjUVMnvYFxuqovrEqZoxxW5NUZqbwKtYz/Tt7nXerk0LbLblQmrsgdeOxV5SFHf0UDggjS/bSeOZwt1pmEQ==}
 
@@ -5605,12 +5598,12 @@ snapshots:
       '@apollo/utils.logger': 2.0.1
       graphql: 16.10.0
 
-  '@apollo/server@4.11.2(graphql@16.10.0)':
+  '@apollo/server@4.11.3(graphql@16.10.0)':
     dependencies:
       '@apollo/cache-control-types': 1.0.3(graphql@16.10.0)
       '@apollo/server-gateway-interface': 1.1.1(graphql@16.10.0)
       '@apollo/usage-reporting-protobuf': 4.1.1
-      '@apollo/utils.createhash': 2.0.1
+      '@apollo/utils.createhash': 2.0.2
       '@apollo/utils.fetcher': 2.0.1
       '@apollo/utils.isnodelike': 2.0.1
       '@apollo/utils.keyvaluecache': 2.1.1
@@ -5623,7 +5616,7 @@ snapshots:
       '@types/node-fetch': 2.6.11
       async-retry: 1.3.3
       cors: 2.8.5
-      express: 4.21.1
+      express: 4.21.2
       graphql: 16.10.0
       loglevel: 1.9.1
       lru-cache: 7.18.3
@@ -5640,7 +5633,7 @@ snapshots:
     dependencies:
       '@apollo/protobufjs': 1.2.7
 
-  '@apollo/utils.createhash@2.0.1':
+  '@apollo/utils.createhash@2.0.2':
     dependencies:
       '@apollo/utils.isnodelike': 2.0.1
       sha.js: 2.4.11
@@ -8671,42 +8664,6 @@ snapshots:
       jest-message-util: 29.7.0
       jest-util: 29.7.0
 
-  express@4.21.1:
-    dependencies:
-      accepts: 1.3.8
-      array-flatten: 1.1.1
-      body-parser: 1.20.3
-      content-disposition: 0.5.4
-      content-type: 1.0.5
-      cookie: 0.7.1
-      cookie-signature: 1.0.6
-      debug: 2.6.9
-      depd: 2.0.0
-      encodeurl: 2.0.0
-      escape-html: 1.0.3
-      etag: 1.8.1
-      finalhandler: 1.3.1
-      fresh: 0.5.2
-      http-errors: 2.0.0
-      merge-descriptors: 1.0.3
-      methods: 1.1.2
-      on-finished: 2.4.1
-      parseurl: 1.3.3
-      path-to-regexp: 0.1.10
-      proxy-addr: 2.0.7
-      qs: 6.13.0
-      range-parser: 1.2.1
-      safe-buffer: 5.2.1
-      send: 0.19.0
-      serve-static: 1.16.2
-      setprototypeof: 1.2.0
-      statuses: 2.0.1
-      type-is: 1.6.18
-      utils-merge: 1.0.1
-      vary: 1.1.2
-    transitivePeerDependencies:
-      - supports-color
-
   express@4.21.2:
     dependencies:
       accepts: 1.3.8
@@ -10148,7 +10105,7 @@ snapshots:
     dependencies:
       ansi-escapes: 7.0.0
       ansi-regex: 6.1.0
-      chalk: 5.3.0
+      chalk: 5.4.1
       cli-highlight: 2.1.11
       cli-table3: 0.6.5
       marked: 12.0.2
@@ -10570,8 +10527,6 @@ snapshots:
     dependencies:
       lru-cache: 11.0.0
       minipass: 7.1.2
-
-  path-to-regexp@0.1.10: {}
 
   path-to-regexp@0.1.12: {}
 
