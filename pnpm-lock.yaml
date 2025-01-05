@@ -99,8 +99,8 @@ importers:
         specifier: 16.10.0
         version: 16.10.0
       graphql-tools:
-        specifier: 9.0.9
-        version: 9.0.9(graphql-ws@5.16.0(graphql@16.10.0))(graphql@16.10.0)(subscriptions-transport-ws@0.11.0(graphql@16.10.0))
+        specifier: 9.0.10
+        version: 9.0.10(graphql-ws@5.16.0(graphql@16.10.0))(graphql@16.10.0)(subscriptions-transport-ws@0.11.0(graphql@16.10.0))
       husky:
         specifier: 9.1.7
         version: 9.1.7
@@ -724,8 +724,8 @@ packages:
     peerDependencies:
       graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
 
-  '@graphql-tools/merge@9.0.15':
-    resolution: {integrity: sha512-uzegRVd4Lq4QyBA6BL3kxDetZQ6GHwNCcRbR+6YFN7Kmea/PlRX7AfmIgdpBbaUBpsDR7dFlLZKFXmYxwodohw==}
+  '@graphql-tools/merge@9.0.16':
+    resolution: {integrity: sha512-Ek2ee3e4qMsMM2pBBZpDmL7j51b3F5qYsHtckO05e8zvOWuS28yBu+VhZYOtUPr/q+lBWhL+0rvFXaUwHZEuQQ==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
       graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
@@ -741,8 +741,8 @@ packages:
     peerDependencies:
       graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
 
-  '@graphql-tools/schema@10.0.14':
-    resolution: {integrity: sha512-BbttXi4xHocecYkOb2Ng/b9LQHfYPfk13gABE5iEOWX1GnJHnWr+2m81cUx9foocxEGaV+agXWUW804b4DcqqQ==}
+  '@graphql-tools/schema@10.0.15':
+    resolution: {integrity: sha512-QAD9XeC/iaVugMYWet73Vz/4wp1qmKHYPj1z/TyIW/fX41oNmNSBGNqdstMsvSG97PWLhFgbUqVCvY+1KesQKw==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
       graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
@@ -763,8 +763,8 @@ packages:
     peerDependencies:
       graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
 
-  '@graphql-tools/utils@10.7.0':
-    resolution: {integrity: sha512-tCO0cZsnioXJBcN7geeER50PRZaKTq1zsSBg/aXe+u/ZkTiEyj6Hyu4Co39SNeG0mURoS2jhxsG03eYjTxloIg==}
+  '@graphql-tools/utils@10.7.1':
+    resolution: {integrity: sha512-mpHAA5EddtxvnkHIBEEon5++tvL5T+j3OeOP4CAXbguAK2RBRM9DVVsoc9U68vSPLJjBRGp+b5NjlRn04g9rMA==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
       graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
@@ -2999,8 +2999,8 @@ packages:
     peerDependencies:
       graphql: ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
 
-  graphql-tools@9.0.9:
-    resolution: {integrity: sha512-em/6edNh3u5vq3E1odxCj15MwJGNfBipjxu/2h8I/oFY2O9HCd1frn3FrMDEmQ7nME+iWJy9SP8DaW+FrSgcug==}
+  graphql-tools@9.0.10:
+    resolution: {integrity: sha512-44EIqnLYjb4byDFmB4sB+yKs/BhP9vUIwudRGX6pY8PTflBa4ftUcShFlaguOPIkPHzbD4XKGJoQKf+vVEoGWw==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
       graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
@@ -6310,9 +6310,9 @@ snapshots:
       graphql: 16.10.0
       tslib: 2.8.1
 
-  '@graphql-tools/merge@9.0.15(graphql@16.10.0)':
+  '@graphql-tools/merge@9.0.16(graphql@16.10.0)':
     dependencies:
-      '@graphql-tools/utils': 10.7.0(graphql@16.10.0)
+      '@graphql-tools/utils': 10.7.1(graphql@16.10.0)
       graphql: 16.10.0
       tslib: 2.8.1
 
@@ -6332,10 +6332,10 @@ snapshots:
       tslib: 2.8.1
       value-or-promise: 1.0.12
 
-  '@graphql-tools/schema@10.0.14(graphql@16.10.0)':
+  '@graphql-tools/schema@10.0.15(graphql@16.10.0)':
     dependencies:
-      '@graphql-tools/merge': 9.0.15(graphql@16.10.0)
-      '@graphql-tools/utils': 10.7.0(graphql@16.10.0)
+      '@graphql-tools/merge': 9.0.16(graphql@16.10.0)
+      '@graphql-tools/utils': 10.7.1(graphql@16.10.0)
       graphql: 16.10.0
       tslib: 2.8.1
       value-or-promise: 1.0.12
@@ -6364,7 +6364,7 @@ snapshots:
       graphql: 16.10.0
       tslib: 2.8.1
 
-  '@graphql-tools/utils@10.7.0(graphql@16.10.0)':
+  '@graphql-tools/utils@10.7.1(graphql@16.10.0)':
     dependencies:
       '@graphql-typed-document-node/core': 3.2.0(graphql@16.10.0)
       cross-inspect: 1.0.1
@@ -9139,9 +9139,9 @@ snapshots:
       graphql: 16.10.0
       tslib: 2.8.1
 
-  graphql-tools@9.0.9(graphql-ws@5.16.0(graphql@16.10.0))(graphql@16.10.0)(subscriptions-transport-ws@0.11.0(graphql@16.10.0)):
+  graphql-tools@9.0.10(graphql-ws@5.16.0(graphql@16.10.0))(graphql@16.10.0)(subscriptions-transport-ws@0.11.0(graphql@16.10.0)):
     dependencies:
-      '@graphql-tools/schema': 10.0.14(graphql@16.10.0)
+      '@graphql-tools/schema': 10.0.15(graphql@16.10.0)
       graphql: 16.10.0
       tslib: 2.8.1
     optionalDependencies:
