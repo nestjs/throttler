@@ -21,8 +21,8 @@ importers:
         specifier: 19.7.0
         version: 19.7.0
       '@nestjs/cli':
-        specifier: 11.0.0
-        version: 11.0.0(@types/node@22.10.6)
+        specifier: 11.0.1
+        version: 11.0.1(@types/node@22.10.6)
       '@nestjs/common':
         specifier: 11.0.3
         version: 11.0.3(reflect-metadata@0.2.2)(rxjs@7.8.1)
@@ -1003,8 +1003,8 @@ packages:
   '@manypkg/get-packages@1.1.3':
     resolution: {integrity: sha512-fo+QhuU3qE/2TQMQmbVMqaQ6EWbMhi4ABWP+O4AM1NqPBuy0OrApV5LO6BrrgnhtAHS2NH6RrVk9OL181tTi8A==}
 
-  '@nestjs/cli@11.0.0':
-    resolution: {integrity: sha512-53Hparhbz4nNQNttf6EFfYNeFxSLdshqnvaiWy3MBnZxgAuqtAZP3xsiNHPId5dYtzGCjdK60FN4Vcspx3Y+aw==}
+  '@nestjs/cli@11.0.1':
+    resolution: {integrity: sha512-W1pS3mKBb5L2T0Sk9/bAFTS3XctcaAn9q1veXCIKSaGwGk7pjqEa1AwzX8/Lq10NJgjJno/Lhw1kZrX32VImFA==}
     engines: {node: '>= 20.11'}
     hasBin: true
     peerDependencies:
@@ -6918,7 +6918,7 @@ snapshots:
       globby: 11.1.0
       read-yaml-file: 1.1.0
 
-  '@nestjs/cli@11.0.0(@types/node@22.10.6)':
+  '@nestjs/cli@11.0.1(@types/node@22.10.6)':
     dependencies:
       '@angular-devkit/core': 19.1.2(chokidar@4.0.3)
       '@angular-devkit/schematics': 19.1.2(chokidar@4.0.3)
