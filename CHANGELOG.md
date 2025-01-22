@@ -1,5 +1,11 @@
 ## 5.0.0
 
+## 6.4.0
+
+### Minor Changes
+
+- 5cb4254: Update to allow for support for Nest version 11
+
 ## 6.3.0
 
 ### Minor Changes
