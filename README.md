@@ -94,7 +94,7 @@ There may come upon times where you want to set up multiple throttling definitio
 export class AppModule {}
 ```
 
-#### Customization
+### Customization
 
 There may be a time where you want to bind the guard to a controller or globally, but want to disable rate limiting for one or more of your endpoints. For that, you can use the `@SkipThrottle()` decorator, to negate the throttler for an entire class or a single route. The `@SkipThrottle()` decorator can also take in an object of string keys with boolean values for if there is a case where you want to exclude _most_ of a controller, but not every route, and configure it per throttler set if you have more than one. If you do not pass an object, the default is to use `{{ '{' }} default: true {{ '}' }}`
 
@@ -133,7 +133,8 @@ findAll() {
 }
 ```
 
-#### Proxies
+### Proxies
+
 
 If your application runs behind a proxy server, check the specific HTTP adapter options ([express](http://expressjs.com/en/guide/behind-proxies.html) and [fastify](https://www.fastify.io/docs/latest/Reference/Server/#trustproxy)) for the `trust proxy` option and enable it. Doing so will allow you to get the original IP address from the `X-Forwarded-For` header, and you can override the `getTracker()` method to pull the value from the header rather than from `req.ip`. The following example works with both express and fastify:
 
@@ -160,7 +161,7 @@ import { ThrottlerBehindProxyGuard } from './throttler-behind-proxy.guard';
 
 > info **Hint** You can find the API of the `req` Request object for express [here](https://expressjs.com/en/api.html#req.ips) and for fastify [here](https://www.fastify.io/docs/latest/Reference/Request/).
 
-#### Websockets
+### Websockets
 
 This module can work with websockets, but it requires some class extension. You can extend the `ThrottlerGuard` and override the `handleRequest` method like so:
 
@@ -206,7 +207,7 @@ There's a few things to keep in mind when working with WebSockets:
 
 > info **Hint** If you are using the `@nestjs/platform-ws` package you can use `client._socket.remoteAddress` instead.
 
-#### GraphQL
+### GraphQL
 
 The `ThrottlerGuard` can also be used to work with GraphQL requests. Again, the guard can be extended, but this time the `getRequestResponse` method will be overridden
 
@@ -245,7 +246,7 @@ GraphQLModule.forRoot({
 });
 ```
 
-#### Configuration
+### Configuration
 
 The following options are valid for the object passed to the array of the `ThrottlerModule`'s options:
 
@@ -357,13 +358,13 @@ export class AppModule {}
 
 This is doable, as long as `ThrottlerConfigService` implements the interface `ThrottlerOptionsFactory`.
 
-#### Storages
+### Storages
 
 The built in storage is an in memory cache that keeps track of the requests made until they have passed the TTL set by the global options. You can drop in your own storage option to the `storage` option of the `ThrottlerModule` so long as the class implements the `ThrottlerStorage` interface.
 
 > info **Note** `ThrottlerStorage` can be imported from `@nestjs/throttler`.
 
-#### Time Helpers
+### Time Helpers
 
 There are a couple of helper methods to make the timings more readable if you prefer to use them over the direct definition. `@nestjs/throttler` exports five different helpers, `seconds`, `minutes`, `hours`, `days`, and `weeks`. To use them, simply call `seconds(5)` or any of the other helpers, and the correct number of milliseconds will be returned.
 
