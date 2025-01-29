@@ -17,6 +17,7 @@ export interface ThrottlerOptions {
    * e.g. x-ratelimit-remaining-long: 5
    */
   name?: string;
+
   /**
    * The amount of requests that are allowed within the ttl's time window.
    */
@@ -59,14 +60,14 @@ export type ThrottlerModuleOptions =
   | Array<ThrottlerOptions>
   | {
       /**
+       * The user agents that should be ignored (checked against the User-Agent header).
+       */
+      ignoreUserAgents?: RegExp[];
+      /**
        * A factory method to determine if throttling should be skipped.
        * This can be based on the incoming context, or something like an env value.
        */
       skipIf?: (context: ExecutionContext) => boolean;
-      /**
-       * The user agents that should be ignored (checked against the User-Agent header).
-       */
-      ignoreUserAgents?: RegExp[];
       /**
        * A method to override the default tracker string.
        */
