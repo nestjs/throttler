@@ -96,7 +96,7 @@ export class AppModule {}
 
 ### Customization
 
-There may be a time where you want to bind the guard to a controller or globally, but want to disable rate limiting for one or more of your endpoints. For that, you can use the `@SkipThrottle()` decorator, to negate the throttler for an entire class or a single route. The `@SkipThrottle()` decorator can also take in an object of string keys with boolean values for if there is a case where you want to exclude _most_ of a controller, but not every route, and configure it per throttler set if you have more than one. If you do not pass an object, the default is to use `{{ '{' }} default: true {{ '}' }}`
+There may be a time where you want to bind the guard to a controller or globally, but want to disable rate limiting for one or more of your endpoints. For that, you can use the `@SkipThrottle()` decorator, to negate the throttler for an entire class or a single route. The `@SkipThrottle()` decorator can also take in an object of string keys with boolean values, if you have more than one throttler set. If you do not pass an object, the default is to use `{ default: true }`
 
 ```typescript
 @SkipThrottle()
@@ -159,7 +159,7 @@ import { ThrottlerBehindProxyGuard } from './throttler-behind-proxy.guard';
 @UseGuards(ThrottlerBehindProxyGuard)
 ```
 
-> info **Hint** You can find the API of the `req` Request object for express [here](https://expressjs.com/en/api.html#req.ips) and for fastify [here](https://www.fastify.io/docs/latest/Reference/Request/).
+> **Hint:** You can find the API of the `req` Request object for express [here](https://expressjs.com/en/api.html#req.ips) and for fastify [here](https://www.fastify.io/docs/latest/Reference/Request/).
 
 ### Websockets
 
@@ -198,14 +198,14 @@ export class WsThrottlerGuard extends ThrottlerGuard {
 }
 ```
 
-> info **Hint** If you are using ws, it is necessary to replace the `_socket` with `conn`
+> **Hint:** If you are using ws, it is necessary to replace the `_socket` with `conn`.
 
 There's a few things to keep in mind when working with WebSockets:
 
 - Guard cannot be registered with the `APP_GUARD` or `app.useGlobalGuards()`
 - When a limit is reached, Nest will emit an `exception` event, so make sure there is a listener ready for this
 
-> info **Hint** If you are using the `@nestjs/platform-ws` package you can use `client._socket.remoteAddress` instead.
+> **Hint:** If you are using the `@nestjs/platform-ws` package you can use `client._socket.remoteAddress` instead.
 
 ### GraphQL
 
@@ -362,7 +362,7 @@ This is doable, as long as `ThrottlerConfigService` implements the interface `Th
 
 The built in storage is an in memory cache that keeps track of the requests made until they have passed the TTL set by the global options. You can drop in your own storage option to the `storage` option of the `ThrottlerModule` so long as the class implements the `ThrottlerStorage` interface.
 
-> info **Note** `ThrottlerStorage` can be imported from `@nestjs/throttler`.
+> **Note:** `ThrottlerStorage` can be imported from `@nestjs/throttler`.
 
 ### Time Helpers
 
