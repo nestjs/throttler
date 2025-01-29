@@ -264,7 +264,7 @@ The following options are valid for the object passed to the array of the `Throt
   </tr>
   <tr>
     <td><code>blockDuration</code></td>
-    <td>the number of milliseconds that request will be blocked for that time</td>
+    <td>the number of milliseconds the request will be blocked</td>
   </tr>
   <tr>
     <td><code>ignoreUserAgents</code></td>
@@ -276,7 +276,7 @@ The following options are valid for the object passed to the array of the `Throt
   </tr>
   <tr>
     <td><code>getTracker</code></td>
-    <td>a function that takes in the <code>Request</code> and returns a <code>string</code> to override the default logic of the <code>getTracker</code> method</td>
+    <td>a function that takes in the <code>Request</code> and <code>ExecutionContext</code>, and returns a <code>string</code> to override the default logic of the <code>getTracker</code> method</td>
   </tr>
    <tr>
     <td><code>generateKey</code></td>
@@ -289,7 +289,7 @@ If you need to set up storages instead, or want to use a some of the above optio
 <table>
   <tr>
     <td><code>storage</code></td>
-    <td>a custom storage service for where the throttling should be kept track. <a href="/security/rate-limiting#storages">See here.</a></td>
+    <td>a custom storage service for where the throttling should be kept track. <a href="#storages">See Storages below.</a></td>
   </tr>
   <tr>
     <td><code>ignoreUserAgents</code></td>
@@ -309,7 +309,7 @@ If you need to set up storages instead, or want to use a some of the above optio
   </tr>
   <tr>
     <td><code>getTracker</code></td>
-    <td>a function that takes in the <code>Request</code> and returns a <code>string</code> to override the default logic of the <code>getTracker</code> method</td>
+    <td>a function that takes in the <code>Request</code> and <code>ExecutionContext</code>, and returns a <code>string</code> to override the default logic of the <code>getTracker</code> method</td>
   </tr>
    <tr>
     <td><code>generateKey</code></td>
