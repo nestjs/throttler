@@ -18,9 +18,9 @@
 
 A Rate-Limiter for NestJS, regardless of the context.
 
-For an overview of the community storage providers, see [Community Storage Providers](#community-storage-providers).
+Throttler ensures that users can only make `limit` requests per `ttl` to each endpoint. By default, users are identified by their IP address. This behavior can be customized by providing your own `getTracker` function. See [Proxies](#proxies) for an example where this is useful.
 
-This package comes with a couple of goodies that should be mentioned, first is the `ThrottlerModule`.
+Throttler comes with a built-in in-memory cache to keep track of the requests. It supports alternate storage providers. For an overview, see [Community Storage Providers](#community-storage-providers).
 
 ## Installation
 
