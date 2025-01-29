@@ -135,8 +135,9 @@ findAll() {
 
 ### Proxies
 
+If your application runs behind a proxy server, check the specific HTTP adapter options ([express](http://expressjs.com/en/guide/behind-proxies.html) and [fastify](https://www.fastify.io/docs/latest/Reference/Server/#trustproxy)) for the `trust proxy` option and enable it. Doing so will allow you to get the original IP address from the `X-Forwarded-For` header.
 
-If your application runs behind a proxy server, check the specific HTTP adapter options ([express](http://expressjs.com/en/guide/behind-proxies.html) and [fastify](https://www.fastify.io/docs/latest/Reference/Server/#trustproxy)) for the `trust proxy` option and enable it. Doing so will allow you to get the original IP address from the `X-Forwarded-For` header, and you can override the `getTracker()` method to pull the value from the header rather than from `req.ip`. The following example works with both express and fastify:
+For express, no further configuration is needed because express sets `req.ip` to the client IP if `trust proxy` is enabled. For fastify, you need to read the client IP from `req.ips` instead. The following example is only needed for fastify, but works with both engines:
 
 ```typescript
 // throttler-behind-proxy.guard.ts
@@ -146,10 +147,10 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export class ThrottlerBehindProxyGuard extends ThrottlerGuard {
   protected getTracker(req: Record<string, any>): Promise<string> {
-  return new Promise<string>((resolve, reject) => {
-    const tracker = req.ips.length > 0 ? req.ips[0] : req.ip; // individualize IP extraction to meet your own needs
-    resolve(tracker);
-  });
+    // The client IP is the leftmost IP in req.ips. You can individualize IP
+    // extraction to meet your own needs.
+    const tracker = req.ips.length > 0 ? req.ips[0] : req.ip;
+    return Promise.resolve(tracker);
   }
 }
 
