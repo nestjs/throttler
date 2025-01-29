@@ -368,24 +368,17 @@ The built in storage is an in memory cache that keeps track of the requests made
 
 There are a couple of helper methods to make the timings more readable if you prefer to use them over the direct definition. `@nestjs/throttler` exports five different helpers, `seconds`, `minutes`, `hours`, `days`, and `weeks`. To use them, simply call `seconds(5)` or any of the other helpers, and the correct number of milliseconds will be returned.
 
-#### Migration Guide
+### Migrating to v5 from earlier versions
 
-For most people, wrapping your options in an array will be enough.
+If you migrate to v5 from earlier versions, you need to wrap your options in an array.
 
-If you are using a custom storage, you should wrap you `ttl` and `limit` in an
-array and assign it to the `throttlers` property of the options object.
+If you are using a custom storage, you should wrap you `ttl` and `limit` in an array and assign it to the `throttlers` property of the options object.
 
-Any `@ThrottleSkip()` should now take in an object with `string: boolean` props.
-The strings are the names of the throttlers. If you do not have a name, pass the
-string `'default'`, as this is what will be used under the hood otherwise.
+Any `@ThrottleSkip()` should now take in an object with `string: boolean` props. The strings are the names of the throttlers. If you do not have a name, pass the string `'default'`, as this is what will be used under the hood otherwise.
 
-Any `@Throttle()` decorators should also now take in an object with string keys,
-relating to the names of the throttler contexts (again, `'default'` if no name)
-and values of objects that have `limit` and `ttl` keys.
+Any `@Throttle()` decorators should also now take in an object with string keys, relating to the names of the throttler contexts (again, `'default'` if no name) and values of objects that have `limit` and `ttl` keys.
 
-> Warning **Important** The `ttl` is now in **milliseconds**. If you want to keep your ttl
-> in seconds for readability, use the `seconds` helper from this package. It just
-> multiplies the ttl by 1000 to make it in milliseconds.
+> **Important:** The `ttl` is now in **milliseconds**. If you want to keep your ttl in seconds for readability, use the `seconds` helper from this package. It just multiplies the ttl by 1000 to make it in milliseconds.
 
 For more info, see the [Changelog](https://github.com/nestjs/throttler/blob/master/CHANGELOG.md#500)
 
