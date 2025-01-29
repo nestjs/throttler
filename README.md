@@ -406,7 +406,7 @@ For more info, see the [Changelog](https://github.com/nestjs/throttler/blob/mast
 
 ## Community Storage Providers
 
-- [Redis](https://github.com/kkoomen/nestjs-throttler-storage-redis)
+- [Redis](https://github.com/jmcdo29/nest-lab/tree/main/packages/throttler-storage-redis)
 - [Mongo](https://www.npmjs.com/package/nestjs-throttler-storage-mongo)
 
 Feel free to submit a PR with your custom storage provider being added to this list.
