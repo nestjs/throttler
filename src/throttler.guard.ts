@@ -127,7 +127,6 @@ export class ThrottlerGuard implements CanActivate {
         routeOrClassGetTracker || namedThrottler.getTracker || this.commonOptions.getTracker;
       const generateKey =
         routeOrClassGetKeyGenerator || namedThrottler.generateKey || this.commonOptions.generateKey;
-      const setHeaders = namedThrottler.setHeaders ?? this.commonOptions.setHeaders ?? true;
 
       continues.push(
         await this.handleRequest({
@@ -138,7 +137,6 @@ export class ThrottlerGuard implements CanActivate {
           blockDuration,
           getTracker,
           generateKey,
-          setHeaders,
         }),
       );
     }
@@ -156,8 +154,7 @@ export class ThrottlerGuard implements CanActivate {
    * @throws {ThrottlerException}
    */
   protected async handleRequest(requestProps: ThrottlerRequest): Promise<boolean> {
-    const { context, limit, ttl, throttler, blockDuration, getTracker, generateKey, setHeaders } =
-      requestProps;
+    const { context, limit, ttl, throttler, blockDuration, getTracker, generateKey } = requestProps;
 
     // Here we start to check the amount of requests being done against the ttl.
     const { req, res } = this.getRequestResponse(context);
@@ -176,6 +173,7 @@ export class ThrottlerGuard implements CanActivate {
       await this.storageService.increment(key, ttl, limit, blockDuration, throttler.name);
 
     const getThrottlerSuffix = (name: string) => (name === 'default' ? '' : `-${name}`);
+    const setHeaders = throttler.setHeaders ?? this.commonOptions.setHeaders ?? true;
 
     // Throw an error when the user reached their limit.
     if (isBlocked) {
