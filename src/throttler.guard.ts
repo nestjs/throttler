@@ -31,7 +31,7 @@ export class ThrottlerGuard implements CanActivate {
   protected throttlers: Array<ThrottlerOptions>;
   protected commonOptions: Pick<
     ThrottlerOptions,
-    'skipIf' | 'ignoreUserAgents' | 'getTracker' | 'generateKey'
+    'skipIf' | 'ignoreUserAgents' | 'getTracker' | 'generateKey' | 'setHeaders'
   >;
 
   constructor(
@@ -60,6 +60,7 @@ export class ThrottlerGuard implements CanActivate {
         ignoreUserAgents: this.options.ignoreUserAgents,
         getTracker: this.options.getTracker,
         generateKey: this.options.generateKey,
+        setHeaders: this.options.setHeaders,
       };
     }
     this.commonOptions.getTracker ??= this.getTracker.bind(this);
@@ -126,6 +127,8 @@ export class ThrottlerGuard implements CanActivate {
         routeOrClassGetTracker || namedThrottler.getTracker || this.commonOptions.getTracker;
       const generateKey =
         routeOrClassGetKeyGenerator || namedThrottler.generateKey || this.commonOptions.generateKey;
+      const setHeaders = namedThrottler.setHeaders ?? this.commonOptions.setHeaders ?? true;
+
       continues.push(
         await this.handleRequest({
           context,
@@ -135,6 +138,7 @@ export class ThrottlerGuard implements CanActivate {
           blockDuration,
           getTracker,
           generateKey,
+          setHeaders,
         }),
       );
     }
@@ -152,7 +156,8 @@ export class ThrottlerGuard implements CanActivate {
    * @throws {ThrottlerException}
    */
   protected async handleRequest(requestProps: ThrottlerRequest): Promise<boolean> {
-    const { context, limit, ttl, throttler, blockDuration, getTracker, generateKey } = requestProps;
+    const { context, limit, ttl, throttler, blockDuration, getTracker, generateKey, setHeaders } =
+      requestProps;
 
     // Here we start to check the amount of requests being done against the ttl.
     const { req, res } = this.getRequestResponse(context);
@@ -174,7 +179,10 @@ export class ThrottlerGuard implements CanActivate {
 
     // Throw an error when the user reached their limit.
     if (isBlocked) {
-      res.header(`Retry-After${getThrottlerSuffix(throttler.name)}`, timeToBlockExpire);
+      if (setHeaders) {
+        res.header(`Retry-After${getThrottlerSuffix(throttler.name)}`, timeToBlockExpire);
+      }
+
       await this.throwThrottlingException(context, {
         limit,
         ttl,
@@ -187,14 +195,16 @@ export class ThrottlerGuard implements CanActivate {
       });
     }
 
-    res.header(`${this.headerPrefix}-Limit${getThrottlerSuffix(throttler.name)}`, limit);
-    // We're about to add a record so we need to take that into account here.
-    // Otherwise the header says we have a request left when there are none.
-    res.header(
-      `${this.headerPrefix}-Remaining${getThrottlerSuffix(throttler.name)}`,
-      Math.max(0, limit - totalHits),
-    );
-    res.header(`${this.headerPrefix}-Reset${getThrottlerSuffix(throttler.name)}`, timeToExpire);
+    if (setHeaders) {
+      res.header(`${this.headerPrefix}-Limit${getThrottlerSuffix(throttler.name)}`, limit);
+      // We're about to add a record so we need to take that into account here.
+      // Otherwise the header says we have a request left when there are none.
+      res.header(
+        `${this.headerPrefix}-Remaining${getThrottlerSuffix(throttler.name)}`,
+        Math.max(0, limit - totalHits),
+      );
+      res.header(`${this.headerPrefix}-Reset${getThrottlerSuffix(throttler.name)}`, timeToExpire);
+    }
 
     return true;
   }
