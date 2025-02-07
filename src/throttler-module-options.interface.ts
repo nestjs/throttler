@@ -50,6 +50,11 @@ export interface ThrottlerOptions {
    * A method to override the default key generator.
    */
   generateKey?: ThrottlerGenerateKeyFunction;
+
+  /**
+   * Weather to add the rate limit headers to the response.
+   */
+  setHeaders?: boolean;
 }
 
 /**
@@ -90,6 +95,11 @@ export type ThrottlerModuleOptions =
        * The named throttlers to use
        */
       throttlers: Array<ThrottlerOptions>;
+
+      /**
+       * Weather to add the rate limit headers to the response.
+       */
+      setHeaders?: boolean;
     };
 
 /**
