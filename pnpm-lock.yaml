@@ -30,8 +30,8 @@ importers:
         specifier: 11.0.12
         version: 11.0.12(@nestjs/common@11.0.12(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/platform-express@11.0.12)(@nestjs/websockets@11.0.12)(reflect-metadata@0.2.2)(rxjs@7.8.2)
       '@nestjs/graphql':
-        specifier: 13.0.3
-        version: 13.0.3(@nestjs/common@11.0.12(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.0.12)(graphql@16.10.0)(reflect-metadata@0.2.2)
+        specifier: 13.0.4
+        version: 13.0.4(@nestjs/common@11.0.12(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.0.12)(graphql@16.10.0)(reflect-metadata@0.2.2)
       '@nestjs/platform-express':
         specifier: 11.0.12
         version: 11.0.12(@nestjs/common@11.0.12(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.0.12)
@@ -745,12 +745,6 @@ packages:
     peerDependencies:
       graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
 
-  '@graphql-tools/merge@9.0.19':
-    resolution: {integrity: sha512-iJP3Xke+vgnST58A1Q/1+y3bzfbYalIMnegUNupYHNvHHSE0PXoq8YieqQF8JYzWVACMxiq/M4Y1vW75mS2UVg==}
-    engines: {node: '>=16.0.0'}
-    peerDependencies:
-      graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
-
   '@graphql-tools/merge@9.0.24':
     resolution: {integrity: sha512-NzWx/Afl/1qHT3Nm1bghGG2l4jub28AdvtG11PoUlmjcIjnFBJMv4vqL0qnxWe8A82peWo4/TkVdjJRLXwgGEw==}
     engines: {node: '>=16.0.0'}
@@ -759,12 +753,6 @@ packages:
 
   '@graphql-tools/mock@8.7.20':
     resolution: {integrity: sha512-ljcHSJWjC/ZyzpXd5cfNhPI7YljRVvabKHPzKjEs5ElxWu2cdlLGvyNYepApXDsM/OJG/2xuhGM+9GWu5gEAPQ==}
-    peerDependencies:
-      graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
-
-  '@graphql-tools/schema@10.0.18':
-    resolution: {integrity: sha512-6j2O/07v1zbGvASizMSO7YZdGt/9HfPDx8s9n75sD2xoGfeJ2aRSmI4LkyuvqOpi0ecaa9xErnMEEvUaKBqMbw==}
-    engines: {node: '>=16.0.0'}
     peerDependencies:
       graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
 
@@ -781,12 +769,6 @@ packages:
 
   '@graphql-tools/schema@9.0.19':
     resolution: {integrity: sha512-oBRPoNBtCkk0zbUsyP4GaIzCt8C0aCI4ycIRUL67KK5pOHljKLBBtGT+Jr6hkzA74C8Gco8bpZPe7aWFjiaK2w==}
-    peerDependencies:
-      graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
-
-  '@graphql-tools/utils@10.8.1':
-    resolution: {integrity: sha512-fI5NNuqeEAHyp7NuCDjvxWR5PTUXM4AqY9BoC59ZcX4nePAJje27ZsFHbAMS6EKDosY1K/D4ADxsO0P5+FH07A==}
-    engines: {node: '>=16.0.0'}
     peerDependencies:
       graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
 
@@ -1114,8 +1096,8 @@ packages:
       '@nestjs/websockets':
         optional: true
 
-  '@nestjs/graphql@13.0.3':
-    resolution: {integrity: sha512-2pwk7L00uPQADkO+FmzKGX9rMfyYh8FwVdT7iwEcVj5gR6NWB9XSSnaNp0hyK/+LmT+oei1DlwsduM7AVdkS0w==}
+  '@nestjs/graphql@13.0.4':
+    resolution: {integrity: sha512-TEWFl9MCbut7A8k/BvrR/hWD8wlvUUxp4mzxUhbfyBef28Zwy6trlhcGpDoM2ENIb7HShWcro4CKNwXwj/YWmA==}
     peerDependencies:
       '@apollo/subgraph': ^2.9.3
       '@nestjs/common': ^11.0.1
@@ -5676,18 +5658,6 @@ packages:
       utf-8-validate:
         optional: true
 
-  ws@8.18.0:
-    resolution: {integrity: sha512-8VbfWfHLbbwu3+N6OKsOMpBdT4kXPDDB9cJk2bJ6mh9ucxdlnNvH1e+roYkKmN9Nxw2yjz7VzeO9oOz2zJ04Pw==}
-    engines: {node: '>=10.0.0'}
-    peerDependencies:
-      bufferutil: ^4.0.1
-      utf-8-validate: '>=5.0.2'
-    peerDependenciesMeta:
-      bufferutil:
-        optional: true
-      utf-8-validate:
-        optional: true
-
   ws@8.18.1:
     resolution: {integrity: sha512-RKW2aJZMXeMxVpnZ6bck+RswznaxmzdULiBr6KY7XkTnW8uvt0iT9H5DkHUChXrc+uurzwa0rVI16n/Xzjdz1w==}
     engines: {node: '>=10.0.0'}
@@ -6619,12 +6589,6 @@ snapshots:
       graphql: 16.10.0
       tslib: 2.8.1
 
-  '@graphql-tools/merge@9.0.19(graphql@16.10.0)':
-    dependencies:
-      '@graphql-tools/utils': 10.8.1(graphql@16.10.0)
-      graphql: 16.10.0
-      tslib: 2.8.1
-
   '@graphql-tools/merge@9.0.24(graphql@16.10.0)':
     dependencies:
       '@graphql-tools/utils': 10.8.6(graphql@16.10.0)
@@ -6636,13 +6600,6 @@ snapshots:
       '@graphql-tools/schema': 9.0.19(graphql@16.10.0)
       '@graphql-tools/utils': 9.2.1(graphql@16.10.0)
       fast-json-stable-stringify: 2.1.0
-      graphql: 16.10.0
-      tslib: 2.8.1
-
-  '@graphql-tools/schema@10.0.18(graphql@16.10.0)':
-    dependencies:
-      '@graphql-tools/merge': 9.0.19(graphql@16.10.0)
-      '@graphql-tools/utils': 10.8.1(graphql@16.10.0)
       graphql: 16.10.0
       tslib: 2.8.1
 
@@ -6668,14 +6625,6 @@ snapshots:
       graphql: 16.10.0
       tslib: 2.8.1
       value-or-promise: 1.0.12
-
-  '@graphql-tools/utils@10.8.1(graphql@16.10.0)':
-    dependencies:
-      '@graphql-typed-document-node/core': 3.2.0(graphql@16.10.0)
-      cross-inspect: 1.0.1
-      dset: 3.1.4
-      graphql: 16.10.0
-      tslib: 2.8.1
 
   '@graphql-tools/utils@10.8.6(graphql@16.10.0)':
     dependencies:
@@ -7123,11 +7072,11 @@ snapshots:
       '@nestjs/platform-express': 11.0.12(@nestjs/common@11.0.12(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.0.12)
       '@nestjs/websockets': 11.0.12(@nestjs/common@11.0.12(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.0.12)(@nestjs/platform-socket.io@11.0.12)(reflect-metadata@0.2.2)(rxjs@7.8.2)
 
-  '@nestjs/graphql@13.0.3(@nestjs/common@11.0.12(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.0.12)(graphql@16.10.0)(reflect-metadata@0.2.2)':
+  '@nestjs/graphql@13.0.4(@nestjs/common@11.0.12(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.0.12)(graphql@16.10.0)(reflect-metadata@0.2.2)':
     dependencies:
-      '@graphql-tools/merge': 9.0.19(graphql@16.10.0)
-      '@graphql-tools/schema': 10.0.18(graphql@16.10.0)
-      '@graphql-tools/utils': 10.8.1(graphql@16.10.0)
+      '@graphql-tools/merge': 9.0.24(graphql@16.10.0)
+      '@graphql-tools/schema': 10.0.23(graphql@16.10.0)
+      '@graphql-tools/utils': 10.8.6(graphql@16.10.0)
       '@nestjs/common': 11.0.12(reflect-metadata@0.2.2)(rxjs@7.8.2)
       '@nestjs/core': 11.0.12(@nestjs/common@11.0.12(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/platform-express@11.0.12)(@nestjs/websockets@11.0.12)(reflect-metadata@0.2.2)(rxjs@7.8.2)
       '@nestjs/mapped-types': 2.1.0(@nestjs/common@11.0.12(reflect-metadata@0.2.2)(rxjs@7.8.2))(reflect-metadata@0.2.2)
@@ -7135,13 +7084,13 @@ snapshots:
       fast-glob: 3.3.3
       graphql: 16.10.0
       graphql-tag: 2.12.6(graphql@16.10.0)
-      graphql-ws: 6.0.4(graphql@16.10.0)(ws@8.18.0)
+      graphql-ws: 6.0.4(graphql@16.10.0)(ws@8.18.1)
       lodash: 4.17.21
       normalize-path: 3.0.0
       reflect-metadata: 0.2.2
       subscriptions-transport-ws: 0.11.0(graphql@16.10.0)
       tslib: 2.8.1
-      ws: 8.18.0
+      ws: 8.18.1
     transitivePeerDependencies:
       - '@fastify/websocket'
       - bufferutil
@@ -9686,11 +9635,11 @@ snapshots:
       graphql: 16.10.0
     optional: true
 
-  graphql-ws@6.0.4(graphql@16.10.0)(ws@8.18.0):
+  graphql-ws@6.0.4(graphql@16.10.0)(ws@8.18.1):
     dependencies:
       graphql: 16.10.0
     optionalDependencies:
-      ws: 8.18.0
+      ws: 8.18.1
 
   graphql@16.10.0: {}
 
@@ -12221,8 +12170,6 @@ snapshots:
   ws@7.5.10: {}
 
   ws@8.17.1: {}
-
-  ws@8.18.0: {}
 
   ws@8.18.1: {}
 
