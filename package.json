@@ -57,7 +57,7 @@
     "@nestjs/platform-fastify": "11.0.15",
     "@nestjs/platform-socket.io": "11.0.15",
     "@nestjs/platform-ws": "11.0.15",
-    "@nestjs/schematics": "11.0.4",
+    "@nestjs/schematics": "11.0.5",
     "@nestjs/testing": "11.0.15",
     "@nestjs/websockets": "11.0.15",
     "@semantic-release/git": "10.0.1",
