@@ -52,7 +52,7 @@
     "@nestjs/cli": "11.0.6",
     "@nestjs/common": "11.0.15",
     "@nestjs/core": "11.0.15",
-    "@nestjs/graphql": "13.0.4",
+    "@nestjs/graphql": "13.1.0",
     "@nestjs/platform-express": "11.0.15",
     "@nestjs/platform-fastify": "11.0.15",
     "@nestjs/platform-socket.io": "11.0.15",
