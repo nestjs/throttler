@@ -153,6 +153,7 @@ export class ThrottlerGuard implements CanActivate {
         }
       }
     }
+
     const tracker = await getTracker(req);
     const key = generateKey(context, tracker, throttler.name);
     const { totalHits, timeToExpire } = await this.storageService.increment(key, ttl);

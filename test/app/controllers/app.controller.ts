@@ -1,5 +1,5 @@
-import { Controller, Get } from '@nestjs/common';
-import { SkipThrottle, Throttle, seconds } from '../../../src';
+import { Controller, Get, UseGuards } from '@nestjs/common';
+import { SkipThrottle, Throttle, seconds, ThrottlerGuard } from '../../../src';
 import { AppService } from '../app.service';
 
 @Controller()
@@ -7,6 +7,8 @@ import { AppService } from '../app.service';
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
+  // @UseGuards(ThrottlerGuard)
+  // @Throttle({ low: { limit: 3, ttl: seconds(60) } })
   @Get()
   async test() {
     return this.appService.success();

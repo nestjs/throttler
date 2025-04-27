@@ -9,9 +9,19 @@ import { LimitController } from './limit.controller';
   imports: [
     ThrottlerModule.forRoot([
       {
-        limit: 5,
+        name: 'low',
+        limit: 3,
         ttl: seconds(60),
-        ignoreUserAgents: [/throttler-test/g],
+      },
+      {
+        name: 'medium',
+        limit: 6,
+        ttl: seconds(120),
+      },
+      {
+        name: 'high',
+        limit: 9,
+        ttl: seconds(180),
       },
     ]),
   ],

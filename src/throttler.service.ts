@@ -28,6 +28,7 @@ export class ThrottlerStorageService implements ThrottlerStorage, OnApplicationS
   private setExpirationTime(key: string, ttlMilliseconds: number): void {
     const timeoutId = setTimeout(() => {
       this.storage[key].totalHits--;
+      console.log(this.storage[key].totalHits, key)
       clearTimeout(timeoutId);
       this.timeoutIds = this.timeoutIds.filter((id) => id != timeoutId);
     }, ttlMilliseconds);
@@ -46,6 +47,8 @@ export class ThrottlerStorageService implements ThrottlerStorage, OnApplicationS
 
     this.storage[key].totalHits++;
     this.setExpirationTime(key, ttlMilliseconds);
+
+    console.log(this.storage[key], new Date(this.storage[key].expiresAt), key)
 
     return {
       totalHits: this.storage[key].totalHits,

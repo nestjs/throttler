@@ -5,11 +5,11 @@ import { ControllerModule } from './controllers/controller.module';
 
 @Module({
   imports: [ControllerModule],
-  providers: [
-    {
-      provide: APP_GUARD,
-      useClass: ThrottlerGuard,
-    },
-  ],
+  // providers: [
+  //   {
+  //     provide: APP_GUARD,
+  //     useClass: ThrottlerGuard,
+  //   },
+  // ],
 })
 export class AppModule {}
