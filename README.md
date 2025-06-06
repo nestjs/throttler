@@ -94,9 +94,46 @@ There may come upon times where you want to set up multiple throttling definitio
 export class AppModule {}
 ```
 
+#### Important note on using decorators with Named Throttlers:
+
+When you have configured named throttlers (e.g., 'short', 'medium', 'long' as shown above), both the `@SkipThrottle()` and `@Throttle()` decorators must be provided with an object where keys are the names of your throttlers.
+
+If you use `@SkipThrottle()` without specifying the names, it will not skip any of your named throttlers. Similarly, `@Throttle()` without specifying names cannot override settings for specific named throttlers.
+
+**Correct usage with named throttlers:**
+
+To skip specific named throttlers:
+```typescript
+@SkipThrottle({ short: true, medium: true })
+@Controller('users')
+export class UsersController {}
+```
+
+To override limits for specific named throttlers:
+```typescript
+@Throttle({ short: { limit: 5, ttl: 1000 }, medium: { limit: 30, ttl: 10000 } })
+@Get()
+findAll() {
+  return "Custom limits for specific throttlers";
+}
+```
+
+**Incorrect usage** (will not work as intended for named throttlers):
+```typescript
+@SkipThrottle() // This will NOT skip any named throttlers
+@Controller('users')
+export class UsersController {}
+```
+
+For more details on this behavior, especially if migrating from older versions, please refer to the [Migration to v5](#migrating-to-v5-from-earlier-versions) guide.
+
 ### Customization
 
-There may be a time where you want to bind the guard to a controller or globally, but want to disable rate limiting for one or more of your endpoints. For that, you can use the `@SkipThrottle()` decorator, to negate the throttler for an entire class or a single route. The `@SkipThrottle()` decorator can also take in an object of string keys with boolean values, if you have more than one throttler set. If you do not pass an object, the default is to use `{ default: true }`
+There may be a time where you want to bind the guard to a controller or globally, but want to disable rate limiting for one or more of your endpoints. For that, you can use the `@SkipThrottle()` decorator to negate the throttler for an entire class or a single route.
+
+The `@SkipThrottle()` decorator behaves differently based on your ThrottlerModule configuration:
+
+1. **For a single, default (unnamed) throttler:** You can use `@SkipThrottle()`, `@SkipThrottle(true)`, or `@SkipThrottle({ default: true })`.
 
 ```typescript
 @SkipThrottle()
@@ -104,10 +141,20 @@ There may be a time where you want to bind the guard to a controller or globally
 export class UsersController {}
 ```
 
-This `@SkipThrottle()` decorator can be used to skip a route or a class or to negate the skipping of a route in a class that is skipped.
+2. **For multiple named throttlers** (e.g., 'short', 'medium'): You must provide an object where keys are the names of the throttlers you wish to skip, and values are `true`.
 
 ```typescript
-@SkipThrottle()
+@SkipThrottle({ short: true, medium: true })
+@Controller('users')
+export class UsersController {}
+```
+
+> **Important:** Simply using `@SkipThrottle()` without an object will not skip any named throttlers. See the [Multiple Throttler Definitions](#multiple-throttler-definitions) section for a detailed example and explanation.
+
+The `@SkipThrottle()` decorator can also be used to negate the skipping of a route in a class that is already skipped:
+
+```typescript
+@SkipThrottle({ default: true })
 @Controller('users')
 export class UsersController {
   // Rate limiting is applied to this route.
@@ -373,13 +420,29 @@ If you migrate to v5 from earlier versions, you need to wrap your options in an 
 
 If you are using a custom storage, you should wrap you `ttl` and `limit` in an array and assign it to the `throttlers` property of the options object.
 
-Any `@ThrottleSkip()` should now take in an object with `string: boolean` props. The strings are the names of the throttlers. If you do not have a name, pass the string `'default'`, as this is what will be used under the hood otherwise.
+Any `@SkipThrottle()` should now take in an object with `string: boolean` props. The strings are the names of the throttlers. If you do not have a name, pass the string `'default'`, as this is what will be used under the hood otherwise.
+
+**Migration examples for decorators:**
+
+```typescript
+// Before v5
+@SkipThrottle()
+@Throttle(10, 60)
+
+// After v5 (with default throttler)
+@SkipThrottle({ default: true })
+@Throttle({ default: { limit: 10, ttl: 60000 } })
+
+// After v5 (with named throttlers)
+@SkipThrottle({ short: true, medium: true })
+@Throttle({ short: { limit: 5, ttl: 1000 }, long: { limit: 100, ttl: 60000 } })
+```
 
 Any `@Throttle()` decorators should also now take in an object with string keys, relating to the names of the throttler contexts (again, `'default'` if no name) and values of objects that have `limit` and `ttl` keys.
 
 > **Important:** The `ttl` is now in **milliseconds**. If you want to keep your ttl in seconds for readability, use the `seconds` helper from this package. It just multiplies the ttl by 1000 to make it in milliseconds.
 
-For more info, see the [Changelog](https://github.com/nestjs/throttler/blob/master/CHANGELOG.md#500)
+> **Note:** When using named throttlers, simply using `@SkipThrottle()` without parameters will not work as expected. See the [Important note on using decorators with Named Throttlers](#important-note-on-using-decorators-with-named-throttlers) section for details.
 
 ## Community Storage Providers
 
