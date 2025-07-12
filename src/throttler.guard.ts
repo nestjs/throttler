@@ -248,7 +248,7 @@ export class ThrottlerGuard implements CanActivate {
     return this.errorMessage;
   }
 
-  private async resolveValue<T extends number | string | boolean>(
+  protected async resolveValue<T extends number | string | boolean>(
     context: ExecutionContext,
     resolvableValue: Resolvable<T>,
   ): Promise<T> {
