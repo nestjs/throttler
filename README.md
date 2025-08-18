@@ -383,7 +383,8 @@ For more info, see the [Changelog](https://github.com/nestjs/throttler/blob/mast
 
 ## Community Storage Providers
 
-- [Redis](https://github.com/jmcdo29/nest-lab/tree/main/packages/throttler-storage-redis)
+- [Redis](https://github.com/CSenshi/nestjs-redis/tree/main/packages/throttler-storage) (`node-redis` based)
+- [Redis](https://github.com/jmcdo29/nest-lab/tree/main/packages/throttler-storage-redis) (`ioredis` based)
 - [Mongo](https://www.npmjs.com/package/nestjs-throttler-storage-mongo)
 
 Feel free to submit a PR with your custom storage provider being added to this list.
