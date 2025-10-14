@@ -280,7 +280,7 @@ The following options are valid for the object passed to the array of the `Throt
   </tr>
    <tr>
     <td><code>generateKey</code></td>
-    <td>a function that takes in the <code>ExecutionContext</code>, the tacker <code>string</code> and the throttler name as a <code>string</code> and returns a <code>string</code> to override the final key which will be used to store the rate limit value. This overrides the default logic of the <code>generateKey</code> method</td>
+    <td>a function that takes in the <code>ExecutionContext</code>, the tracker <code>string</code> and the throttler name as a <code>string</code> and returns a <code>string</code> to override the final key which will be used to store the rate limit value. This overrides the default logic of the <code>generateKey</code> method</td>
   </tr>
 </table>
 
@@ -313,7 +313,7 @@ If you need to set up storages instead, or want to use a some of the above optio
   </tr>
    <tr>
     <td><code>generateKey</code></td>
-    <td>a function that takes in the <code>ExecutionContext</code>, the tacker <code>string</code> and the throttler name as a <code>string</code> and returns a <code>string</code> to override the final key which will be used to store the rate limit value. This overrides the default logic of the <code>generateKey</code> method</td>
+    <td>a function that takes in the <code>ExecutionContext</code>, the tracker <code>string</code> and the throttler name as a <code>string</code> and returns a <code>string</code> to override the final key which will be used to store the rate limit value. This overrides the default logic of the <code>generateKey</code> method</td>
   </tr>
 </table>
 
