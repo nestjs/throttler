@@ -19,7 +19,7 @@ jobs:
       - name: Setup Node.js 20.x
         uses: actions/setup-node@master
         with:
-          node-version: 22.x
+          node-version: 24.x
 
       - name: Install PNPM
         run: npm i -g pnpm
