@@ -45,7 +45,7 @@
     "release": "changeset publish"
   },
   "devDependencies": {
-    "@apollo/server": "5.1.0",
+    "@apollo/server": "5.2.0",
     "@changesets/cli": "2.29.7",
     "@commitlint/cli": "20.1.0",
     "@commitlint/config-angular": "20.0.0",
