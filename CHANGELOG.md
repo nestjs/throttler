@@ -1,5 +1,11 @@
 ## 6.4.0
 
+## 6.5.0
+
+### Minor Changes
+
+- 58964d6: Add a setHeaders option to control whether to add headers to the response or not
+
 ### Minor Changes
 
 - 5cb4254: Update to allow for support for Nest version 11
@@ -74,7 +80,6 @@
 ### Major Changes
 
 - 2f4f2a7: # FEATURES
-
   - allow for multiple Throttler Contexts
   - allow for conditionally skipping based on `ThrottleGuard#shouldSkip` method
   - allow for easily overriding throttler message based on guard method
@@ -83,7 +88,6 @@
   - `getTracker` can now be async
 
   # BREAKING CHANGES
-
   - ttl is now in milliseconds, not seconds, but there are time helper exposed to
     ease the migration to that
   - the module options is now either an array or an object with a `throttlers`
@@ -153,7 +157,6 @@
   called `getRecord()`, then `addRecord`.
 
   ## Breaking Changes
-
   - removed `getRecord`
   - `addRecord(key: string, ttl: number): Promise<number[]>;` changes to `increment(key: string, ttl: number): Promise<ThrottlerStorageRecord>;`
 
