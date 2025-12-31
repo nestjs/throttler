@@ -1,5 +1,11 @@
 ## 6.4.0
 
+## 6.5.1
+
+### Patch Changes
+
+- 603cb82: handles edge case where multiple clients making frequent requests interfere with each other
+
 ## 6.5.0
 
 ### Minor Changes
