@@ -38,28 +38,28 @@ export class ThrottlerStorageService implements ThrottlerStorage, OnApplicationS
       totalHits.set(throttlerName, totalHits.get(throttlerName) - 1);
       clearTimeout(timeoutId);
       this.timeoutIds.set(
-        throttlerName,
-        this.timeoutIds.get(throttlerName).filter((id) => id !== timeoutId),
+        key,
+        this.timeoutIds.get(key).filter((id) => id !== timeoutId),
       );
     }, ttlMilliseconds);
-    this.timeoutIds.get(throttlerName).push(timeoutId);
+    this.timeoutIds.get(key).push(timeoutId);
   }
 
   /**
    * Clear the expiration time related to the throttle
    */
-  private clearExpirationTimes(throttlerName: string) {
-    this.timeoutIds.get(throttlerName).forEach(clearTimeout);
-    this.timeoutIds.set(throttlerName, []);
+  private clearExpirationTimes(key: string) {
+    this.timeoutIds.get(key).forEach(clearTimeout);
+    this.timeoutIds.set(key, []);
   }
 
   /**
    * Reset the request blockage
    */
-  private resetBlockdRequest(key: string, throttlerName: string) {
+  private resetBlockedRequest(key: string, throttlerName: string) {
     this.storage.get(key).isBlocked = false;
     this.storage.get(key).totalHits.set(throttlerName, 0);
-    this.clearExpirationTimes(throttlerName);
+    this.clearExpirationTimes(key);
   }
 
   /**
@@ -81,8 +81,8 @@ export class ThrottlerStorageService implements ThrottlerStorage, OnApplicationS
     const ttlMilliseconds = ttl;
     const blockDurationMilliseconds = blockDuration;
 
-    if (!this.timeoutIds.has(throttlerName)) {
-      this.timeoutIds.set(throttlerName, []);
+    if (!this.timeoutIds.has(key)) {
+      this.timeoutIds.set(key, []);
     }
 
     if (!this.storage.has(key)) {
@@ -119,7 +119,7 @@ export class ThrottlerStorageService implements ThrottlerStorage, OnApplicationS
 
     // Reset time blocked request
     if (timeToBlockExpire <= 0 && this.storage.get(key).isBlocked) {
-      this.resetBlockdRequest(key, throttlerName);
+      this.resetBlockedRequest(key, throttlerName);
       this.fireHitCount(key, throttlerName, ttlMilliseconds);
     }
 
