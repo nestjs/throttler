@@ -16,6 +16,8 @@ Any and all contributions are welcome! This is a decently sized project with a g
 
 All the source code is in `src` as expected. Most of the code should be rather self documented.
 
+The built-in in-memory cache implementation can be found in src/throttler.service.ts
+
 ## Testing
 
 To run a basic dev server you can use `start:dev` to run `nodemon` and `ts-node`. All tests should be running through `jest` using `test:e2e` otherwise.
