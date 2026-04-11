@@ -1,5 +1,5 @@
 import { ExecutionContext } from '@nestjs/common';
-import { Reflector } from '@nestjs/core';
+import { HttpAdapterHost, Reflector } from '@nestjs/core';
 import { Test } from '@nestjs/testing';
 import { ThrottlerStorageOptions } from './throttler-storage-options.interface';
 import { ThrottlerStorageRecord } from './throttler-storage-record.interface';
@@ -116,13 +116,26 @@ function contextMockFactory(
   return executionPartial as ExecutionContext;
 }
 
+const createMockHttpAdapterHost = (setHeaderMock: jest.Mock) => ({
+  httpAdapter: {
+    setHeader: setHeaderMock,
+    getRequestHostname: jest.fn(),
+    getRequestMethod: jest.fn(),
+    getRequestUrl: jest.fn(),
+    reply: jest.fn(),
+    status: jest.fn(),
+  },
+});
+
 describe('ThrottlerGuard', () => {
   let guard: ThrottlerGuard;
   let reflector: Reflector;
   let service: ThrottlerStorageServiceMock;
   let handler: () => any;
+  let setHeaderMock: jest.Mock;
 
   beforeEach(async () => {
+    setHeaderMock = jest.fn();
     const modRef = await Test.createTestingModule({
       providers: [
         ThrottlerGuard,
@@ -146,6 +159,10 @@ describe('ThrottlerGuard', () => {
             getAllAndOverride: jest.fn(),
           },
         },
+        {
+          provide: HttpAdapterHost,
+          useValue: createMockHttpAdapterHost(setHeaderMock),
+        },
       ],
     }).compile();
     guard = modRef.get(ThrottlerGuard);
@@ -162,19 +179,16 @@ describe('ThrottlerGuard', () => {
   describe('HTTP Context', () => {
     let reqMock;
     let resMock;
-    let headerSettingMock: jest.Mock;
 
     beforeEach(() => {
-      headerSettingMock = jest.fn();
-      resMock = {
-        header: headerSettingMock,
-      };
+      setHeaderMock.mockClear();
+      resMock = {};
       reqMock = {
         headers: {},
       };
     });
     afterEach(() => {
-      headerSettingMock.mockClear();
+      setHeaderMock.mockClear();
     });
     it('should add headers to the res', async () => {
       handler = function addHeaders() {
@@ -186,10 +200,15 @@ describe('ThrottlerGuard', () => {
       });
       const canActivate = await guard.canActivate(ctxMock);
       expect(canActivate).toBe(true);
-      expect(headerSettingMock).toBeCalledTimes(3);
-      expect(headerSettingMock).toHaveBeenNthCalledWith(1, 'X-RateLimit-Limit', 5);
-      expect(headerSettingMock).toHaveBeenNthCalledWith(2, 'X-RateLimit-Remaining', 4);
-      expect(headerSettingMock).toHaveBeenNthCalledWith(3, 'X-RateLimit-Reset', expect.any(Number));
+      expect(setHeaderMock).toBeCalledTimes(3);
+      expect(setHeaderMock).toHaveBeenNthCalledWith(1, resMock, 'X-RateLimit-Limit', '5');
+      expect(setHeaderMock).toHaveBeenNthCalledWith(2, resMock, 'X-RateLimit-Remaining', '4');
+      expect(setHeaderMock).toHaveBeenNthCalledWith(
+        3,
+        resMock,
+        'X-RateLimit-Reset',
+        expect.any(String),
+      );
     });
     it('should return an error after passing the limit', async () => {
       handler = function returnError() {
@@ -203,8 +222,8 @@ describe('ThrottlerGuard', () => {
         await guard.canActivate(ctxMock);
       }
       await expect(guard.canActivate(ctxMock)).rejects.toThrowError(ThrottlerException);
-      expect(headerSettingMock).toBeCalledTimes(16);
-      expect(headerSettingMock).toHaveBeenLastCalledWith('Retry-After', expect.any(Number));
+      expect(setHeaderMock).toBeCalledTimes(16);
+      expect(setHeaderMock).toHaveBeenLastCalledWith(resMock, 'Retry-After', expect.any(String));
     });
     it('should pull values from the reflector instead of options', async () => {
       handler = function useReflector() {
@@ -217,10 +236,15 @@ describe('ThrottlerGuard', () => {
       });
       const canActivate = await guard.canActivate(ctxMock);
       expect(canActivate).toBe(true);
-      expect(headerSettingMock).toBeCalledTimes(3);
-      expect(headerSettingMock).toHaveBeenNthCalledWith(1, 'X-RateLimit-Limit', 2);
-      expect(headerSettingMock).toHaveBeenNthCalledWith(2, 'X-RateLimit-Remaining', 1);
-      expect(headerSettingMock).toHaveBeenNthCalledWith(3, 'X-RateLimit-Reset', expect.any(Number));
+      expect(setHeaderMock).toBeCalledTimes(3);
+      expect(setHeaderMock).toHaveBeenNthCalledWith(1, resMock, 'X-RateLimit-Limit', '2');
+      expect(setHeaderMock).toHaveBeenNthCalledWith(2, resMock, 'X-RateLimit-Remaining', '1');
+      expect(setHeaderMock).toHaveBeenNthCalledWith(
+        3,
+        resMock,
+        'X-RateLimit-Reset',
+        expect.any(String),
+      );
     });
     it('should skip due to the user-agent header', async () => {
       handler = function userAgentSkip() {
@@ -235,9 +259,10 @@ describe('ThrottlerGuard', () => {
       });
       const canActivate = await guard.canActivate(ctxMock);
       expect(canActivate).toBe(true);
-      expect(headerSettingMock).toBeCalledTimes(0);
+      expect(setHeaderMock).toBeCalledTimes(0);
     });
     it('should accept callback options for ttl and limit', async () => {
+      const localSetHeaderMock = jest.fn();
       const modRef = await Test.createTestingModule({
         providers: [
           ThrottlerGuard,
@@ -261,6 +286,10 @@ describe('ThrottlerGuard', () => {
               getAllAndOverride: jest.fn(),
             },
           },
+          {
+            provide: HttpAdapterHost,
+            useValue: createMockHttpAdapterHost(localSetHeaderMock),
+          },
         ],
       }).compile();
       const guard = modRef.get(ThrottlerGuard);
@@ -274,12 +303,18 @@ describe('ThrottlerGuard', () => {
       });
       const canActivate = await guard.canActivate(ctxMock);
       expect(canActivate).toBe(true);
-      expect(headerSettingMock).toBeCalledTimes(3);
-      expect(headerSettingMock).toHaveBeenNthCalledWith(1, 'X-RateLimit-Limit', 5);
-      expect(headerSettingMock).toHaveBeenNthCalledWith(2, 'X-RateLimit-Remaining', 4);
-      expect(headerSettingMock).toHaveBeenNthCalledWith(3, 'X-RateLimit-Reset', expect.any(Number));
+      expect(localSetHeaderMock).toBeCalledTimes(3);
+      expect(localSetHeaderMock).toHaveBeenNthCalledWith(1, resMock, 'X-RateLimit-Limit', '5');
+      expect(localSetHeaderMock).toHaveBeenNthCalledWith(2, resMock, 'X-RateLimit-Remaining', '4');
+      expect(localSetHeaderMock).toHaveBeenNthCalledWith(
+        3,
+        resMock,
+        'X-RateLimit-Reset',
+        expect.any(String),
+      );
     });
     it('should not add headers to the response when setHeaders is false', async () => {
+      const localSetHeaderMock = jest.fn();
       const modRef = await Test.createTestingModule({
         providers: [
           ThrottlerGuard,
@@ -303,16 +338,17 @@ describe('ThrottlerGuard', () => {
               getAllAndOverride: jest.fn(),
             },
           },
+          {
+            provide: HttpAdapterHost,
+            useValue: createMockHttpAdapterHost(localSetHeaderMock),
+          },
         ],
       }).compile();
 
       const guard = modRef.get(ThrottlerGuard);
       await guard.onModuleInit();
 
-      const headerSettingMock = jest.fn();
-      const resMock = {
-        header: headerSettingMock,
-      };
+      const resMock = {};
       const reqMock = {
         headers: {},
       };
@@ -331,13 +367,14 @@ describe('ThrottlerGuard', () => {
         expect(canActivate).toBe(true);
       }
 
-      expect(headerSettingMock).not.toHaveBeenCalled();
+      expect(localSetHeaderMock).not.toHaveBeenCalled();
 
       await expect(guard.canActivate(ctxMock)).rejects.toThrowError(ThrottlerException);
 
-      expect(headerSettingMock).not.toHaveBeenCalled();
+      expect(localSetHeaderMock).not.toHaveBeenCalled();
     });
     it('should respect setHeaders option from commonOptions', async () => {
+      const localSetHeaderMock = jest.fn();
       const modRef = await Test.createTestingModule({
         providers: [
           ThrottlerGuard,
@@ -363,6 +400,10 @@ describe('ThrottlerGuard', () => {
               getAllAndOverride: jest.fn(),
             },
           },
+          {
+            provide: HttpAdapterHost,
+            useValue: createMockHttpAdapterHost(localSetHeaderMock),
+          },
         ],
       }).compile();
 
@@ -380,7 +421,7 @@ describe('ThrottlerGuard', () => {
 
       const canActivate = await guard.canActivate(ctxMock);
       expect(canActivate).toBe(true);
-      expect(headerSettingMock).not.toHaveBeenCalled();
+      expect(localSetHeaderMock).not.toHaveBeenCalled();
     });
   });
 });
