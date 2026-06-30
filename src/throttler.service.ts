@@ -78,8 +78,22 @@ export class ThrottlerStorageService implements ThrottlerStorage, OnApplicationS
     blockDuration: number,
     throttlerName: string,
   ): Promise<ThrottlerStorageRecord> {
-    const ttlMilliseconds = ttl;
-    const blockDurationMilliseconds = blockDuration;
+    const ttlMilliseconds = Number(ttl);
+    const blockDurationMilliseconds = Number(blockDuration);
+    const resolvedLimit = Number(limit);
+
+    if (!Number.isFinite(ttlMilliseconds) || ttlMilliseconds <= 0) {
+      throw new Error(
+        `ThrottlerStorage: ttl must be a positive finite number, got "${ttl}". ` +
+          'If using ConfigService, ensure the value is parsed with Number() before passing to ThrottlerModule.',
+      );
+    }
+    if (!Number.isFinite(resolvedLimit) || resolvedLimit <= 0) {
+      throw new Error(
+        `ThrottlerStorage: limit must be a positive finite number, got "${limit}". ` +
+          'If using ConfigService, ensure the value is parsed with Number() before passing to ThrottlerModule.',
+      );
+    }
 
     if (!this.timeoutIds.has(key)) {
       this.timeoutIds.set(key, []);
@@ -108,7 +122,7 @@ export class ThrottlerStorageService implements ThrottlerStorage, OnApplicationS
 
     // Reset the blockExpiresAt once it gets blocked
     if (
-      this.storage.get(key).totalHits.get(throttlerName) > limit &&
+      this.storage.get(key).totalHits.get(throttlerName) > resolvedLimit &&
       !this.storage.get(key).isBlocked
     ) {
       this.storage.get(key).isBlocked = true;
