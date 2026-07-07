@@ -62,7 +62,7 @@
     "@nestjs/websockets": "11.1.27",
     "@semantic-release/git": "10.0.1",
     "@types/express": "5.0.6",
-    "@types/express-serve-static-core": "5.1.1",
+    "@types/express-serve-static-core": "5.1.2",
     "@types/jest": "29.5.14",
     "@types/node": "24.13.2",
     "@types/supertest": "7.2.0",
