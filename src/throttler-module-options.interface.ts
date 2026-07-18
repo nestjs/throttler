@@ -89,7 +89,7 @@ export type ThrottlerModuleOptions =
         | ((context: ExecutionContext, throttlerLimitDetail: ThrottlerLimitDetail) => string);
 
       /**
-       * The storage class to use where all the record will be stored in.
+       * The storage instance to use where all the records will be stored.
        */
       storage?: ThrottlerStorage;
       /**
