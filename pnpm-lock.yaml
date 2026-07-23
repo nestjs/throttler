@@ -108,8 +108,8 @@ importers:
         specifier: 29.7.0
         version: 29.7.0(@types/node@24.13.3)(supports-color@5.5.0)(ts-node@10.9.2(@types/node@24.13.3)(typescript@5.9.3))
       lint-staged:
-        specifier: 17.1.1
-        version: 17.1.1
+        specifier: 17.2.0
+        version: 17.2.0
       nodemon:
         specifier: 3.1.14
         version: 3.1.14
@@ -4040,8 +4040,8 @@ packages:
   lines-and-columns@1.2.4:
     resolution: {integrity: sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg==}
 
-  lint-staged@17.1.1:
-    resolution: {integrity: sha512-FnHWpSe5cPRtrDG+soOuNdBxb4XQb2gN5EqpEWKdweyqyOfpl4QSjbrz3ilcIf0WXmkiNQGZZRQ23R5YtB3TEw==}
+  lint-staged@17.2.0:
+    resolution: {integrity: sha512-FchGnFe4i4B1C/a35SPU9bNGPEHSC1+1iV0plLjzBmKVe9klZrlRfSgK6Cw4VeHyqOXbJUXP0vON61uRftNQ0A==}
     engines: {node: '>=22.22.1'}
     hasBin: true
 
@@ -7635,7 +7635,7 @@ snapshots:
       read-pkg: 9.0.1
       registry-auth-token: 5.1.1
       semantic-release: 24.0.0(supports-color@5.5.0)(typescript@5.9.3)
-      semver: 7.8.0
+      semver: 7.8.5
       tempy: 3.2.0
 
   '@semantic-release/release-notes-generator@14.1.0(semantic-release@24.0.0(supports-color@5.5.0)(typescript@5.9.3))(supports-color@5.5.0)':
@@ -8773,7 +8773,7 @@ snapshots:
       conventional-commits-filter: 5.0.0
       handlebars: 4.7.9
       meow: 13.2.0
-      semver: 7.8.0
+      semver: 7.8.5
 
   conventional-changelog@6.0.0:
     dependencies:
@@ -9590,7 +9590,7 @@ snapshots:
       proxy-addr: 2.0.7
       rfdc: 1.4.1
       secure-json-parse: 2.7.0
-      semver: 7.8.0
+      semver: 7.8.5
       tiny-lru: 8.0.2
     transitivePeerDependencies:
       - supports-color
@@ -10893,7 +10893,7 @@ snapshots:
 
   lines-and-columns@1.2.4: {}
 
-  lint-staged@17.1.1:
+  lint-staged@17.2.0:
     dependencies:
       picomatch: 4.0.5
       string-argv: 0.3.2
@@ -11820,7 +11820,7 @@ snapshots:
       p-reduce: 3.0.0
       read-package-up: 11.0.0
       resolve-from: 5.0.0
-      semver: 7.8.0
+      semver: 7.8.5
       semver-diff: 4.0.0
       signale: 1.4.0
       yargs: 17.7.2
@@ -11830,7 +11830,7 @@ snapshots:
 
   semver-diff@4.0.0:
     dependencies:
-      semver: 7.8.0
+      semver: 7.8.5
 
   semver-regex@4.0.5: {}
 
