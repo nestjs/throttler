@@ -13,11 +13,21 @@ export function createThrottlerProviders(options: ThrottlerModuleOptions): Provi
   ];
 }
 
+// Custom storage may already be registered as a provider. Keep its lifecycle
+// hooks owned by that provider and expose only the storage contract here.
+class DelegatingThrottlerStorage implements ThrottlerStorage {
+  constructor(private readonly storage: ThrottlerStorage) {}
+
+  increment(...args: Parameters<ThrottlerStorage['increment']>) {
+    return this.storage.increment(...args);
+  }
+}
+
 export const ThrottlerStorageProvider = {
   provide: ThrottlerStorage,
   useFactory: (options: ThrottlerModuleOptions) => {
     return !Array.isArray(options) && options.storage
-      ? options.storage
+      ? new DelegatingThrottlerStorage(options.storage)
       : new ThrottlerStorageService();
   },
   inject: [THROTTLER_OPTIONS],
