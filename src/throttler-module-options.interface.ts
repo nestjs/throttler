@@ -1,10 +1,9 @@
-import { ExecutionContext, ModuleMetadata, Type } from '@nestjs/common/interfaces';
+import { ExecutionContext, ModuleMetadata, Type } from '@nestjs/common';
 import { ThrottlerStorage } from './throttler-storage.interface';
 import { ThrottlerLimitDetail } from './throttler.guard.interface';
 
 export type Resolvable<T extends number | string | boolean> =
-  | T
-  | ((context: ExecutionContext) => T | Promise<T>);
+  T | ((context: ExecutionContext) => T | Promise<T>);
 
 /**
  * @publicApi
