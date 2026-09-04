@@ -1,3 +1,9 @@
+## 6.6.0
+
+### Minor Changes
+
+- c625e98: Update to allow for support for Nest version 12
+
 ## 6.4.0
 
 ## 6.5.1
