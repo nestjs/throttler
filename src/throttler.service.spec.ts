@@ -29,6 +29,43 @@ describe('ThrottlerStorageService', () => {
     expect(result.isBlocked).toBe(false);
   });
 
+  it('should coerce numeric string ttl and behave correctly', async () => {
+    // ConfigService.get<number>() returns strings from env vars — Number() must handle them
+    const result = await service.increment('test', '1000' as unknown as number, 10, 0, 'test');
+    expect(result.timeToExpire).toBe(1);
+    expect(result.totalHits).toBe(1);
+  });
+
+  it('should coerce numeric string limit and behave correctly', async () => {
+    const result = await service.increment('test', 1000, '10' as unknown as number, 0, 'test');
+    expect(result.isBlocked).toBe(false);
+    expect(result.totalHits).toBe(1);
+  });
+
+  it('should throw a descriptive error when ttl is a non-numeric string', async () => {
+    await expect(
+      service.increment('test', 'invalid' as unknown as number, 10, 0, 'test'),
+    ).rejects.toThrow('ThrottlerStorage: ttl must be a positive finite number, got "invalid"');
+  });
+
+  it('should throw a descriptive error when limit is a non-numeric string', async () => {
+    await expect(
+      service.increment('test', 1000, 'invalid' as unknown as number, 0, 'test'),
+    ).rejects.toThrow('ThrottlerStorage: limit must be a positive finite number, got "invalid"');
+  });
+
+  it('should throw when ttl is NaN', async () => {
+    await expect(service.increment('test', NaN, 10, 0, 'test')).rejects.toThrow(
+      'ThrottlerStorage: ttl must be a positive finite number',
+    );
+  });
+
+  it('should throw when ttl is zero or negative', async () => {
+    await expect(service.increment('test', 0, 10, 0, 'test')).rejects.toThrow(
+      'ThrottlerStorage: ttl must be a positive finite number',
+    );
+  });
+
   it('keys should be independent of each other over blocking and unblocking', async () => {
     // this test was added to specifically test the behavior of unblocking a key while
     // another key has active timeouts. These timeouts should not be affected since
