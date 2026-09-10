@@ -6,28 +6,39 @@ on:
       - 'master'
   push:
     branches:
-      - '*'
+      - 'master'
   schedule:
     - cron: '0 0 * * *'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   test:
     runs-on: ubuntu-latest
 
     strategy:
+      # every leg is a separate support claim, so a failure on one must not hide the others
+      fail-fast: false
       matrix:
-        node-version: [18.x, 20.x]
+        node-version: [20.x, 22.x, 24.x]
 
     steps:
       - uses: actions/checkout@v7
+      - name: install pnpm
+        # no version input: the action reads packageManager from package.json
+        uses: pnpm/action-setup@v6
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v7
         with:
           node-version: ${{ matrix.node-version }}
-      - name: install pnpm
-        run: npm i -g pnpm@^9
       - name: install deps
-        run: pnpm i
+        # explicit flag: CI mode alone lets a packageManager bump rewrite the lockfile and pass
+        run: pnpm install --frozen-lockfile
       - name: lint
         run: pnpm lint
       - name: build
@@ -41,6 +52,9 @@ jobs:
     needs: test
     if: contains(github.event.pull_request.user.login, 'dependabot') || contains(github.event.pull_request.user.login, 'renovate')
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
     steps:
       - name: automerge
         uses: pascalgn/automerge-action@v0.16.4
