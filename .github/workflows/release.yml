@@ -5,10 +5,22 @@ on:
     branches:
       - master
 
+permissions:
+  contents: read
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
 jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      # Required for npm trusted publishing
+      id-token: write
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v7
@@ -16,27 +28,26 @@ jobs:
           # This makes Actions fetch all Git history so that Changesets can generate changelogs with the correct commits
           fetch-depth: 0
 
+      - name: Install PNPM
+        # no version input: the action reads packageManager from package.json
+        uses: pnpm/action-setup@v6
+
       - name: Setup Node.js
         uses: actions/setup-node@v7
         with:
-          node-version: 24.x
-
-      - name: Install PNPM
-        run: npm i -g pnpm@^10
+          # .nvmrc carries the release line; trusted publishing needs the npm 11.5.1+ that 24.x ships
+          node-version-file: .nvmrc
 
       - name: Install Dependencies
-        run: pnpm i
+        run: pnpm install --frozen-lockfile
 
       - name: Build Projects
         run: pnpm build
 
       - name: Create Release Pull Request or Publish to npm
         id: changesets
-        uses: changesets/action@master
+        uses: changesets/action@v2.1.2
         with:
           # This expects you to have a script called release which does a build for your packages and calls changeset publish
-          publish: yarn release
-          commit: "chore: version packages"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          publish-script: pnpm release
+          commit-message: "chore: version packages"

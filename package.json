@@ -20,6 +20,9 @@
   },
   "private": false,
   "license": "MIT",
+  "engines": {
+    "node": "^20.19.0 || ^22.12.0 || >=24.0.0"
+  },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
@@ -27,7 +30,7 @@
   ],
   "scripts": {
     "prebuild": "rimraf dist",
-    "preversion": "yarn run format && yarn run lint && yarn build",
+    "preversion": "pnpm run format && pnpm run lint && pnpm build",
     "build": "nest build",
     "commit": "git-cz",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
@@ -39,14 +42,13 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json --detectOpenHandles",
     "test:e2e:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --config test/jest-e2e.json --runInBand",
-    "test:e2e:dev": "yarn test:e2e --watchAll",
+    "test:e2e:dev": "pnpm test:e2e --watchAll",
     "prepare": "husky",
     "postpublish": "pinst --enable",
     "prepublishOnly": "pinst --disable",
     "release": "changeset publish"
   },
   "devDependencies": {
-    "@apollo/server": "5.5.1",
     "@changesets/cli": "3.0.2",
     "@commitlint/cli": "21.2.2",
     "@commitlint/config-angular": "21.2.2",
@@ -69,7 +71,6 @@
     "@types/supertest": "7.2.1",
     "@typescript-eslint/eslint-plugin": "7.18.0",
     "@typescript-eslint/parser": "7.18.0",
-    "apollo-server-fastify": "3.13.0",
     "conventional-changelog-cli": "5.0.0",
     "cz-conventional-changelog": "3.3.0",
     "eslint": "8.57.1",
