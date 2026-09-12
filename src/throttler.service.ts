@@ -106,11 +106,23 @@ export class ThrottlerStorageService implements ThrottlerStorage, OnApplicationS
       this.fireHitCount(key, throttlerName, ttlMilliseconds);
     }
 
+    const currentHits = this.storage.get(key).totalHits.get(throttlerName);
+
+    // When blockDuration is 0, don't use the persistent blocking mechanism.
+    // Just check the hit count against the limit on each request and let
+    // individual hits expire naturally via their timeouts.
+    if (blockDurationMilliseconds === 0) {
+      const isOverLimit = currentHits > limit;
+      return {
+        totalHits: currentHits,
+        timeToExpire,
+        isBlocked: isOverLimit,
+        timeToBlockExpire: isOverLimit ? timeToExpire : 0,
+      };
+    }
+
     // Reset the blockExpiresAt once it gets blocked
-    if (
-      this.storage.get(key).totalHits.get(throttlerName) > limit &&
-      !this.storage.get(key).isBlocked
-    ) {
+    if (currentHits > limit && !this.storage.get(key).isBlocked) {
       this.storage.get(key).isBlocked = true;
       this.storage.get(key).blockExpiresAt = Date.now() + blockDurationMilliseconds;
     }
