@@ -48,4 +48,17 @@ describe('ThrottlerStorageService', () => {
       await sleep(50);
     }
   });
+
+  it('should clean up storage and timeout records after TTL expiration', async () => {
+    const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+    const ttl = 50;
+
+    await service.increment('cleanup-test', ttl, 5, ttl, 'test');
+    expect(service.storage.has('cleanup-test')).toBe(true);
+
+    // Wait for the TTL timeout to fire and cleanup the storage entry
+    await sleep(70);
+
+    expect(service.storage.has('cleanup-test')).toBe(false);
+  });
 });
