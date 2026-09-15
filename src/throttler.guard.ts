@@ -163,8 +163,8 @@ export class ThrottlerGuard implements CanActivate {
     if (Array.isArray(ignoreUserAgents)) {
       for (const pattern of ignoreUserAgents) {
         if (pattern.test(req.headers['user-agent'])) {
-          return true;
-        }
+        return true;
+        }        
       }
     }
     const tracker = await getTracker(req, context);
@@ -174,13 +174,13 @@ export class ThrottlerGuard implements CanActivate {
 
     const getThrottlerSuffix = (name: string) => (name === 'default' ? '' : `-${name}`);
     const setHeaders = throttler.setHeaders ?? this.commonOptions.setHeaders ?? true;
-
+    const suffix = getThrottlerSuffix(throttler.name);
     // Throw an error when the user reached their limit.
     if (isBlocked) {
       if (setHeaders) {
-        res.header(`Retry-After${getThrottlerSuffix(throttler.name)}`, timeToBlockExpire);
+        res.header(`Retry-After${suffix}`, timeToBlockExpire);
       }
-
+     
       await this.throwThrottlingException(context, {
         limit,
         ttl,
@@ -194,14 +194,11 @@ export class ThrottlerGuard implements CanActivate {
     }
 
     if (setHeaders) {
-      res.header(`${this.headerPrefix}-Limit${getThrottlerSuffix(throttler.name)}`, limit);
+      res.header(`${this.headerPrefix}-Limit${suffix}`, limit);
       // We're about to add a record so we need to take that into account here.
       // Otherwise the header says we have a request left when there are none.
-      res.header(
-        `${this.headerPrefix}-Remaining${getThrottlerSuffix(throttler.name)}`,
-        Math.max(0, limit - totalHits),
-      );
-      res.header(`${this.headerPrefix}-Reset${getThrottlerSuffix(throttler.name)}`, timeToExpire);
+      res.header(`${this.headerPrefix}-Remaining${suffix}`, Math.max(0, limit - totalHits));
+      res.header(`${this.headerPrefix}-Reset${suffix}`, timeToExpire);
     }
 
     return true;
