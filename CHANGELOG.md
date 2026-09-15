@@ -1,3 +1,10 @@
+## 6.6.0
+
+### Minor Changes
+
+- c342bad: Declare the supported Node versions in `engines`, matching the range the CI matrix tests
+- c625e98: Update to allow for support for Nest version 12
+
 ## 6.4.0
 
 ## 6.5.1
