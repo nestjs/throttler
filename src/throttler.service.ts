@@ -34,13 +34,31 @@ export class ThrottlerStorageService implements ThrottlerStorage, OnApplicationS
    */
   private setExpirationTime(key: string, ttlMilliseconds: number, throttlerName: string): void {
     const timeoutId = setTimeout(() => {
-      const { totalHits } = this.storage.get(key);
-      totalHits.set(throttlerName, totalHits.get(throttlerName) - 1);
+      const record = this.storage.get(key);
       clearTimeout(timeoutId);
-      this.timeoutIds.set(
-        key,
-        this.timeoutIds.get(key).filter((id) => id !== timeoutId),
-      );
+
+      const timeouts = this.timeoutIds.get(key);
+      if (timeouts) {
+        const remainingTimeouts = timeouts.filter((id) => id !== timeoutId);
+        if (remainingTimeouts.length > 0) {
+          this.timeoutIds.set(key, remainingTimeouts);
+        } else {
+          this.timeoutIds.delete(key);
+        }
+      }
+
+      if (record) {
+        const currentHits = record.totalHits.get(throttlerName) ?? 0;
+        record.totalHits.set(throttlerName, Math.max(0, currentHits - 1));
+
+        const hasActiveTimeouts = (this.timeoutIds.get(key)?.length ?? 0) > 0;
+        const hasActiveHits = Array.from(record.totalHits.values()).some((hits) => hits > 0);
+
+        if (!hasActiveTimeouts && !hasActiveHits && !record.isBlocked) {
+          this._storage.delete(key);
+          this.timeoutIds.delete(key);
+        }
+      }
     }, ttlMilliseconds);
     this.timeoutIds.get(key).push(timeoutId);
   }
