@@ -174,11 +174,21 @@ export class ThrottlerGuard implements CanActivate {
 
     const getThrottlerSuffix = (name: string) => (name === 'default' ? '' : `-${name}`);
     const setHeaders = throttler.setHeaders ?? this.commonOptions.setHeaders ?? true;
+    // Use an adapter-agnostic helper: Fastify/Express expose `res.header()`,
+    // while the plain Node.js IncomingMessage exposes `res.setHeader()`.
+    // Custom platform adapters may only implement one of them.
+    const setResponseHeader = (name: string, value: string | number) => {
+      if (typeof res.header === 'function') {
+        res.header(name, value);
+      } else if (typeof res.setHeader === 'function') {
+        res.setHeader(name, value);
+      }
+    };
 
     // Throw an error when the user reached their limit.
     if (isBlocked) {
       if (setHeaders) {
-        res.header(`Retry-After${getThrottlerSuffix(throttler.name)}`, timeToBlockExpire);
+        setResponseHeader(`Retry-After${getThrottlerSuffix(throttler.name)}`, timeToBlockExpire);
       }
 
       await this.throwThrottlingException(context, {
@@ -194,14 +204,17 @@ export class ThrottlerGuard implements CanActivate {
     }
 
     if (setHeaders) {
-      res.header(`${this.headerPrefix}-Limit${getThrottlerSuffix(throttler.name)}`, limit);
+      setResponseHeader(`${this.headerPrefix}-Limit${getThrottlerSuffix(throttler.name)}`, limit);
       // We're about to add a record so we need to take that into account here.
       // Otherwise the header says we have a request left when there are none.
-      res.header(
+      setResponseHeader(
         `${this.headerPrefix}-Remaining${getThrottlerSuffix(throttler.name)}`,
         Math.max(0, limit - totalHits),
       );
-      res.header(`${this.headerPrefix}-Reset${getThrottlerSuffix(throttler.name)}`, timeToExpire);
+      setResponseHeader(
+        `${this.headerPrefix}-Reset${getThrottlerSuffix(throttler.name)}`,
+        timeToExpire,
+      );
     }
 
     return true;
