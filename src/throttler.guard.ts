@@ -117,11 +117,13 @@ export class ThrottlerGuard implements CanActivate {
         );
 
       // Check if specific limits are set at class or route level, otherwise use global options.
-      const limit = await this.resolveValue(context, routeOrClassLimit || namedThrottler.limit);
-      const ttl = await this.resolveValue(context, routeOrClassTtl || namedThrottler.ttl);
+      // Use `??` (not `||`) so an explicit `0` (e.g. to fully block a route) is not
+      // silently overridden by the throttler-level default.
+      const limit = await this.resolveValue(context, routeOrClassLimit ?? namedThrottler.limit);
+      const ttl = await this.resolveValue(context, routeOrClassTtl ?? namedThrottler.ttl);
       const blockDuration = await this.resolveValue(
         context,
-        routeOrClassBlockDuration || namedThrottler.blockDuration || ttl,
+        routeOrClassBlockDuration ?? namedThrottler.blockDuration ?? ttl,
       );
       const getTracker =
         routeOrClassGetTracker || namedThrottler.getTracker || this.commonOptions.getTracker;
