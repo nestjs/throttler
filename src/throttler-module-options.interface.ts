@@ -1,4 +1,4 @@
-import { ExecutionContext, ModuleMetadata, Type } from '@nestjs/common/interfaces';
+import { ExecutionContext, ModuleMetadata, Type } from '@nestjs/common';
 import { ThrottlerStorage } from './throttler-storage.interface';
 import { ThrottlerLimitDetail } from './throttler.guard.interface';
 
