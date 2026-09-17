@@ -383,4 +383,53 @@ describe('ThrottlerGuard', () => {
       expect(headerSettingMock).not.toHaveBeenCalled();
     });
   });
+
+  describe('tracker normalization', () => {
+    const makeGuard = async (options: Record<string, any>) => {
+      const modRef = await Test.createTestingModule({
+        providers: [
+          ThrottlerGuard,
+          { provide: THROTTLER_OPTIONS, useValue: options },
+          { provide: ThrottlerStorage, useClass: ThrottlerStorageServiceMock },
+          { provide: Reflector, useValue: { getAllAndOverride: jest.fn() } },
+        ],
+      }).compile();
+      const guard = modRef.get(ThrottlerGuard);
+      await guard.onModuleInit();
+      // `getTracker` is protected; reach in to test it directly.
+      return (req: Record<string, any>) => (guard as any).getTracker(req) as Promise<string>;
+    };
+
+    it('masks IPv6 to a /64 by default', async () => {
+      const getTracker = await makeGuard({ throttlers: [{ limit: 5, ttl: 60 }] });
+      await expect(getTracker({ ip: '2001:db8:0:1:dead:beef:1:2' })).resolves.toBe(
+        '2001:db8:0:1::/64',
+      );
+    });
+
+    it('honours ipv6SubnetPrefix from the module options', async () => {
+      const getTracker = await makeGuard({
+        ipv6SubnetPrefix: 48,
+        throttlers: [{ limit: 5, ttl: 60 }],
+      });
+      await expect(getTracker({ ip: '2001:db8:0:1:dead:beef:1:2' })).resolves.toBe('2001:db8::/48');
+    });
+
+    it('still masks when ipv6SubnetPrefix is not a finite number', async () => {
+      const getTracker = await makeGuard({
+        ipv6SubnetPrefix: Number(undefined),
+        throttlers: [{ limit: 5, ttl: 60 }],
+      });
+      await expect(getTracker({ ip: '2001:db8:0:1:dead:beef:1:2' })).resolves.toBe(
+        '2001:db8:0:1::/64',
+      );
+    });
+
+    it('uses the default when options are given in array form', async () => {
+      const getTracker = await makeGuard([{ limit: 5, ttl: 60 }]);
+      await expect(getTracker({ ip: '2001:db8:0:1:dead:beef:1:2' })).resolves.toBe(
+        '2001:db8:0:1::/64',
+      );
+    });
+  });
 });

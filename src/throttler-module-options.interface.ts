@@ -3,8 +3,7 @@ import { ThrottlerStorage } from './throttler-storage.interface';
 import { ThrottlerLimitDetail } from './throttler.guard.interface';
 
 export type Resolvable<T extends number | string | boolean> =
-  | T
-  | ((context: ExecutionContext) => T | Promise<T>);
+  T | ((context: ExecutionContext) => T | Promise<T>);
 
 /**
  * @publicApi
@@ -92,6 +91,15 @@ export type ThrottlerModuleOptions =
        * The storage class to use where all the record will be stored in.
        */
       storage?: ThrottlerStorage;
+      /**
+       * The prefix length used to group IPv6 source addresses into a single
+       * tracker bucket, so that a client cannot evade the limit by rotating
+       * through the addresses of its own subnet.
+       *
+       * Only applies to the built-in tracker; a custom `getTracker` is left
+       * untouched. Defaults to `64`.
+       */
+      ipv6SubnetPrefix?: number;
       /**
        * The named throttlers to use
        */

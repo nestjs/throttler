@@ -48,4 +48,49 @@ describe('ThrottlerStorageService', () => {
       await sleep(50);
     }
   });
+
+  describe('record eviction', () => {
+    const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+    const sweep = () => (service as any).evictIdleRecords();
+
+    it('drops records once their window has fully elapsed', async () => {
+      const ttl = 50;
+      for (let i = 0; i < 100; i++) {
+        await service.increment(`tracker-${i}`, ttl, 10, 0, 'test');
+      }
+      expect(service.storage.size).toBe(100);
+
+      // Nothing is evicted while the windows are still live.
+      sweep();
+      expect(service.storage.size).toBe(100);
+
+      await sleep(ttl * 2);
+      sweep();
+      expect(service.storage.size).toBe(0);
+    });
+
+    it('does not evict a record that still has pending hits', async () => {
+      const ttl = 500;
+      await service.increment('busy', ttl, 10, 0, 'test');
+      await sleep(50);
+      sweep();
+      expect(service.storage.has('busy')).toBe(true);
+
+      // The surviving record keeps counting as before.
+      const result = await service.increment('busy', ttl, 10, 0, 'test');
+      expect(result.totalHits).toBe(2);
+    });
+
+    it('does not evict a record while it is still blocked', async () => {
+      const ttl = 50;
+      const blockDuration = 1000;
+      await service.increment('blocked', ttl, 1, blockDuration, 'test');
+      const blockedResult = await service.increment('blocked', ttl, 1, blockDuration, 'test');
+      expect(blockedResult.isBlocked).toBe(true);
+
+      await sleep(ttl * 2);
+      sweep();
+      expect(service.storage.has('blocked')).toBe(true);
+    });
+  });
 });
