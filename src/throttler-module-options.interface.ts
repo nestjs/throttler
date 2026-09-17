@@ -1,4 +1,4 @@
-import { ExecutionContext, ModuleMetadata, Type } from '@nestjs/common/interfaces';
+import { ExecutionContext, Type } from '@nestjs/common';
 import { ThrottlerStorage } from './throttler-storage.interface';
 import { ThrottlerLimitDetail } from './throttler.guard.interface';
 
@@ -121,7 +121,12 @@ export interface ThrottlerOptionsFactory {
 /**
  * @publicApi
  */
-export interface ThrottlerAsyncOptions extends Pick<ModuleMetadata, 'imports'> {
+export interface ThrottlerAsyncOptions {
+  /**
+   * List of modules to import into the context for the factory function.
+   * This is optional in all NestJS versions.
+   */
+  imports?: any[];
   /**
    * The `useExisting` syntax allows you to create aliases for existing providers.
    */
