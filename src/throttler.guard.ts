@@ -1,5 +1,5 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
-import { Reflector } from '@nestjs/core';
+import { HttpAdapterHost, Reflector } from '@nestjs/core';
 import { sha256 } from './hash';
 import { DEFAULT_IPV6_SUBNET_PREFIX, normalizeIp } from './ip';
 import {
@@ -40,6 +40,7 @@ export class ThrottlerGuard implements CanActivate {
     @InjectThrottlerOptions() protected readonly options: ThrottlerModuleOptions,
     @InjectThrottlerStorage() protected readonly storageService: ThrottlerStorage,
     protected readonly reflector: Reflector,
+    protected readonly httpAdapterHost: HttpAdapterHost,
   ) {}
 
   async onModuleInit() {
@@ -124,7 +125,7 @@ export class ThrottlerGuard implements CanActivate {
       const ttl = await this.resolveValue(context, routeOrClassTtl || namedThrottler.ttl);
       const blockDuration = await this.resolveValue(
         context,
-        routeOrClassBlockDuration || namedThrottler.blockDuration || ttl,
+        routeOrClassBlockDuration || namedThrottler.blockDuration || 0,
       );
       const getTracker =
         routeOrClassGetTracker || namedThrottler.getTracker || this.commonOptions.getTracker;
@@ -181,7 +182,11 @@ export class ThrottlerGuard implements CanActivate {
     // Throw an error when the user reached their limit.
     if (isBlocked) {
       if (setHeaders) {
-        res.header(`Retry-After${getThrottlerSuffix(throttler.name)}`, timeToBlockExpire);
+        this.httpAdapterHost.httpAdapter.setHeader(
+          res,
+          `Retry-After${getThrottlerSuffix(throttler.name)}`,
+          String(timeToBlockExpire),
+        );
       }
 
       await this.throwThrottlingException(context, {
@@ -197,14 +202,23 @@ export class ThrottlerGuard implements CanActivate {
     }
 
     if (setHeaders) {
-      res.header(`${this.headerPrefix}-Limit${getThrottlerSuffix(throttler.name)}`, limit);
+      this.httpAdapterHost.httpAdapter.setHeader(
+        res,
+        `${this.headerPrefix}-Limit${getThrottlerSuffix(throttler.name)}`,
+        String(limit),
+      );
       // We're about to add a record so we need to take that into account here.
       // Otherwise the header says we have a request left when there are none.
-      res.header(
+      this.httpAdapterHost.httpAdapter.setHeader(
+        res,
         `${this.headerPrefix}-Remaining${getThrottlerSuffix(throttler.name)}`,
-        Math.max(0, limit - totalHits),
+        String(Math.max(0, limit - totalHits)),
       );
-      res.header(`${this.headerPrefix}-Reset${getThrottlerSuffix(throttler.name)}`, timeToExpire);
+      this.httpAdapterHost.httpAdapter.setHeader(
+        res,
+        `${this.headerPrefix}-Reset${getThrottlerSuffix(throttler.name)}`,
+        String(timeToExpire),
+      );
     }
 
     return true;
