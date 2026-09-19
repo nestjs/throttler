@@ -1,4 +1,4 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import { CanActivate, ExecutionContext, Injectable, Logger } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { sha256 } from './hash';
 import { DEFAULT_IPV6_SUBNET_PREFIX, normalizeIp } from './ip';
@@ -28,6 +28,7 @@ import { ThrottlerLimitDetail, ThrottlerRequest } from './throttler.guard.interf
 @Injectable()
 export class ThrottlerGuard implements CanActivate {
   protected headerPrefix = 'X-RateLimit';
+  protected logger = new Logger(ThrottlerGuard.name);
   protected errorMessage = throttlerMessage;
   protected throttlers: Array<ThrottlerOptions>;
   protected commonOptions: Pick<
@@ -54,6 +55,11 @@ export class ThrottlerGuard implements CanActivate {
         return first.ttl - second.ttl;
       })
       .map((opt) => ({ ...opt, name: opt.name ?? 'default' }));
+    if (!this.throttlers.length) {
+      this.logger.warn(
+        'No throttlers are configured, so no request is limited. Provide at least one entry to ThrottlerModule.forRoot() or return one from ThrottlerModule.forRootAsync().',
+      );
+    }
     if (Array.isArray(this.options)) {
       this.commonOptions = {};
     } else {
