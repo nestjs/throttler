@@ -127,6 +127,39 @@ export class UsersController {}
 
 For more details on this behavior, especially if migrating from older versions, please refer to the [Migration to v5](#migrating-to-v5-from-earlier-versions) guide.
 
+#### Throttling specific routes
+
+`ThrottlerModule` is global, so it is imported once. To limit a subset of routes, leave out the `APP_GUARD` provider and bind the guard to the controller or the handler. The guard is passed as a class, so dependency injection keeps working.
+
+```typescript
+@UseGuards(ThrottlerGuard)
+@Controller('reports')
+export class ReportsController {}
+```
+
+```typescript
+@UseGuards(ThrottlerGuard)
+@Get('search')
+search() {
+  return this.searchService.run();
+}
+```
+
+Binding the guard globally and skipping the routes that should not be limited keeps every route limited by default, including the ones added later. Binding it per route inverts that: a route without the guard carries no limit.
+
+The definitions in `forRoot` are one policy, not a menu: every entry applies wherever the guard is bound. `@Throttle()` changes only the fields it lists, so `@Throttle({ default: { limit: 5 } })` lowers the limit and keeps the `ttl` from the configuration. To leave an entry out for a route, skip it by name:
+
+```typescript
+@SkipThrottle({ long: true })
+@UseGuards(ThrottlerGuard)
+@Post('login')
+login() {
+  return this.authService.login();
+}
+```
+
+Every name used in a decorator must exist in the module configuration. `ThrottlerModule.forRoot()` and `ThrottlerModule.forRoot([])` register no throttler at all, so the guard has nothing to check and every request passes.
+
 ### Customization
 
 There may be a time where you want to bind the guard to a controller or globally, but want to disable rate limiting for one or more of your endpoints. For that, you can use the `@SkipThrottle()` decorator to negate the throttler for an entire class or a single route.
