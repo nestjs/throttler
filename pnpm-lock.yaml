@@ -180,7 +180,7 @@ importers:
         version: 21.2.2
       '@nestjs/cli':
         specifier: 11.0.24
-        version: 11.0.24(@types/node@24.13.4)(prettier@3.9.6)(uglify-js@3.19.3)
+        version: 11.0.24(@types/node@24.13.4)(prettier@3.9.7)(uglify-js@3.19.3)
       '@nestjs/common':
         specifier: 11.2.4
         version: 11.2.4(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@5.5.0)
@@ -204,7 +204,7 @@ importers:
         version: 11.2.4(@nestjs/common@11.2.4(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@5.5.0))(@nestjs/websockets@11.2.4)(rxjs@7.8.2)
       '@nestjs/schematics':
         specifier: 11.1.0
-        version: 11.1.0(chokidar@4.0.3)(prettier@3.9.6)(typescript@5.9.3)
+        version: 11.1.0(chokidar@4.0.3)(prettier@3.9.7)(typescript@5.9.3)
       '@nestjs/testing':
         specifier: 11.2.4
         version: 11.2.4(@nestjs/common@11.2.4(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@5.5.0))(@nestjs/core@11.2.4)(@nestjs/platform-express@11.2.4)
@@ -275,8 +275,8 @@ importers:
         specifier: 3.0.0
         version: 3.0.0
       prettier:
-        specifier: 3.9.6
-        version: 3.9.6
+        specifier: 3.9.7
+        version: 3.9.7
       reflect-metadata:
         specifier: 0.2.2
         version: 0.2.2
@@ -4425,8 +4425,8 @@ packages:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}
     engines: {node: '>= 0.8.0'}
 
-  prettier@3.9.6:
-    resolution: {integrity: sha512-OpN0zzVdiaiAhxpuuj5efpIS4sY9j7bY6uR5mnj5yPzGkdkjNKSJeUThPb60Jw29QuAZgA4o+/iB49kFiaBX6g==}
+  prettier@3.9.7:
+    resolution: {integrity: sha512-T3mF5P7HFzZVLDQuCUNtJj6WK1pcpLMweMNUVwGb01bLNkH9AkKxtZvmInw8K6bnn2O3d6/5RHl6zSHiBAD0Og==}
     engines: {node: '>=14'}
     hasBin: true
 
@@ -6640,13 +6640,13 @@ snapshots:
       tinyglobby: 0.2.17
       yaml: 2.9.1
 
-  '@nestjs/cli@11.0.24(@types/node@24.13.4)(prettier@3.9.6)(uglify-js@3.19.3)':
+  '@nestjs/cli@11.0.24(@types/node@24.13.4)(prettier@3.9.7)(uglify-js@3.19.3)':
     dependencies:
       '@angular-devkit/core': 19.2.27(chokidar@4.0.3)
       '@angular-devkit/schematics': 19.2.27(chokidar@4.0.3)
       '@angular-devkit/schematics-cli': 19.2.27(@types/node@24.13.4)(chokidar@4.0.3)
       '@inquirer/prompts': 7.10.1(@types/node@24.13.4)
-      '@nestjs/schematics': 11.1.0(chokidar@4.0.3)(prettier@3.9.6)(typescript@5.9.3)
+      '@nestjs/schematics': 11.1.0(chokidar@4.0.3)(prettier@3.9.7)(typescript@5.9.3)
       ansis: 4.2.0
       chokidar: 4.0.3
       cli-table3: 0.6.5
@@ -6780,7 +6780,7 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
-  '@nestjs/schematics@11.1.0(chokidar@4.0.3)(prettier@3.9.6)(typescript@5.9.3)':
+  '@nestjs/schematics@11.1.0(chokidar@4.0.3)(prettier@3.9.7)(typescript@5.9.3)':
     dependencies:
       '@angular-devkit/core': 19.2.24(chokidar@4.0.3)
       '@angular-devkit/schematics': 19.2.24(chokidar@4.0.3)
@@ -6789,7 +6789,7 @@ snapshots:
       pluralize: 8.0.0
       typescript: 5.9.3
     optionalDependencies:
-      prettier: 3.9.6
+      prettier: 3.9.7
     transitivePeerDependencies:
       - chokidar
 
@@ -10374,7 +10374,7 @@ snapshots:
 
   prelude-ls@1.2.1: {}
 
-  prettier@3.9.6: {}
+  prettier@3.9.7: {}
 
   pretty-format@29.7.0:
     dependencies:
