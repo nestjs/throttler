@@ -16,15 +16,19 @@ export const DEFAULT_SWEEP_INTERVAL = 60_000;
 export class ThrottlerStorageService implements ThrottlerStorage, OnApplicationShutdown {
   private _storage: Map<string, ThrottlerStorageOptions> = new Map();
   /**
-   * When each counted hit expires, per key and throttler name.
+   * When each counted hit expires, per record and throttler name.
    *
    * Hits used to be decremented by one `setTimeout` each. A timer created
    * while handling a request retains that request's `AsyncLocalStorage`
    * stores (e.g. an ORM's per-request entity manager) until it fires, so the
    * whole request context stayed in memory for the full TTL. Timestamps are
    * pruned on access instead.
+   *
+   * Keyed by the record rather than by its key, so the hits leave with the
+   * record however it is removed: by the sweep, `storage.clear()` or
+   * `storage.delete()`.
    */
-  private hitExpirations: Map<string, Map<string, number[]>> = new Map();
+  private hitExpirations: WeakMap<ThrottlerStorageOptions, Map<string, number[]>> = new WeakMap();
   private sweepInterval?: NodeJS.Timeout;
 
   /**
@@ -79,13 +83,12 @@ export class ThrottlerStorageService implements ThrottlerStorage, OnApplicationS
       if (this.hasLiveHits(key, now)) {
         continue;
       }
-      this.hitExpirations.delete(key);
       this._storage.delete(key);
     }
   }
 
   private hasLiveHits(key: string, now: number): boolean {
-    const expirations = this.hitExpirations.get(key);
+    const expirations = this.hitExpirations.get(this.storage.get(key));
     if (!expirations) {
       return false;
     }
@@ -98,10 +101,11 @@ export class ThrottlerStorageService implements ThrottlerStorage, OnApplicationS
   }
 
   private getHitExpirations(key: string, throttlerName: string): number[] {
-    let expirations = this.hitExpirations.get(key);
+    const record = this.storage.get(key);
+    let expirations = this.hitExpirations.get(record);
     if (!expirations) {
       expirations = new Map();
-      this.hitExpirations.set(key, expirations);
+      this.hitExpirations.set(record, expirations);
     }
     let hits = expirations.get(throttlerName);
     if (!hits) {
@@ -116,7 +120,7 @@ export class ThrottlerStorageService implements ThrottlerStorage, OnApplicationS
    */
   private pruneExpiredHits(key: string, throttlerName: string, now = Date.now()): void {
     const hits = this.getHitExpirations(key, throttlerName).filter((expiresAt) => expiresAt > now);
-    this.hitExpirations.get(key).set(throttlerName, hits);
+    this.hitExpirations.get(this.storage.get(key)).set(throttlerName, hits);
     this.storage.get(key).totalHits.set(throttlerName, hits.length);
   }
 
@@ -140,7 +144,7 @@ export class ThrottlerStorageService implements ThrottlerStorage, OnApplicationS
   private resetBlockedRequest(key: string, throttlerName: string) {
     this.storage.get(key).isBlocked = false;
     this.storage.get(key).totalHits.set(throttlerName, 0);
-    this.hitExpirations.get(key).set(throttlerName, []);
+    this.hitExpirations.get(this.storage.get(key)).set(throttlerName, []);
   }
 
   /**
@@ -255,7 +259,6 @@ export class ThrottlerStorageService implements ThrottlerStorage, OnApplicationS
       clearInterval(this.sweepInterval);
       this.sweepInterval = undefined;
     }
-    this.hitExpirations.clear();
     this._storage.clear();
   }
 }
