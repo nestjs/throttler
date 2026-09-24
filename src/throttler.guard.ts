@@ -128,11 +128,23 @@ export class ThrottlerGuard implements CanActivate {
       // Check if specific limits are set at class or route level, otherwise use global options.
       // Use `??` (not `||`) so an explicit `0` (e.g. to fully block a route) is not
       // silently overridden by the throttler-level default.
-      const limit = await this.resolveValue(context, routeOrClassLimit ?? namedThrottler.limit);
-      const ttl = await this.resolveValue(context, routeOrClassTtl ?? namedThrottler.ttl);
-      const blockDuration = await this.resolveValue(
-        context,
-        routeOrClassBlockDuration ?? namedThrottler.blockDuration ?? ttl,
+      const limit = this.toNumber(
+        await this.resolveValue(context, routeOrClassLimit ?? namedThrottler.limit),
+        'limit',
+        namedThrottler.name,
+      );
+      const ttl = this.toNumber(
+        await this.resolveValue(context, routeOrClassTtl ?? namedThrottler.ttl),
+        'ttl',
+        namedThrottler.name,
+      );
+      const blockDuration = this.toNumber(
+        await this.resolveValue(
+          context,
+          routeOrClassBlockDuration ?? namedThrottler.blockDuration ?? ttl,
+        ),
+        'blockDuration',
+        namedThrottler.name,
       );
       const getTracker =
         routeOrClassGetTracker || namedThrottler.getTracker || this.commonOptions.getTracker;
@@ -302,6 +314,24 @@ export class ThrottlerGuard implements CanActivate {
         : this.options.errorMessage;
     }
     return this.errorMessage;
+  }
+
+  /**
+   * Coerce a resolved option to a number.
+   *
+   * Values read from the environment arrive as strings (`ConfigService.get<number>()`
+   * does not convert them), and `Date.now() + '60000'` concatenates instead of
+   * adding, silently corrupting every expiry. Numeric strings are accepted;
+   * anything else is a configuration error and is reported as one.
+   */
+  private toNumber(value: unknown, option: string, throttlerName: string): number {
+    const number = typeof value === 'string' && value.trim() !== '' ? Number(value) : value;
+    if (typeof number !== 'number' || Number.isNaN(number)) {
+      throw new Error(
+        `Invalid "${option}" for the "${throttlerName}" throttler: expected a number, got ${JSON.stringify(value)}.`,
+      );
+    }
+    return number;
   }
 
   private async resolveValue<T extends number | string | boolean>(
