@@ -1,4 +1,4 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import { CanActivate, ExecutionContext, Injectable, Logger } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { sha256 } from './hash';
 import { DEFAULT_IPV6_SUBNET_PREFIX, normalizeIp } from './ip';
@@ -28,6 +28,7 @@ import { ThrottlerLimitDetail, ThrottlerRequest } from './throttler.guard.interf
 @Injectable()
 export class ThrottlerGuard implements CanActivate {
   protected headerPrefix = 'X-RateLimit';
+  protected logger = new Logger(ThrottlerGuard.name);
   protected errorMessage = throttlerMessage;
   protected throttlers: Array<ThrottlerOptions>;
   protected commonOptions: Pick<
@@ -54,6 +55,11 @@ export class ThrottlerGuard implements CanActivate {
         return first.ttl - second.ttl;
       })
       .map((opt) => ({ ...opt, name: opt.name ?? 'default' }));
+    if (!this.throttlers.length) {
+      this.logger.warn(
+        'No throttlers are configured, so no request is limited. Provide at least one entry to ThrottlerModule.forRoot() or return one from ThrottlerModule.forRootAsync().',
+      );
+    }
     if (Array.isArray(this.options)) {
       this.commonOptions = {};
     } else {
@@ -120,11 +126,13 @@ export class ThrottlerGuard implements CanActivate {
         );
 
       // Check if specific limits are set at class or route level, otherwise use global options.
-      const limit = await this.resolveValue(context, routeOrClassLimit || namedThrottler.limit);
-      const ttl = await this.resolveValue(context, routeOrClassTtl || namedThrottler.ttl);
+      // Use `??` (not `||`) so an explicit `0` (e.g. to fully block a route) is not
+      // silently overridden by the throttler-level default.
+      const limit = await this.resolveValue(context, routeOrClassLimit ?? namedThrottler.limit);
+      const ttl = await this.resolveValue(context, routeOrClassTtl ?? namedThrottler.ttl);
       const blockDuration = await this.resolveValue(
         context,
-        routeOrClassBlockDuration || namedThrottler.blockDuration || ttl,
+        routeOrClassBlockDuration ?? namedThrottler.blockDuration ?? ttl,
       );
       const getTracker =
         routeOrClassGetTracker || namedThrottler.getTracker || this.commonOptions.getTracker;
@@ -181,7 +189,11 @@ export class ThrottlerGuard implements CanActivate {
     // Throw an error when the user reached their limit.
     if (isBlocked) {
       if (setHeaders) {
-        res.header(`Retry-After${getThrottlerSuffix(throttler.name)}`, timeToBlockExpire);
+        this.setResponseHeader(
+          res,
+          `Retry-After${getThrottlerSuffix(throttler.name)}`,
+          timeToBlockExpire,
+        );
       }
 
       await this.throwThrottlingException(context, {
@@ -197,14 +209,23 @@ export class ThrottlerGuard implements CanActivate {
     }
 
     if (setHeaders) {
-      res.header(`${this.headerPrefix}-Limit${getThrottlerSuffix(throttler.name)}`, limit);
+      this.setResponseHeader(
+        res,
+        `${this.headerPrefix}-Limit${getThrottlerSuffix(throttler.name)}`,
+        limit,
+      );
       // We're about to add a record so we need to take that into account here.
       // Otherwise the header says we have a request left when there are none.
-      res.header(
+      this.setResponseHeader(
+        res,
         `${this.headerPrefix}-Remaining${getThrottlerSuffix(throttler.name)}`,
         Math.max(0, limit - totalHits),
       );
-      res.header(`${this.headerPrefix}-Reset${getThrottlerSuffix(throttler.name)}`, timeToExpire);
+      this.setResponseHeader(
+        res,
+        `${this.headerPrefix}-Reset${getThrottlerSuffix(throttler.name)}`,
+        timeToExpire,
+      );
     }
 
     return true;
@@ -220,6 +241,22 @@ export class ThrottlerGuard implements CanActivate {
    */
   protected async getTracker(req: Record<string, any>): Promise<string> {
     return normalizeIp(req.ip, this.ipv6SubnetPrefix);
+  }
+
+  /**
+   * Set a header on the response object of any HTTP adapter.
+   *
+   * Express and Fastify expose `res.header()`, while a plain Node.js
+   * `ServerResponse`, which custom adapters often hand through, only has
+   * `res.setHeader()`. A response offering neither is left untouched rather
+   * than failing the request.
+   */
+  protected setResponseHeader(res: Record<string, any>, name: string, value: string | number) {
+    if (typeof res.header === 'function') {
+      res.header(name, value);
+    } else if (typeof res.setHeader === 'function') {
+      res.setHeader(name, value);
+    }
   }
 
   protected getRequestResponse(context: ExecutionContext): {

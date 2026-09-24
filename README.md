@@ -103,6 +103,7 @@ If you use `@SkipThrottle()` without specifying the names, it will not skip any 
 **Correct usage with named throttlers:**
 
 To skip specific named throttlers:
+
 ```typescript
 @SkipThrottle({ short: true, medium: true })
 @Controller('users')
@@ -110,6 +111,7 @@ export class UsersController {}
 ```
 
 To override limits for specific named throttlers:
+
 ```typescript
 @Throttle({ short: { limit: 5, ttl: 1000 }, medium: { limit: 30, ttl: 10000 } })
 @Get()
@@ -119,6 +121,7 @@ findAll() {
 ```
 
 **Incorrect usage** (will not work as intended for named throttlers):
+
 ```typescript
 @SkipThrottle() // This will NOT skip any named throttlers
 @Controller('users')
@@ -126,6 +129,39 @@ export class UsersController {}
 ```
 
 For more details on this behavior, especially if migrating from older versions, please refer to the [Migration to v5](#migrating-to-v5-from-earlier-versions) guide.
+
+#### Throttling specific routes
+
+`ThrottlerModule` is global, so it is imported once. To limit a subset of routes, leave out the `APP_GUARD` provider and bind the guard to the controller or the handler. The guard is passed as a class, so dependency injection keeps working.
+
+```typescript
+@UseGuards(ThrottlerGuard)
+@Controller('reports')
+export class ReportsController {}
+```
+
+```typescript
+@UseGuards(ThrottlerGuard)
+@Get('search')
+search() {
+  return this.searchService.run();
+}
+```
+
+Binding the guard globally and skipping the routes that should not be limited keeps every route limited by default, including the ones added later. Binding it per route inverts that: a route without the guard carries no limit.
+
+The definitions in `forRoot` are one policy, not a menu: every entry applies wherever the guard is bound. `@Throttle()` changes only the fields it lists, so `@Throttle({ default: { limit: 5 } })` lowers the limit and keeps the `ttl` from the configuration. To leave an entry out for a route, skip it by name:
+
+```typescript
+@SkipThrottle({ long: true })
+@UseGuards(ThrottlerGuard)
+@Post('login')
+login() {
+  return this.authService.login();
+}
+```
+
+Every name used in a decorator must exist in the module configuration. `ThrottlerModule.forRoot()` and `ThrottlerModule.forRoot([])` register no throttler at all, so the guard has nothing to check and every request passes.
 
 ### Customization
 
@@ -311,7 +347,7 @@ The following options are valid for the object passed to the array of the `Throt
   </tr>
   <tr>
     <td><code>blockDuration</code></td>
-    <td>the number of milliseconds the request will be blocked</td>
+    <td>the number of milliseconds the request will be blocked once the limit is exceeded. Defaults to <code>ttl</code>. Set it to <code>0</code> to skip the block, so requests are let through again as soon as the oldest hit in the window expires</td>
   </tr>
   <tr>
     <td><code>ignoreUserAgents</code></td>

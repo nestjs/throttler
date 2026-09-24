@@ -132,6 +132,36 @@ export class ThrottlerStorageService implements ThrottlerStorage, OnApplicationS
     this.setExpirationTime(key, ttl, throttlerName);
   }
 
+  /**
+   * Count a hit when no block duration is configured.
+   *
+   * There is no block to serve out once the limit is reached: a request is
+   * rejected while the window holds `limit` hits and let through again as soon
+   * as the oldest of them expires. Rejected requests are not recorded, so a
+   * client that keeps retrying cannot extend its own window or pile up timers.
+   */
+  private incrementWithoutBlock(
+    key: string,
+    ttlMilliseconds: number,
+    limit: number,
+    throttlerName: string,
+    timeToExpire: number,
+  ): ThrottlerStorageRecord {
+    const { totalHits } = this.storage.get(key);
+    const isBlocked = totalHits.get(throttlerName) >= limit;
+    if (!isBlocked) {
+      this.fireHitCount(key, throttlerName, ttlMilliseconds);
+    }
+    return {
+      // Count the rejected request too, so a blocked result reports `totalHits > limit`.
+      totalHits: totalHits.get(throttlerName) + (isBlocked ? 1 : 0),
+      timeToExpire,
+      isBlocked,
+      // Every live hit expires before the current window does.
+      timeToBlockExpire: isBlocked ? timeToExpire : 0,
+    };
+  }
+
   async increment(
     key: string,
     ttl: number,
@@ -163,6 +193,10 @@ export class ThrottlerStorageService implements ThrottlerStorage, OnApplicationS
     if (timeToExpire <= 0) {
       this.storage.get(key).expiresAt = Date.now() + ttlMilliseconds;
       timeToExpire = this.getExpirationTime(key);
+    }
+
+    if (blockDurationMilliseconds <= 0) {
+      return this.incrementWithoutBlock(key, ttlMilliseconds, limit, throttlerName, timeToExpire);
     }
 
     if (!this.storage.get(key).isBlocked) {

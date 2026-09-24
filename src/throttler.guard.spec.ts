@@ -1,5 +1,5 @@
 import { type Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { ExecutionContext } from '@nestjs/common';
+import { ExecutionContext, Logger } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Test } from '@nestjs/testing';
 import { ThrottlerStorageOptions } from './throttler-storage-options.interface';
@@ -223,6 +223,38 @@ describe('ThrottlerGuard', () => {
       expect(headerSettingMock).toHaveBeenNthCalledWith(2, 'X-RateLimit-Remaining', 1);
       expect(headerSettingMock).toHaveBeenNthCalledWith(3, 'X-RateLimit-Reset', expect.any(Number));
     });
+    it('should respect an explicit route-level limit of 0 instead of falling back to the default', async () => {
+      handler = function zeroLimit() {
+        return 'string';
+      };
+      reflector.getAllAndOverride = vi.fn().mockReturnValueOnce(false).mockReturnValueOnce(0);
+      const ctxMock = contextMockFactory('http', handler, {
+        getResponse: () => resMock,
+        getRequest: () => reqMock,
+      });
+      await expect(guard.canActivate(ctxMock)).rejects.toThrowError(ThrottlerException);
+      expect(headerSettingMock).toBeCalledTimes(1);
+      expect(headerSettingMock).toHaveBeenCalledWith('Retry-After', expect.any(Number));
+    });
+    it('should pass an explicit route-level blockDuration of 0 to the storage', async () => {
+      handler = function zeroBlockDuration() {
+        return 'string';
+      };
+      reflector.getAllAndOverride = vi
+        .fn()
+        .mockReturnValueOnce(false)
+        .mockReturnValueOnce(undefined)
+        .mockReturnValueOnce(undefined)
+        .mockReturnValueOnce(0);
+      const incrementSpy = vi.spyOn(service, 'increment');
+      const ctxMock = contextMockFactory('http', handler, {
+        getResponse: () => resMock,
+        getRequest: () => reqMock,
+      });
+      await guard.canActivate(ctxMock);
+      expect(incrementSpy).toHaveBeenCalledWith(expect.any(String), 60, 5, 0, 'default');
+      incrementSpy.mockRestore();
+    });
     it('should skip due to the user-agent header', async () => {
       handler = function userAgentSkip() {
         return 'string';
@@ -279,6 +311,32 @@ describe('ThrottlerGuard', () => {
       expect(headerSettingMock).toHaveBeenNthCalledWith(1, 'X-RateLimit-Limit', 5);
       expect(headerSettingMock).toHaveBeenNthCalledWith(2, 'X-RateLimit-Remaining', 4);
       expect(headerSettingMock).toHaveBeenNthCalledWith(3, 'X-RateLimit-Reset', expect.any(Number));
+    });
+    it('should fall back to setHeader when the response has no header method', async () => {
+      handler = function setHeaderFallback() {
+        return 'string';
+      };
+      const setHeaderMock = vi.fn();
+      const ctxMock = contextMockFactory('http', handler, {
+        getResponse: () => ({ setHeader: setHeaderMock }),
+        getRequest: () => reqMock,
+      });
+      for (let i = 0; i < 5; i++) {
+        await guard.canActivate(ctxMock);
+      }
+      await expect(guard.canActivate(ctxMock)).rejects.toThrowError(ThrottlerException);
+      expect(setHeaderMock).toHaveBeenNthCalledWith(1, 'X-RateLimit-Limit', 5);
+      expect(setHeaderMock).toHaveBeenLastCalledWith('Retry-After', expect.any(Number));
+    });
+    it('should not fail when the response cannot set headers', async () => {
+      handler = function noHeaderMethods() {
+        return 'string';
+      };
+      const ctxMock = contextMockFactory('http', handler, {
+        getResponse: () => ({}),
+        getRequest: () => reqMock,
+      });
+      await expect(guard.canActivate(ctxMock)).resolves.toBe(true);
     });
     it('should not add headers to the response when setHeaders is false', async () => {
       const modRef = await Test.createTestingModule({
@@ -431,6 +489,36 @@ describe('ThrottlerGuard', () => {
       await expect(getTracker({ ip: '2001:db8:0:1:dead:beef:1:2' })).resolves.toBe(
         '2001:db8:0:1::/64',
       );
+    });
+  });
+
+  describe('empty configuration', () => {
+    const buildGuard = async (options: Record<string, any>) => {
+      const modRef = await Test.createTestingModule({
+        providers: [
+          ThrottlerGuard,
+          { provide: THROTTLER_OPTIONS, useValue: options },
+          { provide: ThrottlerStorage, useClass: ThrottlerStorageServiceMock },
+          { provide: Reflector, useValue: { getAllAndOverride: vi.fn() } },
+        ],
+      }).compile();
+      return modRef.get(ThrottlerGuard);
+    };
+
+    it('warns when no throttler is configured', async () => {
+      const warn = vi.spyOn(Logger.prototype, 'warn').mockImplementation(() => undefined);
+      const guard = await buildGuard([]);
+      await guard.onModuleInit();
+      expect(warn).toHaveBeenCalledWith(expect.stringContaining('No throttlers are configured'));
+      warn.mockRestore();
+    });
+
+    it('does not warn when a throttler is configured', async () => {
+      const warn = vi.spyOn(Logger.prototype, 'warn').mockImplementation(() => undefined);
+      const guard = await buildGuard([{ limit: 5, ttl: 60 }]);
+      await guard.onModuleInit();
+      expect(warn).not.toHaveBeenCalled();
+      warn.mockRestore();
     });
   });
 });
