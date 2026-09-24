@@ -21,12 +21,24 @@ describe('normalizeIp', () => {
     expect(normalizeIp('64:ff9b::1.2.3.4')).not.toBe(normalizeIp('64:ff9b::5.6.7.8'));
   });
 
-  it('collapses IPv4-compatible addresses onto the embedded IPv4', () => {
-    expect(normalizeIp('::203.0.113.7')).toBe('203.0.113.7');
-    expect(normalizeIp('::1.2.3.4')).not.toBe(normalizeIp('::5.6.7.8'));
+  it('masks deprecated IPv4-compatible addresses like any other IPv6', () => {
+    expect(normalizeIp('::203.0.113.7')).toBe('::/64');
+    expect(normalizeIp('::cb00:7107')).toBe('::/64');
+    expect(normalizeIp('::0.1.0.0')).toBe('::/64');
+    expect(normalizeIp('::0.0.1.1')).toBe('::/64');
   });
 
-  it('does not treat the unspecified address as IPv4-compatible', () => {
+  it('does not let an IPv4-compatible address share an IPv4 host bucket', () => {
+    expect(normalizeIp('::1.2.3.4')).not.toBe(normalizeIp('1.2.3.4'));
+    expect(normalizeIp('::1.2.3.4')).not.toBe(normalizeIp('::ffff:1.2.3.4'));
+  });
+
+  it('only collapses ::ffff: when the rest of the prefix is zero', () => {
+    expect(normalizeIp('1::ffff:1.2.3.4')).toBe('1::/64');
+    expect(normalizeIp('::1:ffff:1.2.3.4')).toBe('::/64');
+  });
+
+  it('leaves the unspecified address masked', () => {
     expect(normalizeIp('::')).toBe('::/64');
   });
 

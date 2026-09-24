@@ -108,23 +108,21 @@ function formatIpv6(hextets: number[]): string {
  * - `::ffff:a.b.c.d`   IPv4-mapped (RFC 4291)
  * - `64:ff9b::a.b.c.d` NAT64 well-known prefix (RFC 6052), which is how every
  *                      IPv4 client appears behind a NAT64 / SIIT gateway
- * - `::a.b.c.d`        IPv4-compatible (RFC 4291, deprecated)
  *
- * `::` and `::1` also start with 96 zero bits but are not IPv4 hosts, so an
- * IPv4-compatible address must use more than its lowest 16 bits.
+ * The deprecated IPv4-compatible form (`::a.b.c.d`) is deliberately left out:
+ * no transition mechanism still produces it, and collapsing it would let a
+ * peer that can source `::a.b.c.d` draw from the bucket of IPv4 host
+ * `a.b.c.d`.
  */
 function embedsIpv4(hextets: number[]): boolean {
-  const [a, b, c, d, e, f, g] = hextets;
+  const [a, b, c, d, e, f] = hextets;
   if (c !== 0 || d !== 0 || e !== 0) {
     return false;
   }
   if (a === 0x64 && b === 0xff9b) {
     return f === 0;
   }
-  if (a !== 0 || b !== 0) {
-    return false;
-  }
-  return f === 0xffff || (f === 0 && g !== 0);
+  return a === 0 && b === 0 && f === 0xffff;
 }
 
 /**
@@ -134,9 +132,9 @@ function embedsIpv4(hextets: number[]): boolean {
  * - IPv4 addresses are returned unchanged.
  * - IPv4-mapped IPv6 addresses (`::ffff:1.2.3.4`) collapse onto the IPv4 form,
  *   so the same host is tracked identically on a dual-stack listener.
- * - NAT64 (`64:ff9b::1.2.3.4`) and IPv4-compatible (`::1.2.3.4`) addresses
- *   collapse onto the IPv4 form too, so the IPv4 clients behind a NAT64
- *   gateway are not all merged into a single `/64` bucket.
+ * - NAT64 well-known prefix addresses (`64:ff9b::1.2.3.4`) collapse onto the
+ *   IPv4 form too, so the IPv4 clients behind a NAT64 gateway are not all
+ *   merged into a single `/64` bucket.
  * - The IPv6 loopback (`::1`) is left alone; it is a single address with no
  *   subnet to rotate through.
  * - Other IPv6 addresses are masked to `ipv6SubnetPrefix` bits and rendered as
