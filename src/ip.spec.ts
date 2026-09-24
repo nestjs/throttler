@@ -11,6 +11,30 @@ describe('normalizeIp', () => {
     expect(normalizeIp('::ffff:cb00:7107')).toBe('203.0.113.7');
   });
 
+  it('collapses NAT64 well-known prefix addresses onto the embedded IPv4', () => {
+    expect(normalizeIp('64:ff9b::203.0.113.7')).toBe('203.0.113.7');
+    expect(normalizeIp('64:ff9b::cb00:7107')).toBe('203.0.113.7');
+    expect(normalizeIp('0064:FF9B:0:0:0:0:CB00:7107')).toBe('203.0.113.7');
+  });
+
+  it('keeps distinct IPv4 clients behind NAT64 distinct', () => {
+    expect(normalizeIp('64:ff9b::1.2.3.4')).not.toBe(normalizeIp('64:ff9b::5.6.7.8'));
+  });
+
+  it('collapses IPv4-compatible addresses onto the embedded IPv4', () => {
+    expect(normalizeIp('::203.0.113.7')).toBe('203.0.113.7');
+    expect(normalizeIp('::1.2.3.4')).not.toBe(normalizeIp('::5.6.7.8'));
+  });
+
+  it('does not treat the unspecified address as IPv4-compatible', () => {
+    expect(normalizeIp('::')).toBe('::/64');
+  });
+
+  it('masks addresses that only resemble the NAT64 prefix', () => {
+    expect(normalizeIp('64:ff9b:1::1.2.3.4')).toBe('64:ff9b:1::/64');
+    expect(normalizeIp('64:ff9b::1:0:102:304')).toBe('64:ff9b::/64');
+  });
+
   it('masks IPv6 to the default /64', () => {
     expect(normalizeIp('2001:db8:0:1:dead:beef:1:2')).toBe(`2001:db8:0:1::/64`);
   });

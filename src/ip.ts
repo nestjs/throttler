@@ -103,12 +103,40 @@ function formatIpv6(hextets: number[]): string {
 }
 
 /**
+ * Whether the first 96 bits mark an address that embeds one IPv4 host:
+ *
+ * - `::ffff:a.b.c.d`   IPv4-mapped (RFC 4291)
+ * - `64:ff9b::a.b.c.d` NAT64 well-known prefix (RFC 6052), which is how every
+ *                      IPv4 client appears behind a NAT64 / SIIT gateway
+ * - `::a.b.c.d`        IPv4-compatible (RFC 4291, deprecated)
+ *
+ * `::` and `::1` also start with 96 zero bits but are not IPv4 hosts, so an
+ * IPv4-compatible address must use more than its lowest 16 bits.
+ */
+function embedsIpv4(hextets: number[]): boolean {
+  const [a, b, c, d, e, f, g] = hextets;
+  if (c !== 0 || d !== 0 || e !== 0) {
+    return false;
+  }
+  if (a === 0x64 && b === 0xff9b) {
+    return f === 0;
+  }
+  if (a !== 0 || b !== 0) {
+    return false;
+  }
+  return f === 0xffff || (f === 0 && g !== 0);
+}
+
+/**
  * Normalize a source address so that every address a single client can rotate
  * through maps onto one tracker string.
  *
  * - IPv4 addresses are returned unchanged.
  * - IPv4-mapped IPv6 addresses (`::ffff:1.2.3.4`) collapse onto the IPv4 form,
  *   so the same host is tracked identically on a dual-stack listener.
+ * - NAT64 (`64:ff9b::1.2.3.4`) and IPv4-compatible (`::1.2.3.4`) addresses
+ *   collapse onto the IPv4 form too, so the IPv4 clients behind a NAT64
+ *   gateway are not all merged into a single `/64` bucket.
  * - The IPv6 loopback (`::1`) is left alone; it is a single address with no
  *   subnet to rotate through.
  * - Other IPv6 addresses are masked to `ipv6SubnetPrefix` bits and rendered as
@@ -148,15 +176,9 @@ export function normalizeIp(
     return '::1';
   }
 
-  // `::ffff:a.b.c.d` is a single IPv4 host, not a subnet.
-  const isIpv4Mapped =
-    hextets[0] === 0 &&
-    hextets[1] === 0 &&
-    hextets[2] === 0 &&
-    hextets[3] === 0 &&
-    hextets[4] === 0 &&
-    hextets[5] === 0xffff;
-  if (isIpv4Mapped) {
+  // These forms carry a single IPv4 host in their low 32 bits. Masking them
+  // would discard exactly the bits that tell clients apart.
+  if (embedsIpv4(hextets)) {
     return [hextets[6] >> 8, hextets[6] & 0xff, hextets[7] >> 8, hextets[7] & 0xff].join('.');
   }
 
