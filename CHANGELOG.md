@@ -1,3 +1,14 @@
+## 6.7.1
+
+### Patch Changes
+
+- e8368b3: Set rate limit headers through `res.setHeader()` when the response has no `res.header()` method, so the guard no longer throws `res.header is not a function` on custom HTTP adapters. The logic lives in a new protected `setResponseHeader()` method that subclasses can override.
+- a482ef9: Coerce numeric strings for `limit`, `ttl` and `blockDuration` to numbers, as returned for example by `ConfigService.get<number>()` for environment variables. Previously `Date.now() + '60000'` concatenated instead of adding, which silently corrupted every expiry and `X-RateLimit-Reset`. A value that is not numeric now fails with an error naming the option and the throttler.
+- a9a28b9: Respect an explicit `0` for `limit`, `ttl` and `blockDuration` in `@Throttle()` and the module options instead of falling back to the default. `blockDuration: 0` now means "no extra block": the in-memory storage rejects requests while the window is full and lets them through again as soon as the oldest hit expires, without recording the rejected ones.
+- bf81677: Import shared interfaces from the public Nest package entry point for Nest 12 compatibility.
+- caaabc9: Stop the in-memory storage from retaining request contexts. It used to schedule one `setTimeout` per counted hit, and each timer kept the request's `AsyncLocalStorage` stores (for example an ORM's per-request entity manager) in memory until the TTL expired. It now records when each hit expires and prunes expired hits on access. The idle-record sweep is also no longer tied to the context of the first request. With `blockDuration: 0`, `Retry-After` now reports when the oldest hit expires rather than when the window ends.
+- 7703c10: Log a warning when no throttler is configured. The guard limits nothing in that case and previously said nothing at boot, so `ThrottlerModule.forRoot()` and `ThrottlerModule.forRoot([])` looked like a working setup.
+
 ## 6.7.0
 
 ### Minor Changes
