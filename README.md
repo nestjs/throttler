@@ -161,7 +161,7 @@ login() {
 }
 ```
 
-Every name used in a decorator must exist in the module configuration. `ThrottlerModule.forRoot()` and `ThrottlerModule.forRoot([])` register no throttler at all, so the guard has nothing to check and every request passes.
+Every name used in a decorator must exist in the module configuration. `ThrottlerModule.forRoot()` and `ThrottlerModule.forRoot([])` register no throttler at all, so the guard has nothing to check and every request passes. The guard reports this with a warning when the application starts.
 
 ### Customization
 
