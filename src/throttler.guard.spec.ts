@@ -1,4 +1,4 @@
-import { ExecutionContext } from '@nestjs/common';
+import { ExecutionContext, Logger } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Test } from '@nestjs/testing';
 import { ThrottlerStorageOptions } from './throttler-storage-options.interface';
@@ -430,6 +430,36 @@ describe('ThrottlerGuard', () => {
       await expect(getTracker({ ip: '2001:db8:0:1:dead:beef:1:2' })).resolves.toBe(
         '2001:db8:0:1::/64',
       );
+    });
+  });
+
+  describe('empty configuration', () => {
+    const buildGuard = async (options: Record<string, any>) => {
+      const modRef = await Test.createTestingModule({
+        providers: [
+          ThrottlerGuard,
+          { provide: THROTTLER_OPTIONS, useValue: options },
+          { provide: ThrottlerStorage, useClass: ThrottlerStorageServiceMock },
+          { provide: Reflector, useValue: { getAllAndOverride: jest.fn() } },
+        ],
+      }).compile();
+      return modRef.get(ThrottlerGuard);
+    };
+
+    it('warns when no throttler is configured', async () => {
+      const warn = jest.spyOn(Logger.prototype, 'warn').mockImplementation(() => undefined);
+      const guard = await buildGuard([]);
+      await guard.onModuleInit();
+      expect(warn).toHaveBeenCalledWith(expect.stringContaining('No throttlers are configured'));
+      warn.mockRestore();
+    });
+
+    it('does not warn when a throttler is configured', async () => {
+      const warn = jest.spyOn(Logger.prototype, 'warn').mockImplementation(() => undefined);
+      const guard = await buildGuard([{ limit: 5, ttl: 60 }]);
+      await guard.onModuleInit();
+      expect(warn).not.toHaveBeenCalled();
+      warn.mockRestore();
     });
   });
 });
