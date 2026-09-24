@@ -222,6 +222,38 @@ describe('ThrottlerGuard', () => {
       expect(headerSettingMock).toHaveBeenNthCalledWith(2, 'X-RateLimit-Remaining', 1);
       expect(headerSettingMock).toHaveBeenNthCalledWith(3, 'X-RateLimit-Reset', expect.any(Number));
     });
+    it('should respect an explicit route-level limit of 0 instead of falling back to the default', async () => {
+      handler = function zeroLimit() {
+        return 'string';
+      };
+      reflector.getAllAndOverride = jest.fn().mockReturnValueOnce(false).mockReturnValueOnce(0);
+      const ctxMock = contextMockFactory('http', handler, {
+        getResponse: () => resMock,
+        getRequest: () => reqMock,
+      });
+      await expect(guard.canActivate(ctxMock)).rejects.toThrowError(ThrottlerException);
+      expect(headerSettingMock).toBeCalledTimes(1);
+      expect(headerSettingMock).toHaveBeenCalledWith('Retry-After', expect.any(Number));
+    });
+    it('should pass an explicit route-level blockDuration of 0 to the storage', async () => {
+      handler = function zeroBlockDuration() {
+        return 'string';
+      };
+      reflector.getAllAndOverride = jest
+        .fn()
+        .mockReturnValueOnce(false)
+        .mockReturnValueOnce(undefined)
+        .mockReturnValueOnce(undefined)
+        .mockReturnValueOnce(0);
+      const incrementSpy = jest.spyOn(service, 'increment');
+      const ctxMock = contextMockFactory('http', handler, {
+        getResponse: () => resMock,
+        getRequest: () => reqMock,
+      });
+      await guard.canActivate(ctxMock);
+      expect(incrementSpy).toHaveBeenCalledWith(expect.any(String), 60, 5, 0, 'default');
+      incrementSpy.mockRestore();
+    });
     it('should skip due to the user-agent header', async () => {
       handler = function userAgentSkip() {
         return 'string';

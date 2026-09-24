@@ -103,6 +103,7 @@ If you use `@SkipThrottle()` without specifying the names, it will not skip any 
 **Correct usage with named throttlers:**
 
 To skip specific named throttlers:
+
 ```typescript
 @SkipThrottle({ short: true, medium: true })
 @Controller('users')
@@ -110,6 +111,7 @@ export class UsersController {}
 ```
 
 To override limits for specific named throttlers:
+
 ```typescript
 @Throttle({ short: { limit: 5, ttl: 1000 }, medium: { limit: 30, ttl: 10000 } })
 @Get()
@@ -119,6 +121,7 @@ findAll() {
 ```
 
 **Incorrect usage** (will not work as intended for named throttlers):
+
 ```typescript
 @SkipThrottle() // This will NOT skip any named throttlers
 @Controller('users')
@@ -344,7 +347,7 @@ The following options are valid for the object passed to the array of the `Throt
   </tr>
   <tr>
     <td><code>blockDuration</code></td>
-    <td>the number of milliseconds the request will be blocked</td>
+    <td>the number of milliseconds the request will be blocked once the limit is exceeded. Defaults to <code>ttl</code>. Set it to <code>0</code> to skip the block, so requests are let through again as soon as the oldest hit in the window expires</td>
   </tr>
   <tr>
     <td><code>ignoreUserAgents</code></td>
