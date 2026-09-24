@@ -311,6 +311,32 @@ describe('ThrottlerGuard', () => {
       expect(headerSettingMock).toHaveBeenNthCalledWith(2, 'X-RateLimit-Remaining', 4);
       expect(headerSettingMock).toHaveBeenNthCalledWith(3, 'X-RateLimit-Reset', expect.any(Number));
     });
+    it('should fall back to setHeader when the response has no header method', async () => {
+      handler = function setHeaderFallback() {
+        return 'string';
+      };
+      const setHeaderMock = jest.fn();
+      const ctxMock = contextMockFactory('http', handler, {
+        getResponse: () => ({ setHeader: setHeaderMock }),
+        getRequest: () => reqMock,
+      });
+      for (let i = 0; i < 5; i++) {
+        await guard.canActivate(ctxMock);
+      }
+      await expect(guard.canActivate(ctxMock)).rejects.toThrowError(ThrottlerException);
+      expect(setHeaderMock).toHaveBeenNthCalledWith(1, 'X-RateLimit-Limit', 5);
+      expect(setHeaderMock).toHaveBeenLastCalledWith('Retry-After', expect.any(Number));
+    });
+    it('should not fail when the response cannot set headers', async () => {
+      handler = function noHeaderMethods() {
+        return 'string';
+      };
+      const ctxMock = contextMockFactory('http', handler, {
+        getResponse: () => ({}),
+        getRequest: () => reqMock,
+      });
+      await expect(guard.canActivate(ctxMock)).resolves.toBe(true);
+    });
     it('should not add headers to the response when setHeaders is false', async () => {
       const modRef = await Test.createTestingModule({
         providers: [
