@@ -1,7 +1,7 @@
 {
   "*.ts": [
     "prettier --write",
-    "eslint --ext ts"
+    "oxlint"
   ],
   "*.{md,html,json,js}": [
     "prettier --write"

@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { DEFAULT_IPV6_SUBNET_PREFIX, normalizeIp } from './ip';
 
 describe('normalizeIp', () => {

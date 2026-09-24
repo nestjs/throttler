@@ -1,3 +1,4 @@
+import { afterAll, beforeAll, describe, it } from 'vitest';
 import { INestApplication, Type } from '@nestjs/common';
 import { AbstractHttpAdapter } from '@nestjs/core';
 import { ExpressAdapter } from '@nestjs/platform-express';
@@ -5,8 +6,6 @@ import { FastifyAdapter } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { request, spec } from 'pactum';
 import { CustomErrorMessageThrottlerModule } from './app.module';
-
-jest.setTimeout(10000);
 
 describe.each`
   adapter           | name

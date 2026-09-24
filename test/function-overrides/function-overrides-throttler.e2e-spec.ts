@@ -1,3 +1,4 @@
+import { afterAll, beforeAll, describe, it } from 'vitest';
 import { INestApplication, Type } from '@nestjs/common';
 import { AbstractHttpAdapter } from '@nestjs/core';
 import { ExpressAdapter } from '@nestjs/platform-express';
@@ -6,8 +7,6 @@ import { Test } from '@nestjs/testing';
 import { setTimeout } from 'node:timers/promises';
 import { request, spec } from 'pactum';
 import { FunctionOverridesThrottlerModule } from './app.module';
-
-jest.setTimeout(10000);
 
 const commonHeader = (prefix: string, name?: string) => `${prefix}${name ? '-' + name : ''}`;
 

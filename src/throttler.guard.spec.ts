@@ -1,3 +1,4 @@
+import { type Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Test } from '@nestjs/testing';
@@ -143,7 +144,7 @@ describe('ThrottlerGuard', () => {
         {
           provide: Reflector,
           useValue: {
-            getAllAndOverride: jest.fn(),
+            getAllAndOverride: vi.fn(),
           },
         },
       ],
@@ -162,10 +163,10 @@ describe('ThrottlerGuard', () => {
   describe('HTTP Context', () => {
     let reqMock;
     let resMock;
-    let headerSettingMock: jest.Mock;
+    let headerSettingMock: Mock;
 
     beforeEach(() => {
-      headerSettingMock = jest.fn();
+      headerSettingMock = vi.fn();
       resMock = {
         header: headerSettingMock,
       };
@@ -210,7 +211,7 @@ describe('ThrottlerGuard', () => {
       handler = function useReflector() {
         return 'string';
       };
-      reflector.getAllAndOverride = jest.fn().mockReturnValueOnce(false).mockReturnValueOnce(2);
+      reflector.getAllAndOverride = vi.fn().mockReturnValueOnce(false).mockReturnValueOnce(2);
       const ctxMock = contextMockFactory('http', handler, {
         getResponse: () => resMock,
         getRequest: () => reqMock,
@@ -258,7 +259,7 @@ describe('ThrottlerGuard', () => {
           {
             provide: Reflector,
             useValue: {
-              getAllAndOverride: jest.fn(),
+              getAllAndOverride: vi.fn(),
             },
           },
         ],
@@ -300,7 +301,7 @@ describe('ThrottlerGuard', () => {
           {
             provide: Reflector,
             useValue: {
-              getAllAndOverride: jest.fn(),
+              getAllAndOverride: vi.fn(),
             },
           },
         ],
@@ -309,7 +310,7 @@ describe('ThrottlerGuard', () => {
       const guard = modRef.get(ThrottlerGuard);
       await guard.onModuleInit();
 
-      const headerSettingMock = jest.fn();
+      const headerSettingMock = vi.fn();
       const resMock = {
         header: headerSettingMock,
       };
@@ -360,7 +361,7 @@ describe('ThrottlerGuard', () => {
           {
             provide: Reflector,
             useValue: {
-              getAllAndOverride: jest.fn(),
+              getAllAndOverride: vi.fn(),
             },
           },
         ],
@@ -391,7 +392,7 @@ describe('ThrottlerGuard', () => {
           ThrottlerGuard,
           { provide: THROTTLER_OPTIONS, useValue: options },
           { provide: ThrottlerStorage, useClass: ThrottlerStorageServiceMock },
-          { provide: Reflector, useValue: { getAllAndOverride: jest.fn() } },
+          { provide: Reflector, useValue: { getAllAndOverride: vi.fn() } },
         ],
       }).compile();
       const guard = modRef.get(ThrottlerGuard);
