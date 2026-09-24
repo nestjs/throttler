@@ -207,6 +207,43 @@ describe('ThrottlerGuard', () => {
       expect(headerSettingMock).toBeCalledTimes(16);
       expect(headerSettingMock).toHaveBeenLastCalledWith('Retry-After', expect.any(Number));
     });
+    it('should coerce numeric strings, e.g. read from the environment', async () => {
+      handler = function numericStrings() {
+        return 'string';
+      };
+      reflector.getAllAndOverride = vi
+        .fn()
+        .mockReturnValueOnce(false)
+        .mockReturnValueOnce('2')
+        .mockReturnValueOnce('60000')
+        .mockReturnValueOnce('1000');
+      const incrementSpy = vi.spyOn(service, 'increment');
+      const ctxMock = contextMockFactory('http', handler, {
+        getResponse: () => resMock,
+        getRequest: () => reqMock,
+      });
+      await expect(guard.canActivate(ctxMock)).resolves.toBe(true);
+      expect(incrementSpy).toHaveBeenCalledWith(expect.any(String), 60000, 2, 1000, 'default');
+      expect(headerSettingMock).toHaveBeenNthCalledWith(1, 'X-RateLimit-Limit', 2);
+      incrementSpy.mockRestore();
+    });
+    it('should reject a non-numeric option with a descriptive error', async () => {
+      handler = function invalidOption() {
+        return 'string';
+      };
+      reflector.getAllAndOverride = vi
+        .fn()
+        .mockReturnValueOnce(false)
+        .mockReturnValueOnce(undefined)
+        .mockReturnValueOnce('one minute');
+      const ctxMock = contextMockFactory('http', handler, {
+        getResponse: () => resMock,
+        getRequest: () => reqMock,
+      });
+      await expect(guard.canActivate(ctxMock)).rejects.toThrow(
+        'Invalid "ttl" for the "default" throttler: expected a number, got "one minute".',
+      );
+    });
     it('should pull values from the reflector instead of options', async () => {
       handler = function useReflector() {
         return 'string';
