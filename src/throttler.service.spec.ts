@@ -49,6 +49,39 @@ describe('ThrottlerStorageService', () => {
     }
   });
 
+  describe('without a block duration', () => {
+    const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+    it('rejects requests over the limit instead of resetting the counter', async () => {
+      const ttl = 1000;
+      const results = [];
+      for (let i = 0; i < 5; i++) {
+        results.push(await service.increment('no-block', ttl, 2, 0, 'test'));
+      }
+      expect(results.map((result) => result.isBlocked)).toEqual([false, false, true, true, true]);
+      expect(results[2].totalHits).toBe(3);
+      expect(results[2].timeToBlockExpire).toBeGreaterThan(0);
+    });
+
+    it('lets requests through again once the earlier hits expire', async () => {
+      const ttl = 100;
+      await service.increment('no-block', ttl, 2, 0, 'test');
+      await service.increment('no-block', ttl, 2, 0, 'test');
+
+      // Rejected retries are not recorded, so they do not extend the window.
+      for (let i = 0; i < 5; i++) {
+        await sleep(15);
+        const result = await service.increment('no-block', ttl, 2, 0, 'test');
+        expect(result.isBlocked).toBe(true);
+      }
+
+      await sleep(ttl);
+      const result = await service.increment('no-block', ttl, 2, 0, 'test');
+      expect(result.isBlocked).toBe(false);
+      expect(result.totalHits).toBe(1);
+    });
+  });
+
   describe('record eviction', () => {
     const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
     const sweep = () => (service as any).evictIdleRecords();
