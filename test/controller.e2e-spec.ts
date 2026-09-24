@@ -1,3 +1,4 @@
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { Controller, INestApplication, Post } from '@nestjs/common';
 import { AbstractHttpAdapter, APP_GUARD } from '@nestjs/core';
 import { ExpressAdapter } from '@nestjs/platform-express';
@@ -8,8 +9,6 @@ import { Throttle, ThrottlerGuard } from '../src';
 import { THROTTLER_OPTIONS } from '../src/throttler.constants';
 import { ControllerModule } from './app/controllers/controller.module';
 import { httPromise } from './utility/httpromise';
-
-jest.setTimeout(45000);
 
 describe.each`
   adapter                 | adapterName

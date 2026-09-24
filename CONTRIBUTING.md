@@ -20,13 +20,13 @@ The built-in in-memory cache implementation can be found in src/throttler.servic
 
 ## Testing
 
-To run a basic dev server you can use `start:dev` to run `nodemon` and `ts-node`. All tests should be running through `jest` using `test:e2e` otherwise.
+To run a basic dev server you can use `start:dev` to run `nodemon` and `ts-node`. Tests run through `vitest`: `test` for the unit tests and `test:e2e` for the end-to-end suite.
 
 If you need to run tests for a specific context, use `pnpm test:e2e <type>` (one of: controller, ws, gql) e.g. `pnpm test:e2e controller` will run the e2e tests for the HTTP guard.
 
 ## Commits
 
-We are using [Conventional Commit](https://github.com/conventional-changelog/commitlint) to help keep commit messages aligned as development continues. The easiest way to get acquainted with what the commit should look like is to run `yarn commit` which will use the `git-cz` cli and walk you through the steps of committing. Once you've made your commit, prettier and eslint will run and ensure that the new code is up to the standards we have in place.
+We are using [Conventional Commit](https://github.com/conventional-changelog/commitlint) to help keep commit messages aligned as development continues. The easiest way to get acquainted with what the commit should look like is to run `yarn commit` which will use the `git-cz` cli and walk you through the steps of committing. Once you've made your commit, prettier and oxlint will run and ensure that the new code is up to the standards we have in place.
 
 ## Issues
 
