@@ -1,6 +1,7 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { sha256 } from './hash';
+import { DEFAULT_IPV6_SUBNET_PREFIX, normalizeIp } from './ip';
 import {
   Resolvable,
   ThrottlerGenerateKeyFunction,
@@ -33,6 +34,7 @@ export class ThrottlerGuard implements CanActivate {
     ThrottlerOptions,
     'skipIf' | 'ignoreUserAgents' | 'getTracker' | 'generateKey' | 'setHeaders'
   >;
+  protected ipv6SubnetPrefix: number = DEFAULT_IPV6_SUBNET_PREFIX;
 
   constructor(
     @InjectThrottlerOptions() protected readonly options: ThrottlerModuleOptions,
@@ -62,6 +64,7 @@ export class ThrottlerGuard implements CanActivate {
         generateKey: this.options.generateKey,
         setHeaders: this.options.setHeaders,
       };
+      this.ipv6SubnetPrefix = this.options.ipv6SubnetPrefix ?? DEFAULT_IPV6_SUBNET_PREFIX;
     }
     this.commonOptions.getTracker ??= this.getTracker.bind(this);
     this.commonOptions.generateKey ??= this.generateKey.bind(this);
@@ -209,8 +212,16 @@ export class ThrottlerGuard implements CanActivate {
     return true;
   }
 
+  /**
+   * Resolve the tracker string for a request.
+   *
+   * The raw source address is normalized first: a client holding an IPv6
+   * allocation can otherwise send every request from a different address
+   * within its own subnet and never share a counter, which defeats the limit
+   * entirely. See {@link normalizeIp}.
+   */
   protected async getTracker(req: Record<string, any>): Promise<string> {
-    return req.ip;
+    return normalizeIp(req.ip, this.ipv6SubnetPrefix);
   }
 
   protected getRequestResponse(context: ExecutionContext): {
