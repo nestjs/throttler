@@ -5,10 +5,10 @@ import { ExpressAdapter } from '@nestjs/platform-express';
 import { FastifyAdapter } from '@nestjs/platform-fastify';
 import { Test, TestingModule } from '@nestjs/testing';
 import { setTimeout } from 'node:timers/promises';
-import { Throttle, ThrottlerGuard } from '../src';
-import { THROTTLER_OPTIONS } from '../src/throttler.constants';
-import { ControllerModule } from './app/controllers/controller.module';
-import { httPromise } from './utility/httpromise';
+import { Throttle, ThrottlerGuard } from '../src/index.js';
+import { THROTTLER_OPTIONS } from '../src/throttler.constants.js';
+import { ControllerModule } from './app/controllers/controller.module.js';
+import { httPromise } from './utility/httpromise.js';
 
 describe.each`
   adapter                 | adapterName

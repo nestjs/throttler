@@ -1,6 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
-import { SkipThrottle, Throttle, seconds } from '../../../src';
-import { AppService } from '../app.service';
+import { SkipThrottle, Throttle, seconds } from '../../../src/index.js';
+import { AppService } from '../app.service.js';
 
 @Controller()
 @Throttle({ default: { limit: 2, ttl: seconds(10) } })

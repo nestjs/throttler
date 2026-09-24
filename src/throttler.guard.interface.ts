@@ -1,10 +1,10 @@
 import { ExecutionContext } from '@nestjs/common';
-import { ThrottlerStorageRecord } from './throttler-storage-record.interface';
+import { ThrottlerStorageRecord } from './throttler-storage-record.interface.js';
 import {
   ThrottlerGenerateKeyFunction,
   ThrottlerGetTrackerFunction,
   ThrottlerOptions,
-} from './throttler-module-options.interface';
+} from './throttler-module-options.interface.js';
 
 /**
  * Interface describing the details of a rate limit applied by the ThrottlerGuard.

@@ -1,8 +1,8 @@
 import { Provider } from '@nestjs/common';
-import { ThrottlerModuleOptions } from './throttler-module-options.interface';
-import { ThrottlerStorage } from './throttler-storage.interface';
-import { THROTTLER_OPTIONS } from './throttler.constants';
-import { ThrottlerStorageService } from './throttler.service';
+import { ThrottlerModuleOptions } from './throttler-module-options.interface.js';
+import { ThrottlerStorage } from './throttler-storage.interface.js';
+import { THROTTLER_OPTIONS } from './throttler.constants.js';
+import { ThrottlerStorageService } from './throttler.service.js';
 
 export function createThrottlerProviders(options: ThrottlerModuleOptions): Provider[] {
   return [

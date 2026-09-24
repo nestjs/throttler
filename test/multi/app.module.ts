@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
-import { ThrottlerGuard, ThrottlerModule, seconds, minutes } from '../../src';
-import { MultiThrottlerController } from './multi-throttler.controller';
+import { ThrottlerGuard, ThrottlerModule, seconds, minutes } from '../../src/index.js';
+import { MultiThrottlerController } from './multi-throttler.controller.js';
 
 @Module({
   imports: [

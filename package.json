@@ -23,8 +23,18 @@
   "engines": {
     "node": "^20.19.0 || ^22.12.0 || >=24.0.0"
   },
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
   "files": [
     "dist"
   ],
@@ -34,7 +44,7 @@
     "build": "nest build",
     "commit": "git-cz",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start:dev": "nodemon --watch '{src,test/app}/**/*.ts' --ignore '**/*.spec.ts' --exec 'ts-node' test/app/main.ts",
+    "start:dev": "nodemon --watch '{src,test/app}/**/*.ts' --ignore '**/*.spec.ts' --exec 'node --loader ts-node/esm' test/app/main.ts",
     "lint": "oxlint src/ test/",
     "lint:fix": "oxlint src/ test/ --fix",
     "test": "vitest run",

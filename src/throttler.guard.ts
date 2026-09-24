@@ -1,15 +1,15 @@
 import { CanActivate, ExecutionContext, Injectable, Logger } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { sha256 } from './hash';
-import { DEFAULT_IPV6_SUBNET_PREFIX, normalizeIp } from './ip';
+import { sha256 } from './hash.js';
+import { DEFAULT_IPV6_SUBNET_PREFIX, normalizeIp } from './ip.js';
 import {
   Resolvable,
   ThrottlerGenerateKeyFunction,
   ThrottlerGetTrackerFunction,
   ThrottlerModuleOptions,
   ThrottlerOptions,
-} from './throttler-module-options.interface';
-import { ThrottlerStorage } from './throttler-storage.interface';
+} from './throttler-module-options.interface.js';
+import { ThrottlerStorage } from './throttler-storage.interface.js';
 import {
   THROTTLER_BLOCK_DURATION,
   THROTTLER_KEY_GENERATOR,
@@ -17,10 +17,10 @@ import {
   THROTTLER_SKIP,
   THROTTLER_TRACKER,
   THROTTLER_TTL,
-} from './throttler.constants';
-import { InjectThrottlerOptions, InjectThrottlerStorage } from './throttler.decorator';
-import { ThrottlerException, throttlerMessage } from './throttler.exception';
-import { ThrottlerLimitDetail, ThrottlerRequest } from './throttler.guard.interface';
+} from './throttler.constants.js';
+import { InjectThrottlerOptions, InjectThrottlerStorage } from './throttler.decorator.js';
+import { ThrottlerException, throttlerMessage } from './throttler.exception.js';
+import { ThrottlerLimitDetail, ThrottlerRequest } from './throttler.guard.interface.js';
 
 /**
  * @publicApi

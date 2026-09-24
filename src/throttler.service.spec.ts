@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { Test } from '@nestjs/testing';
-import { ThrottlerStorage } from './throttler-storage.interface';
-import { ThrottlerStorageService } from './throttler.service';
+import { ThrottlerStorage } from './throttler-storage.interface.js';
+import { ThrottlerStorageService } from './throttler.service.js';
 
 describe('ThrottlerStorageService', () => {
   let service: ThrottlerStorageService;
