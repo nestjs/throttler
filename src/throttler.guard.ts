@@ -36,6 +36,7 @@ export class ThrottlerGuard implements CanActivate {
     'skipIf' | 'ignoreUserAgents' | 'getTracker' | 'generateKey' | 'setHeaders'
   >;
   protected ipv6SubnetPrefix: number = DEFAULT_IPV6_SUBNET_PREFIX;
+  private readonly untrackedContextTypes = new Set<string>();
 
   constructor(
     @InjectThrottlerOptions() protected readonly options: ThrottlerModuleOptions,
@@ -191,6 +192,9 @@ export class ThrottlerGuard implements CanActivate {
       }
     }
     const tracker = await getTracker(req, context);
+    if (!tracker) {
+      this.warnUntrackedContext(context);
+    }
     const key = generateKey(context, tracker, throttler.name);
     const { totalHits, timeToExpire, isBlocked, timeToBlockExpire } =
       await this.storageService.increment(key, ttl, limit, blockDuration, throttler.name);
@@ -332,6 +336,23 @@ export class ThrottlerGuard implements CanActivate {
       );
     }
     return number;
+  }
+
+  /**
+   * Warn once per context type when no tracker could be determined.
+   *
+   * An empty tracker yields the same storage key for every request, so a single
+   * client can exhaust the limit for all of them without anything failing.
+   */
+  private warnUntrackedContext(context: ExecutionContext): void {
+    const type = context.getType();
+    if (this.untrackedContextTypes.has(type)) {
+      return;
+    }
+    this.untrackedContextTypes.add(type);
+    this.logger.warn(
+      `Could not determine a tracker in a "${type}" context, so all of its requests share one limit. Return a client identifier from getTracker() or skip this context with @SkipThrottle().`,
+    );
   }
 
   private async resolveValue<T extends number | string | boolean>(
