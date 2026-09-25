@@ -1,4 +1,4 @@
-import { ThrottlerStorageRecord } from './throttler-storage-record.interface';
+import { ThrottlerStorageRecord } from './throttler-storage-record.interface.js';
 
 export interface ThrottlerStorage {
   /**

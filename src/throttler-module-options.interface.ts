@@ -1,6 +1,6 @@
 import { ExecutionContext, ModuleMetadata, Type } from '@nestjs/common';
-import { ThrottlerStorage } from './throttler-storage.interface';
-import { ThrottlerLimitDetail } from './throttler.guard.interface';
+import { ThrottlerStorage } from './throttler-storage.interface.js';
+import { ThrottlerLimitDetail } from './throttler.guard.interface.js';
 
 export type Resolvable<T extends number | string | boolean> =
   T | ((context: ExecutionContext) => T | Promise<T>);

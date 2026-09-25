@@ -3,9 +3,9 @@ import {
   ThrottlerModuleOptions,
   ThrottlerAsyncOptions,
   ThrottlerOptionsFactory,
-} from './throttler-module-options.interface';
-import { THROTTLER_OPTIONS } from './throttler.constants';
-import { createThrottlerProviders, ThrottlerStorageProvider } from './throttler.providers';
+} from './throttler-module-options.interface.js';
+import { THROTTLER_OPTIONS } from './throttler.constants.js';
+import { createThrottlerProviders, ThrottlerStorageProvider } from './throttler.providers.js';
 
 /**
  * @publicApi
