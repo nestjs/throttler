@@ -250,9 +250,12 @@ export class ThrottlerGuard implements CanActivate {
    * allocation can otherwise send every request from a different address
    * within its own subnet and never share a counter, which defeats the limit
    * entirely. See {@link normalizeIp}.
+   *
+   * A plain Node.js request, such as the upgrade request behind a GraphQL
+   * subscription, has no `ip`, so the address of its socket is used instead.
    */
   protected async getTracker(req: Record<string, any>): Promise<string> {
-    return normalizeIp(req.ip, this.ipv6SubnetPrefix);
+    return normalizeIp(req?.ip ?? req?.socket?.remoteAddress, this.ipv6SubnetPrefix);
   }
 
   /**
@@ -260,13 +263,13 @@ export class ThrottlerGuard implements CanActivate {
    *
    * Express and Fastify expose `res.header()`, while a plain Node.js
    * `ServerResponse`, which custom adapters often hand through, only has
-   * `res.setHeader()`. A response offering neither is left untouched rather
-   * than failing the request.
+   * `res.setHeader()`. A missing response, as in a GraphQL subscription, or one
+   * offering neither is left untouched rather than failing the request.
    */
   protected setResponseHeader(res: Record<string, any>, name: string, value: string | number) {
-    if (typeof res.header === 'function') {
+    if (typeof res?.header === 'function') {
       res.header(name, value);
-    } else if (typeof res.setHeader === 'function') {
+    } else if (typeof res?.setHeader === 'function') {
       res.setHeader(name, value);
     }
   }
