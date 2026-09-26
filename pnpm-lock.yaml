@@ -188,8 +188,8 @@ importers:
         specifier: 12.0.4
         version: 12.0.4(@nestjs/common@12.0.4(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@5.5.0))(@nestjs/platform-express@12.0.4)(@nestjs/websockets@12.0.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)
       '@nestjs/graphql':
-        specifier: 14.0.1
-        version: 14.0.1(@nestjs/common@12.0.4(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@5.5.0))(@nestjs/core@12.0.4)(graphql@17.0.2)(reflect-metadata@0.2.2)
+        specifier: 14.0.2
+        version: 14.0.2(@nestjs/common@12.0.4(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@5.5.0))(@nestjs/core@12.0.4)(graphql@17.0.2)(reflect-metadata@0.2.2)(typescript@5.9.3)
       '@nestjs/platform-express':
         specifier: 12.0.4
         version: 12.0.4(@nestjs/common@12.0.4(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@5.5.0))(@nestjs/core@12.0.4)(supports-color@5.5.0)
@@ -953,8 +953,8 @@ packages:
       '@nestjs/websockets':
         optional: true
 
-  '@nestjs/graphql@14.0.1':
-    resolution: {integrity: sha512-KLh/J9qZuHKokcCpzE9x4VXshjXhUYgKd8SOfgflPgChGFIAzkHy23YWqm8vU9SrTLGYOPlorzWcyTUuQeWvKA==}
+  '@nestjs/graphql@14.0.2':
+    resolution: {integrity: sha512-9uEU36uey1loiltPlzdQ0LBI0TAD7xnbSsO+eVDkuz90jvWX6+vCkLt7HdxOGgtWBPBd+FgOJ+v0gZS1J06/8Q==}
     peerDependencies:
       '@apollo/subgraph': ^2.9.3
       '@nestjs/common': ^12.0.0
@@ -964,6 +964,7 @@ packages:
       graphql: ^16.11.0 || ^17.0.0
       reflect-metadata: ^0.1.13 || ^0.2.0
       ts-morph: ^20.0.0 || ^21.0.0 || ^24.0.0 || ^25.0.0 || ^26.0.0 || ^27.0.0 || ^28.0.0
+      typescript: ^5.5.0 || ^6.0.0
     peerDependenciesMeta:
       '@apollo/subgraph':
         optional: true
@@ -972,6 +973,8 @@ packages:
       class-validator:
         optional: true
       ts-morph:
+        optional: true
+      typescript:
         optional: true
 
   '@nestjs/mapped-types@12.0.0':
@@ -5416,7 +5419,7 @@ snapshots:
       '@nestjs/platform-express': 12.0.4(@nestjs/common@12.0.4(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@5.5.0))(@nestjs/core@12.0.4)(supports-color@5.5.0)
       '@nestjs/websockets': 12.0.4(@nestjs/common@12.0.4(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@5.5.0))(@nestjs/core@12.0.4)(@nestjs/platform-socket.io@12.0.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)
 
-  '@nestjs/graphql@14.0.1(@nestjs/common@12.0.4(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@5.5.0))(@nestjs/core@12.0.4)(graphql@17.0.2)(reflect-metadata@0.2.2)':
+  '@nestjs/graphql@14.0.2(@nestjs/common@12.0.4(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@5.5.0))(@nestjs/core@12.0.4)(graphql@17.0.2)(reflect-metadata@0.2.2)(typescript@5.9.3)':
     dependencies:
       '@graphql-tools/merge': 9.2.4(graphql@17.0.2)
       '@graphql-tools/schema': 10.1.1(graphql@17.0.2)
@@ -5434,6 +5437,8 @@ snapshots:
       tinyglobby: 0.2.17
       tslib: 2.8.1
       ws: 8.21.3
+    optionalDependencies:
+      typescript: 5.9.3
     transitivePeerDependencies:
       - '@fastify/websocket'
       - bufferutil
