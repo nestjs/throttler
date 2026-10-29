@@ -41,7 +41,7 @@ export interface ThrottlerOptions {
    * A factory method to determine if throttling should be skipped.
    * This can be based on the incoming context, or something like an env value.
    */
-  skipIf?: (context: ExecutionContext) => boolean;
+  skipIf?: ThrottlerSkipIfFunction;
   /**
    * A method to override the default tracker string.
    */
@@ -71,7 +71,7 @@ export type ThrottlerModuleOptions =
        * A factory method to determine if throttling should be skipped.
        * This can be based on the incoming context, or something like an env value.
        */
-      skipIf?: (context: ExecutionContext) => boolean;
+      skipIf?: ThrottlerSkipIfFunction;
       /**
        * A method to override the default tracker string.
        */
@@ -157,3 +157,8 @@ export type ThrottlerGenerateKeyFunction = (
   trackerString: string,
   throttlerName: string,
 ) => string;
+
+/**
+ * @publicApi
+ */
+export type ThrottlerSkipIfFunction = (context: ExecutionContext) => Promise<boolean> | boolean;
