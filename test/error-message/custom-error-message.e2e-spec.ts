@@ -5,7 +5,7 @@ import { ExpressAdapter } from '@nestjs/platform-express';
 import { FastifyAdapter } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { request, spec } from 'pactum';
-import { CustomErrorMessageThrottlerModule } from './app.module';
+import { CustomErrorMessageThrottlerModule } from './app.module.js';
 
 describe.each`
   adapter           | name

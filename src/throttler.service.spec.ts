@@ -1,8 +1,8 @@
 import { AsyncLocalStorage } from 'async_hooks';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Test } from '@nestjs/testing';
-import { ThrottlerStorage } from './throttler-storage.interface';
-import { ThrottlerStorageService } from './throttler.service';
+import { ThrottlerStorage } from './throttler-storage.interface.js';
+import { ThrottlerStorageService } from './throttler.service.js';
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 

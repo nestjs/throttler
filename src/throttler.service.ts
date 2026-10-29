@@ -1,8 +1,8 @@
 import { Injectable, OnApplicationShutdown } from '@nestjs/common';
 import { AsyncResource } from 'async_hooks';
-import { ThrottlerStorageOptions } from './throttler-storage-options.interface';
-import { ThrottlerStorageRecord } from './throttler-storage-record.interface';
-import { ThrottlerStorage } from './throttler-storage.interface';
+import { ThrottlerStorageOptions } from './throttler-storage-options.interface.js';
+import { ThrottlerStorageRecord } from './throttler-storage-record.interface.js';
+import { ThrottlerStorage } from './throttler-storage.interface.js';
 
 /**
  * How often, in milliseconds, idle records are swept out of the in-memory map.

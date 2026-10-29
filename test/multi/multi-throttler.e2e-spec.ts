@@ -6,7 +6,7 @@ import { FastifyAdapter } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { setTimeout } from 'node:timers/promises';
 import { request, spec } from 'pactum';
-import { MultiThrottlerAppModule } from './app.module';
+import { MultiThrottlerAppModule } from './app.module.js';
 
 const commonHeader = (prefix: string, name?: string) => `${prefix}${name ? '-' + name : ''}`;
 

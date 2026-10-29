@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
-import { seconds, ThrottlerGuard, ThrottlerModule } from '../../src';
-import { CustomErrorMessageController } from './custom-error-message.controller';
+import { seconds, ThrottlerGuard, ThrottlerModule } from '../../src/index.js';
+import { CustomErrorMessageController } from './custom-error-message.controller.js';
 
 @Module({
   imports: [

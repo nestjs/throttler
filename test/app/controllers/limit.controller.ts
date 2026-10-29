@@ -1,6 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
-import { Throttle, seconds } from '../../../src';
-import { AppService } from '../app.service';
+import { Throttle, seconds } from '../../../src/index.js';
+import { AppService } from '../app.service.js';
 
 @Throttle({ default: { limit: 2, ttl: seconds(10), blockDuration: seconds(5) } })
 @Controller('limit')

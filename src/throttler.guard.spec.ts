@@ -2,12 +2,12 @@ import { type Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vite
 import { ExecutionContext, Logger } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Test } from '@nestjs/testing';
-import { ThrottlerStorageOptions } from './throttler-storage-options.interface';
-import { ThrottlerStorageRecord } from './throttler-storage-record.interface';
-import { ThrottlerStorage } from './throttler-storage.interface';
-import { THROTTLER_OPTIONS } from './throttler.constants';
-import { ThrottlerException } from './throttler.exception';
-import { ThrottlerGuard } from './throttler.guard';
+import { ThrottlerStorageOptions } from './throttler-storage-options.interface.js';
+import { ThrottlerStorageRecord } from './throttler-storage-record.interface.js';
+import { ThrottlerStorage } from './throttler-storage.interface.js';
+import { THROTTLER_OPTIONS } from './throttler.constants.js';
+import { ThrottlerException } from './throttler.exception.js';
+import { ThrottlerGuard } from './throttler.guard.js';
 
 class ThrottlerStorageServiceMock implements ThrottlerStorage {
   private _storage: Map<string, ThrottlerStorageOptions> = new Map();

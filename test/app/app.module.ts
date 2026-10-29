@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
-import { ThrottlerGuard } from '../../src';
-import { ControllerModule } from './controllers/controller.module';
+import { ThrottlerGuard } from '../../src/index.js';
+import { ControllerModule } from './controllers/controller.module.js';
 
 @Module({
   imports: [ControllerModule],

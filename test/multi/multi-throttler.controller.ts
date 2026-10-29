@@ -1,5 +1,5 @@
 import { Controller, Get } from '@nestjs/common';
-import { SkipThrottle } from '../../src';
+import { SkipThrottle } from '../../src/index.js';
 
 @Controller()
 export class MultiThrottlerController {

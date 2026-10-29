@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { DEFAULT_IPV6_SUBNET_PREFIX, normalizeIp } from './ip';
+import { DEFAULT_IPV6_SUBNET_PREFIX, normalizeIp } from './ip.js';
 
 describe('normalizeIp', () => {
   it('leaves IPv4 addresses untouched', () => {

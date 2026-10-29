@@ -3,7 +3,7 @@ import {
   Resolvable,
   ThrottlerGenerateKeyFunction,
   ThrottlerGetTrackerFunction,
-} from './throttler-module-options.interface';
+} from './throttler-module-options.interface.js';
 import {
   THROTTLER_BLOCK_DURATION,
   THROTTLER_KEY_GENERATOR,
@@ -11,8 +11,8 @@ import {
   THROTTLER_SKIP,
   THROTTLER_TRACKER,
   THROTTLER_TTL,
-} from './throttler.constants';
-import { getOptionsToken, getStorageToken } from './throttler.providers';
+} from './throttler.constants.js';
+import { getOptionsToken, getStorageToken } from './throttler.providers.js';
 
 interface ThrottlerMethodOrControllerOptions {
   limit?: Resolvable<number>;

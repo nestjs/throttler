@@ -1,9 +1,9 @@
+import assert from 'node:assert';
 import { ExecutionContext, Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
-import { ThrottlerGuard, ThrottlerModule, seconds } from '../../src';
-import { FunctionOverridesThrottlerController } from './function-overrides-throttler.controller';
-import { md5 } from '../utility/hash';
-import assert = require('assert');
+import { ThrottlerGuard, ThrottlerModule, seconds } from '../../src/index.js';
+import { FunctionOverridesThrottlerController } from './function-overrides-throttler.controller.js';
+import { md5 } from '../utility/hash.js';
 
 @Module({
   imports: [
