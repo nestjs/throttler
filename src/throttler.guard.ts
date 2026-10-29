@@ -97,7 +97,7 @@ export class ThrottlerGuard implements CanActivate {
         classRef,
       ]);
       const skipIf = namedThrottler.skipIf || this.commonOptions.skipIf;
-      if (skip || skipIf?.(context)) {
+      if (skip || (skipIf && (await this.resolveValue(context, skipIf)))) {
         continues.push(true);
         continue;
       }

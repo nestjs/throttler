@@ -355,7 +355,7 @@ The following options are valid for the object passed to the array of the `Throt
   </tr>
   <tr>
     <td><code>skipIf</code></td>
-    <td>a function that takes in the <code>ExecutionContext</code> and returns a <code>boolean</code> to short circuit the throttler logic. Like <code>@SkipThrottler()</code>, but based on the request</td>
+    <td>a function that takes in the <code>ExecutionContext</code> and returns a <code>Promise&lt;boolean&gt; | boolean</code> to short circuit the throttler logic. Like <code>@SkipThrottler()</code>, but based on the request</td>
   </tr>
   <tr>
     <td><code>getTracker</code></td>
@@ -380,7 +380,7 @@ If you need to set up storages instead, or want to use a some of the above optio
   </tr>
   <tr>
     <td><code>skipIf</code></td>
-    <td>a function that takes in the <code>ExecutionContext</code> and returns a <code>boolean</code> to short circuit the throttler logic. Like <code>@SkipThrottler()</code>, but based on the request</td>
+    <td>a function that takes in the <code>ExecutionContext</code> and returns a <code>Promise&lt;boolean&gt; | boolean</code> to short circuit the throttler logic. Like <code>@SkipThrottler()</code>, but based on the request</td>
   </tr>
   <tr>
     <td><code>throttlers</code></td>

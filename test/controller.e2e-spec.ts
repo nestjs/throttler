@@ -221,4 +221,44 @@ describe('SkipIf suite', () => {
     }
     await app.close();
   });
+
+  it('should skip throttling if skipIf resolves true', async () => {
+    let skipCount = 0;
+    const moduleFixture: TestingModule = await Test.createTestingModule({
+      imports: [ControllerModule],
+      providers: [
+        {
+          provide: APP_GUARD,
+          useClass: ThrottlerGuard,
+        },
+      ],
+    })
+      .overrideProvider(THROTTLER_OPTIONS)
+      .useValue([
+        {
+          skipIf: async () => {
+            skipCount++;
+            return true;
+          },
+          limit: 5,
+        },
+      ])
+      .compile();
+
+    const app = moduleFixture.createNestApplication();
+    await app.listen(0);
+    const appUrl = await app.getUrl();
+    for (let i = 0; i < 15; i++) {
+      const response = await httPromise(appUrl + '/');
+      expect(response.status).toBe(200);
+      expect(response.data).toEqual({ success: true });
+      expect(response.headers).not.toMatchObject({
+        'x-ratelimit-limit': '5',
+        'x-ratelimit-remaining': '4',
+        'x-ratelimit-reset': /^\d+$/,
+      });
+    }
+    expect(skipCount).toBe(15);
+    await app.close();
+  });
 });
