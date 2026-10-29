@@ -375,6 +375,19 @@ describe('ThrottlerGuard', () => {
       });
       await expect(guard.canActivate(ctxMock)).resolves.toBe(true);
     });
+    it('should not fail when there is no response', async () => {
+      handler = function noResponse() {
+        return 'string';
+      };
+      const ctxMock = contextMockFactory('http', handler, {
+        getResponse: () => undefined,
+        getRequest: () => reqMock,
+      });
+      for (let i = 0; i < 5; i++) {
+        await expect(guard.canActivate(ctxMock)).resolves.toBe(true);
+      }
+      await expect(guard.canActivate(ctxMock)).rejects.toThrowError(ThrottlerException);
+    });
     it('should not add headers to the response when setHeaders is false', async () => {
       const modRef = await Test.createTestingModule({
         providers: [
@@ -526,6 +539,28 @@ describe('ThrottlerGuard', () => {
       await expect(getTracker({ ip: '2001:db8:0:1:dead:beef:1:2' })).resolves.toBe(
         '2001:db8:0:1::/64',
       );
+    });
+
+    it('falls back to the socket address when the request has no ip', async () => {
+      const getTracker = await makeGuard([{ limit: 5, ttl: 60 }]);
+      await expect(getTracker({ socket: { remoteAddress: '203.0.113.7' } })).resolves.toBe(
+        '203.0.113.7',
+      );
+      await expect(
+        getTracker({ socket: { remoteAddress: '2001:db8:0:1:dead:beef:1:2' } }),
+      ).resolves.toBe('2001:db8:0:1::/64');
+    });
+
+    it('prefers the request ip over the socket address', async () => {
+      const getTracker = await makeGuard([{ limit: 5, ttl: 60 }]);
+      await expect(
+        getTracker({ ip: '198.51.100.1', socket: { remoteAddress: '203.0.113.7' } }),
+      ).resolves.toBe('198.51.100.1');
+    });
+
+    it('resolves to nothing when there is no request', async () => {
+      const getTracker = await makeGuard([{ limit: 5, ttl: 60 }]);
+      await expect(getTracker(undefined)).resolves.toBeUndefined();
     });
   });
 
