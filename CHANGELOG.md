@@ -1,3 +1,13 @@
+## 6.8.0
+
+### Minor Changes
+
+- 2e075c6: Allow `skipIf` to return a promise, so the decision to skip throttling can depend on an asynchronous lookup such as a database or Redis call. Synchronous `skipIf` callbacks keep working unchanged.
+
+### Patch Changes
+
+- 35b1b84: Track NAT64 well-known prefix (`64:ff9b::a.b.c.d`) source addresses by their embedded IPv4 address. The default tracker used to mask them to a `/64` like any other IPv6 address, which merged every IPv4 client behind a NAT64 gateway into a single rate-limit bucket.
+
 ## 6.7.1
 
 ### Patch Changes
