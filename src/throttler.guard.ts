@@ -30,8 +30,8 @@ export class ThrottlerGuard implements CanActivate {
   protected headerPrefix = 'X-RateLimit';
   protected logger = new Logger(ThrottlerGuard.name);
   protected errorMessage = throttlerMessage;
-  protected throttlers: Array<ThrottlerOptions>;
-  protected commonOptions: Pick<
+  protected throttlers!: Array<ThrottlerOptions>;
+  protected commonOptions!: Pick<
     ThrottlerOptions,
     'skipIf' | 'ignoreUserAgents' | 'getTracker' | 'generateKey' | 'setHeaders'
   >;
@@ -131,12 +131,12 @@ export class ThrottlerGuard implements CanActivate {
       const limit = this.toNumber(
         await this.resolveValue(context, routeOrClassLimit ?? namedThrottler.limit),
         'limit',
-        namedThrottler.name,
+        namedThrottler.name!,
       );
       const ttl = this.toNumber(
         await this.resolveValue(context, routeOrClassTtl ?? namedThrottler.ttl),
         'ttl',
-        namedThrottler.name,
+        namedThrottler.name!,
       );
       const blockDuration = this.toNumber(
         await this.resolveValue(
@@ -144,7 +144,7 @@ export class ThrottlerGuard implements CanActivate {
           routeOrClassBlockDuration ?? namedThrottler.blockDuration ?? ttl,
         ),
         'blockDuration',
-        namedThrottler.name,
+        namedThrottler.name!,
       );
       const getTracker =
         routeOrClassGetTracker || namedThrottler.getTracker || this.commonOptions.getTracker;
@@ -191,11 +191,10 @@ export class ThrottlerGuard implements CanActivate {
       }
     }
     const tracker = await getTracker(req, context);
-    const key = generateKey(context, tracker, throttler.name);
+    const key = generateKey(context, tracker, throttler.name!);
     const { totalHits, timeToExpire, isBlocked, timeToBlockExpire } =
-      await this.storageService.increment(key, ttl, limit, blockDuration, throttler.name);
+      await this.storageService.increment(key, ttl, limit, blockDuration, throttler.name!);
 
-    const getThrottlerSuffix = (name: string) => (name === 'default' ? '' : `-${name}`);
     const setHeaders = throttler.setHeaders ?? this.commonOptions.setHeaders ?? true;
 
     // Throw an error when the user reached their limit.
@@ -203,7 +202,7 @@ export class ThrottlerGuard implements CanActivate {
       if (setHeaders) {
         this.setResponseHeader(
           res,
-          `Retry-After${getThrottlerSuffix(throttler.name)}`,
+          `Retry-After${this.getThrottlerSuffix(throttler.name)}`,
           timeToBlockExpire,
         );
       }
@@ -223,19 +222,19 @@ export class ThrottlerGuard implements CanActivate {
     if (setHeaders) {
       this.setResponseHeader(
         res,
-        `${this.headerPrefix}-Limit${getThrottlerSuffix(throttler.name)}`,
+        `${this.headerPrefix}-Limit${this.getThrottlerSuffix(throttler.name)}`,
         limit,
       );
       // We're about to add a record so we need to take that into account here.
       // Otherwise the header says we have a request left when there are none.
       this.setResponseHeader(
         res,
-        `${this.headerPrefix}-Remaining${getThrottlerSuffix(throttler.name)}`,
+        `${this.headerPrefix}-Remaining${this.getThrottlerSuffix(throttler.name)}`,
         Math.max(0, limit - totalHits),
       );
       this.setResponseHeader(
         res,
-        `${this.headerPrefix}-Reset${getThrottlerSuffix(throttler.name)}`,
+        `${this.headerPrefix}-Reset${this.getThrottlerSuffix(throttler.name)}`,
         timeToExpire,
       );
     }
@@ -339,5 +338,10 @@ export class ThrottlerGuard implements CanActivate {
     resolvableValue: Resolvable<T>,
   ): Promise<T> {
     return typeof resolvableValue === 'function' ? resolvableValue(context) : resolvableValue;
+  }
+
+  private getThrottlerSuffix(name: string | undefined) {
+    if (!name || name === 'default') return '';
+    return `-${name}`;
   }
 }
