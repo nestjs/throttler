@@ -558,4 +558,37 @@ describe('ThrottlerGuard', () => {
       warn.mockRestore();
     });
   });
+
+  describe('missing tracker', () => {
+    const untrackedContext = (request: Record<string, any>) =>
+      contextMockFactory(
+        'http',
+        function untracked() {
+          return 'string';
+        },
+        {
+          getResponse: () => ({ header: vi.fn() }),
+          getRequest: () => request,
+        },
+      );
+
+    it('warns once per context type when no tracker can be determined', async () => {
+      const warn = vi.spyOn(Logger.prototype, 'warn').mockImplementation(() => undefined);
+      const ctxMock = untrackedContext({ headers: {} });
+      await expect(guard.canActivate(ctxMock)).resolves.toBe(true);
+      await expect(guard.canActivate(ctxMock)).resolves.toBe(true);
+      expect(warn).toHaveBeenCalledTimes(1);
+      expect(warn).toHaveBeenCalledWith(
+        expect.stringContaining('Could not determine a tracker in a "http" context'),
+      );
+      warn.mockRestore();
+    });
+
+    it('does not warn when a tracker is determined', async () => {
+      const warn = vi.spyOn(Logger.prototype, 'warn').mockImplementation(() => undefined);
+      await guard.canActivate(untrackedContext({ headers: {}, ip: '127.0.0.1' }));
+      expect(warn).not.toHaveBeenCalled();
+      warn.mockRestore();
+    });
+  });
 });
