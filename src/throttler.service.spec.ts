@@ -172,6 +172,14 @@ describe('ThrottlerStorageService', () => {
       expect(result.totalHits).toBe(2);
     });
 
+    it('starts a key over once its record is removed from storage', async () => {
+      await service.increment('cleared', 10_000, 1, 0, 'test');
+      service.storage.clear();
+      const result = await service.increment('cleared', 10_000, 1, 0, 'test');
+      expect(result.totalHits).toBe(1);
+      expect(result.isBlocked).toBe(false);
+    });
+
     it('does not evict a record while it is still blocked', async () => {
       const ttl = 50;
       const blockDuration = 1000;
@@ -182,6 +190,46 @@ describe('ThrottlerStorageService', () => {
       await sleep(ttl * 2);
       sweep();
       expect(service.storage.has('blocked')).toBe(true);
+    });
+  });
+
+  describe('throttlers sharing a key', () => {
+    it('counts each throttler from zero', async () => {
+      await service.increment('shared', 1000, 5, 0, 'short');
+      const first = await service.increment('shared', 1000, 1, 0, 'long');
+      const second = await service.increment('shared', 1000, 1, 0, 'long');
+      expect(first.totalHits).toBe(1);
+      expect(second.isBlocked).toBe(true);
+    });
+
+    it('does not block a throttler when another one blocks', async () => {
+      await service.increment('shared', 60_000, 100, 1000, 'long');
+      await service.increment('shared', 1000, 1, 1000, 'short');
+      const blocked = await service.increment('shared', 1000, 1, 1000, 'short');
+      expect(blocked.isBlocked).toBe(true);
+
+      const result = await service.increment('shared', 60_000, 100, 1000, 'long');
+      expect(result.isBlocked).toBe(false);
+      expect(result.totalHits).toBe(2);
+    });
+
+    it("keeps a throttler's hits when another one's block ends", async () => {
+      const blockDuration = 50;
+      for (let i = 0; i < 5; i++) {
+        await service.increment('shared', 60_000, 100, blockDuration, 'long');
+      }
+      await service.increment('shared', 1000, 1, blockDuration, 'short');
+      await service.increment('shared', 1000, 1, blockDuration, 'short');
+      await sleep(blockDuration * 2);
+
+      const result = await service.increment('shared', 60_000, 100, blockDuration, 'long');
+      expect(result.totalHits).toBe(6);
+    });
+
+    it("reports each throttler's own window", async () => {
+      await service.increment('shared', 1000, 5, 0, 'short');
+      const result = await service.increment('shared', 60_000, 5, 0, 'long');
+      expect(result.timeToExpire).toBe(60);
     });
   });
 });
