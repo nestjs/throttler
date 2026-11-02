@@ -8,6 +8,7 @@ import { ThrottlerStorage } from './throttler-storage.interface';
 import { THROTTLER_OPTIONS } from './throttler.constants';
 import { ThrottlerException } from './throttler.exception';
 import { ThrottlerGuard } from './throttler.guard';
+import { ThrottlerStorageService } from './throttler.service';
 
 class ThrottlerStorageServiceMock implements ThrottlerStorage {
   private _storage: Map<string, ThrottlerStorageOptions> = new Map();
@@ -556,6 +557,29 @@ describe('ThrottlerGuard', () => {
       await guard.onModuleInit();
       expect(warn).not.toHaveBeenCalled();
       warn.mockRestore();
+    });
+  });
+
+  describe('ignoreUserAgents with a stateful regular expression', () => {
+    it.each([[/bot/g], [/bot/y]])('should ignore every request matching %s', async (pattern) => {
+      const guard = new ThrottlerGuard(
+        { throttlers: [{ limit: 1, ttl: 60000 }], ignoreUserAgents: [pattern] },
+        new ThrottlerStorageService(),
+        new Reflector(),
+      );
+      await guard.onModuleInit();
+      const context = {
+        getClass: () => class Controller {},
+        getHandler: () => function handler() {},
+        switchToHttp: () => ({
+          getRequest: () => ({ ip: '127.0.0.1', headers: { 'user-agent': 'bot' } }),
+          getResponse: () => ({ header: vi.fn() }),
+        }),
+      } as unknown as ExecutionContext;
+
+      for (let request = 0; request < 4; request++) {
+        await expect(guard.canActivate(context)).resolves.toBe(true);
+      }
     });
   });
 });
