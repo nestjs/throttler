@@ -184,4 +184,29 @@ describe('ThrottlerStorageService', () => {
       expect(service.storage.has('blocked')).toBe(true);
     });
   });
+
+  describe('with a limit of zero and a block duration', () => {
+    it('keeps rejecting requests after a block has elapsed', async () => {
+      const first = await service.increment('closed', 50, 0, 50, 'test');
+      expect(first.isBlocked).toBe(true);
+
+      await sleep(80);
+
+      const afterBlock = await service.increment('closed', 50, 0, 50, 'test');
+      expect(afterBlock.isBlocked).toBe(true);
+      expect(afterBlock.timeToBlockExpire).toBeGreaterThan(0);
+    });
+  });
+
+  it('lets a request through once a block has elapsed when the limit allows it', async () => {
+    await service.increment('open', 50, 1, 50, 'test');
+    const blocked = await service.increment('open', 50, 1, 50, 'test');
+    expect(blocked.isBlocked).toBe(true);
+
+    await sleep(80);
+
+    const afterBlock = await service.increment('open', 50, 1, 50, 'test');
+    expect(afterBlock.isBlocked).toBe(false);
+    expect(afterBlock.totalHits).toBe(1);
+  });
 });
