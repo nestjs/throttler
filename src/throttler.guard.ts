@@ -82,6 +82,10 @@ export class ThrottlerGuard implements CanActivate {
    * @throws {ThrottlerException}
    */
   async canActivate(context: ExecutionContext): Promise<boolean> {
+    // Nest does not call `onModuleInit()` on request-scoped instances.
+    if (!this.throttlers) {
+      await this.onModuleInit();
+    }
     const handler = context.getHandler();
     const classRef = context.getClass();
 
