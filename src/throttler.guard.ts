@@ -189,6 +189,9 @@ export class ThrottlerGuard implements CanActivate {
     // Return early if the current user agent should be ignored.
     if (Array.isArray(ignoreUserAgents)) {
       for (const pattern of ignoreUserAgents) {
+        // A global or sticky pattern keeps its position between `test()` calls,
+        // which would make it miss every other matching request.
+        pattern.lastIndex = 0;
         if (pattern.test(req.headers['user-agent'])) {
           return true;
         }
