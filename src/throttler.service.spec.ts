@@ -172,6 +172,14 @@ describe('ThrottlerStorageService', () => {
       expect(result.totalHits).toBe(2);
     });
 
+    it('starts a key over once its record is removed from storage', async () => {
+      await service.increment('cleared', 10_000, 1, 0, 'test');
+      service.storage.clear();
+      const result = await service.increment('cleared', 10_000, 1, 0, 'test');
+      expect(result.totalHits).toBe(1);
+      expect(result.isBlocked).toBe(false);
+    });
+
     it('does not evict a record while it is still blocked', async () => {
       const ttl = 50;
       const blockDuration = 1000;
