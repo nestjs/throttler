@@ -221,6 +221,12 @@ export class ThrottlerStorageService implements ThrottlerStorage, OnApplicationS
       return this.incrementWithoutBlock(key, ttlMilliseconds, limit, throttlerName, timeToExpire);
     }
 
+    // Lift an elapsed block first, so the hit below is checked against the limit
+    // like any other: with `limit: 0` it starts the next block straight away.
+    if (this.storage.get(key).isBlocked && this.getBlockExpirationTime(key) <= 0) {
+      this.resetBlockedRequest(key, throttlerName);
+    }
+
     if (!this.storage.get(key).isBlocked) {
       this.fireHitCount(key, throttlerName, ttlMilliseconds);
     }
@@ -235,12 +241,6 @@ export class ThrottlerStorageService implements ThrottlerStorage, OnApplicationS
     }
 
     const timeToBlockExpire = this.getBlockExpirationTime(key);
-
-    // Reset time blocked request
-    if (timeToBlockExpire <= 0 && this.storage.get(key).isBlocked) {
-      this.resetBlockedRequest(key, throttlerName);
-      this.fireHitCount(key, throttlerName, ttlMilliseconds);
-    }
 
     return {
       totalHits: this.storage.get(key).totalHits.get(throttlerName),
