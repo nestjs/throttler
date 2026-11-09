@@ -79,6 +79,23 @@ describe('ThrottlerStorageService', () => {
       expect(result.timeToBlockExpire).toBe(1);
     });
 
+    it('handles a window holding more hits than fit in a call stack', async () => {
+      const ttl = 60_000;
+      const limit = 1_000_000;
+      await service.increment('busy-key', ttl, limit, 0, 'test');
+      // Filling the window through `increment()` would take minutes.
+      const pendingHits = new Array(500_000).fill(Date.now() + ttl);
+      (service as any).hitExpirations.get('busy-key').set('test', pendingHits);
+
+      const result = await service.increment('busy-key', ttl, limit, 0, 'test');
+      expect(result.isBlocked).toBe(false);
+      expect(result.totalHits).toBe(500_001);
+
+      const rejected = await service.increment('busy-key', ttl, 500_001, 0, 'test');
+      expect(rejected.isBlocked).toBe(true);
+      expect(rejected.timeToBlockExpire).toBe(60);
+    });
+
     it('lets requests through again once the earlier hits expire', async () => {
       const ttl = 100;
       await service.increment('no-block', ttl, 2, 0, 'test');

@@ -174,8 +174,11 @@ export class ThrottlerStorageService implements ThrottlerStorage, OnApplicationS
     }
     const hits = this.getHitExpirations(key, throttlerName);
     // With `limit: 0` there is no hit to wait for, only the window itself.
+    // Not `Math.min(...hits)`: spreading a large window overflows the call stack.
     const timeToBlockExpire = hits.length
-      ? Math.ceil((Math.min(...hits) - Date.now()) / 1000)
+      ? Math.ceil(
+          (hits.reduce((oldest, expiresAt) => Math.min(oldest, expiresAt)) - Date.now()) / 1000,
+        )
       : timeToExpire;
     return {
       // Count the rejected request too, so a blocked result reports `totalHits > limit`.
