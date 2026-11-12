@@ -98,6 +98,41 @@ describe('normalizeIp', () => {
     expect(normalizeIp(undefined as unknown as string)).toBeUndefined();
   });
 
+  it('masks inside a group when the prefix is not a multiple of 16', () => {
+    expect(normalizeIp('2001:db8:0:12ff::1', 56)).toBe('2001:db8:0:1200::/56');
+    expect(normalizeIp('2001:db8:0:12ff::1', 52)).toBe('2001:db8:0:1000::/52');
+  });
+
+  it('maps every address in a /56 onto one bucket', () => {
+    const rotated = ['2001:db8:0:1200::1', '2001:db8:0:1234::1', '2001:db8:0:12ff:ffff::1'].map(
+      (ip) => normalizeIp(ip, 56),
+    );
+    expect(new Set(rotated).size).toBe(1);
+    expect(normalizeIp('2001:db8:0:1300::1', 56)).not.toBe(rotated[0]);
+  });
+
+  it('does not treat half of the NAT64 prefix as NAT64', () => {
+    expect(normalizeIp('64::1.2.3.4')).toBe('64::/64');
+    expect(normalizeIp('0:ff9b::1.2.3.4')).toBe('0:ff9b::/64');
+    expect(normalizeIp('64:ff9b::1:102:304')).toBe('64:ff9b::/64');
+  });
+
+  it('only collapses ::ffff: when every group before it is zero', () => {
+    expect(normalizeIp('0:1::ffff:1.2.3.4')).toBe('0:1::/64');
+    expect(normalizeIp('::1:0:ffff:1.2.3.4')).toBe('0:0:0:1::/64');
+  });
+
+  it('strips a zone index that contains a dot', () => {
+    expect(normalizeIp('fe80::1%eth0.100')).toBe('fe80::/64');
+  });
+
+  it('compresses zero groups the way RFC 5952 asks', () => {
+    expect(normalizeIp('2001:db8:0:0:1:1:1:1', 128)).toBe('2001:db8::1:1:1:1/128');
+    expect(normalizeIp('2001:db8:0:1:1:1:1:1', 128)).toBe('2001:db8:0:1:1:1:1:1/128');
+    expect(normalizeIp('2001:0:0:1:0:0:1:1', 128)).toBe('2001::1:0:0:1:1/128');
+    expect(normalizeIp('0:0:0:1:1:1:1:1', 128)).toBe('::1:1:1:1:1/128');
+  });
+
   it('defaults to a /64', () => {
     expect(DEFAULT_IPV6_SUBNET_PREFIX).toBe(64);
   });
