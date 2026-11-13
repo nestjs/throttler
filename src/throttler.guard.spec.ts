@@ -560,6 +560,28 @@ describe('ThrottlerGuard', () => {
     });
   });
 
+  describe('throttler order', () => {
+    it('sorts throttlers with a static ttl by ttl and puts callback ttls last', async () => {
+      const guard = new ThrottlerGuard(
+        {
+          throttlers: [
+            { name: 'medium', limit: 5, ttl: 10000 },
+            { name: 'dynamic', limit: 5, ttl: () => 5000 },
+            { name: 'short', limit: 1, ttl: 1000 },
+          ],
+        },
+        new ThrottlerStorageService(),
+        new Reflector(),
+      );
+      await guard.onModuleInit();
+      expect(guard['throttlers'].map((throttler) => throttler.name)).toEqual([
+        'short',
+        'medium',
+        'dynamic',
+      ]);
+    });
+  });
+
   describe('ignoreUserAgents with a stateful regular expression', () => {
     it.each([[/bot/g], [/bot/y]])('should ignore every request matching %s', async (pattern) => {
       const guard = new ThrottlerGuard(
