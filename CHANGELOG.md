@@ -1,3 +1,18 @@
+## 6.8.0
+
+### Minor Changes
+
+- 2e075c6: Allow `skipIf` to return a promise, so the decision to skip throttling can depend on an asynchronous lookup such as a database or Redis call. Synchronous `skipIf` callbacks keep working unchanged.
+
+### Patch Changes
+
+- 23b32ee: Stop throwing `RangeError: Maximum call stack size exceeded` with `blockDuration: 0` once a window holds more than about 125,000 hits. Every request on that key failed with a 500 instead of being counted, even below the limit.
+- 22e9340: Keep rejecting requests with `limit: 0` after a block has elapsed. One request got through at the end of every block, because the first hit after a block was not checked against the limit.
+- 35b1b84: Track NAT64 well-known prefix (`64:ff9b::a.b.c.d`) source addresses by their embedded IPv4 address. The default tracker used to mask them to a `/64` like any other IPv6 address, which merged every IPv4 client behind a NAT64 gateway into a single rate-limit bucket.
+- edbfd85: Support request-scoped guards. Nest does not call `onModuleInit()` on these instances, so a guard that is request-scoped, or depends on a request-scoped provider, failed every request with `this.throttlers is not iterable`.
+- bd78317: Sort throttlers by `ttl` when one of them uses a callback `ttl`. The comparator was not consistent, so a throttler with a callback `ttl` could stay ahead of the others and the static ones were left unsorted. A request rejected by a short throttler was then still counted against a longer one, which could block the client for the whole longer window.
+- 4cfda86: Match every request against `ignoreUserAgents` patterns that use the `g` or `y` flag. These patterns keep their position between checks, so every other matching request was counted against the limit.
+
 ## 6.7.1
 
 ### Patch Changes
