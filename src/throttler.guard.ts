@@ -47,10 +47,10 @@ export class ThrottlerGuard implements CanActivate {
     this.throttlers = (Array.isArray(this.options) ? this.options : this.options.throttlers)
       .sort((first, second) => {
         if (typeof first.ttl === 'function') {
-          return 1;
+          return typeof second.ttl === 'function' ? 0 : 1;
         }
         if (typeof second.ttl === 'function') {
-          return 0;
+          return -1;
         }
         return first.ttl - second.ttl;
       })
