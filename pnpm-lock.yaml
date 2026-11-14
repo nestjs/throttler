@@ -180,7 +180,7 @@ importers:
         version: 21.2.2
       '@nestjs/cli':
         specifier: 12.0.3
-        version: 12.0.3(@types/node@24.13.6)(fork-ts-checker-webpack-plugin@9.1.0(typescript@5.9.3)(webpack@5.106.2(lightningcss@1.33.0)(postcss@8.5.28)(uglify-js@3.19.3)))(prettier@3.9.8)(ts-loader@9.6.2(typescript@5.9.3)(webpack@5.106.2(lightningcss@1.33.0)(postcss@8.5.28)(uglify-js@3.19.3)))(tsconfig-paths-webpack-plugin@4.2.0)(webpack-node-externals@3.0.0)(webpack@5.106.2(lightningcss@1.33.0)(postcss@8.5.28)(uglify-js@3.19.3))
+        version: 12.0.3(@types/node@24.13.6)(fork-ts-checker-webpack-plugin@9.1.0(typescript@5.9.3)(webpack@5.106.2(lightningcss@1.33.0)(postcss@8.5.28)(uglify-js@3.19.3)))(prettier@3.10.0)(ts-loader@9.6.2(typescript@5.9.3)(webpack@5.106.2(lightningcss@1.33.0)(postcss@8.5.28)(uglify-js@3.19.3)))(tsconfig-paths-webpack-plugin@4.2.0)(webpack-node-externals@3.0.0)(webpack@5.106.2(lightningcss@1.33.0)(postcss@8.5.28)(uglify-js@3.19.3))
       '@nestjs/common':
         specifier: 12.0.4
         version: 12.0.4(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@5.5.0)
@@ -204,7 +204,7 @@ importers:
         version: 12.0.4(@nestjs/common@12.0.4(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@5.5.0))(@nestjs/websockets@12.0.4)(rxjs@7.8.2)
       '@nestjs/schematics':
         specifier: 12.0.4
-        version: 12.0.4(chokidar@5.0.0)(prettier@3.9.8)(typescript@5.9.3)
+        version: 12.0.4(chokidar@5.0.0)(prettier@3.10.0)(typescript@5.9.3)
       '@nestjs/testing':
         specifier: 12.0.4
         version: 12.0.4(@nestjs/common@12.0.4(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@5.5.0))(@nestjs/core@12.0.4)(@nestjs/platform-express@12.0.4)
@@ -260,8 +260,8 @@ importers:
         specifier: 3.0.0
         version: 3.0.0
       prettier:
-        specifier: 3.9.8
-        version: 3.9.8
+        specifier: 3.10.0
+        version: 3.10.0
       reflect-metadata:
         specifier: 0.2.2
         version: 0.2.2
@@ -3348,6 +3348,7 @@ packages:
 
   node-abort-controller@3.1.1:
     resolution: {integrity: sha512-AGK2yQKIjRuqnc6VkX2Xj5d+QW8xZ87pa1UK6yA6ouUyuxfHuMP6umE5QK7UmTeOAymo+Zx1Fxiuw9rVx8taHQ==}
+    deprecated: This package is no longer needed on supported Node.js versions. Node.js 16+ includes AbortController and AbortSignal as built-in globals. All Node.js versions requiring this polyfill are end-of-life. Use the built-in globals instead.
 
   node-emoji@2.2.0:
     resolution: {integrity: sha512-Z3lTE9pLaJF47NyMhd4ww1yFTAP8YhYI8SleJiHzM46Fgpm5cnNzSl9XfzFNqbaz+VlJrIj3fXQ4DeN1Rjm6cw==}
@@ -3695,8 +3696,8 @@ packages:
     resolution: {integrity: sha512-RRuzqDtt5Y9h3quz5hWhK+TPnsmVs6WwSU6LkJMeY4HstUEDuYTG8UJSdawMRzmzAtV+KEoG8N3Qg2qLy5vM/A==}
     engines: {node: ^10 || ^12 || >=14}
 
-  prettier@3.9.8:
-    resolution: {integrity: sha512-WRFq3Wn3WId7LLROfMLdH7xaFr2jR62wU8nLO6rQUOLOxNZUviyJQs1M0iIhLexSFy+L+w0ch66wtoO2jRjG0A==}
+  prettier@3.10.0:
+    resolution: {integrity: sha512-mBi4765LgjO1PFjlEs7pUeK0nb1bw71c+N4/ItfeUWNdY5cV2pRKaFpbbFRYmDJMO+5ZwzGxHRqHxFZna7iv5w==}
     engines: {node: '>=14'}
     hasBin: true
 
@@ -5363,13 +5364,13 @@ snapshots:
       tinyglobby: 0.2.17
       yaml: 2.9.1
 
-  '@nestjs/cli@12.0.3(@types/node@24.13.6)(fork-ts-checker-webpack-plugin@9.1.0(typescript@5.9.3)(webpack@5.106.2(lightningcss@1.33.0)(postcss@8.5.28)(uglify-js@3.19.3)))(prettier@3.9.8)(ts-loader@9.6.2(typescript@5.9.3)(webpack@5.106.2(lightningcss@1.33.0)(postcss@8.5.28)(uglify-js@3.19.3)))(tsconfig-paths-webpack-plugin@4.2.0)(webpack-node-externals@3.0.0)(webpack@5.106.2(lightningcss@1.33.0)(postcss@8.5.28)(uglify-js@3.19.3))':
+  '@nestjs/cli@12.0.3(@types/node@24.13.6)(fork-ts-checker-webpack-plugin@9.1.0(typescript@5.9.3)(webpack@5.106.2(lightningcss@1.33.0)(postcss@8.5.28)(uglify-js@3.19.3)))(prettier@3.10.0)(ts-loader@9.6.2(typescript@5.9.3)(webpack@5.106.2(lightningcss@1.33.0)(postcss@8.5.28)(uglify-js@3.19.3)))(tsconfig-paths-webpack-plugin@4.2.0)(webpack-node-externals@3.0.0)(webpack@5.106.2(lightningcss@1.33.0)(postcss@8.5.28)(uglify-js@3.19.3))':
     dependencies:
       '@angular-devkit/core': 22.1.8(chokidar@5.0.0)
       '@angular-devkit/schematics': 22.1.8(chokidar@5.0.0)
       '@angular-devkit/schematics-cli': 22.1.8(@types/node@24.13.6)(chokidar@5.0.0)
       '@inquirer/prompts': 8.7.2(@types/node@24.13.6)
-      '@nestjs/schematics': 12.0.4(chokidar@5.0.0)(prettier@3.9.8)(typescript@6.0.3)
+      '@nestjs/schematics': 12.0.4(chokidar@5.0.0)(prettier@3.10.0)(typescript@6.0.3)
       ansis: 4.4.0
       chokidar: 5.0.0
       cli-table3: 0.6.5
@@ -5494,7 +5495,7 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
-  '@nestjs/schematics@12.0.4(chokidar@5.0.0)(prettier@3.9.8)(typescript@5.9.3)':
+  '@nestjs/schematics@12.0.4(chokidar@5.0.0)(prettier@3.10.0)(typescript@5.9.3)':
     dependencies:
       '@angular-devkit/core': 22.1.8(chokidar@5.0.0)
       '@angular-devkit/schematics': 22.1.8(chokidar@5.0.0)
@@ -5503,11 +5504,11 @@ snapshots:
       pluralize: 8.0.0
       typescript: 5.9.3
     optionalDependencies:
-      prettier: 3.9.8
+      prettier: 3.10.0
     transitivePeerDependencies:
       - chokidar
 
-  '@nestjs/schematics@12.0.4(chokidar@5.0.0)(prettier@3.9.8)(typescript@6.0.3)':
+  '@nestjs/schematics@12.0.4(chokidar@5.0.0)(prettier@3.10.0)(typescript@6.0.3)':
     dependencies:
       '@angular-devkit/core': 22.1.8(chokidar@5.0.0)
       '@angular-devkit/schematics': 22.1.8(chokidar@5.0.0)
@@ -5516,7 +5517,7 @@ snapshots:
       pluralize: 8.0.0
       typescript: 6.0.3
     optionalDependencies:
-      prettier: 3.9.8
+      prettier: 3.10.0
     transitivePeerDependencies:
       - chokidar
 
@@ -8080,7 +8081,7 @@ snapshots:
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
-  prettier@3.9.8: {}
+  prettier@3.10.0: {}
 
   pretty-ms@9.3.1:
     dependencies:
