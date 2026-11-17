@@ -277,17 +277,34 @@ export class WsThrottlerGuard extends ThrottlerGuard {
 
     return true;
   }
+
+  protected async throwThrottlingException(
+    context: ExecutionContext,
+    throttlerLimitDetail: ThrottlerLimitDetail,
+  ): Promise<void> {
+    throw new WsException(await this.getErrorMessage(context, throttlerLimitDetail));
+  }
 }
 ```
 
-> **Hint:** If you are using ws, it is necessary to replace the `_socket` with `conn`.
+> **Hint:** `client._socket` exists on `@nestjs/platform-ws` clients. With `@nestjs/platform-socket.io`, read the address from `client.handshake.address` instead.
 
 There's a few things to keep in mind when working with WebSockets:
 
-- Guard cannot be registered with the `APP_GUARD` or `app.useGlobalGuards()`
-- When a limit is reached, Nest will emit an `exception` event, so make sure there is a listener ready for this
+- Bind this guard to the gateway with `@UseGuards()`. It cannot be registered with the `APP_GUARD` or `app.useGlobalGuards()`, because it only handles WebSocket contexts.
+- When a limit is reached, Nest will emit an `exception` event with the error message, so make sure there is a listener ready for this. Without the `WsException` above, the message is `Internal server error`.
+- A `ThrottlerGuard` registered with `APP_GUARD` also runs for gateway messages, where it cannot tell clients apart, so all of them would share one limit. Skip the WebSocket context in it:
 
-> **Hint:** If you are using the `@nestjs/platform-ws` package you can use `client._socket.remoteAddress` instead.
+```typescript
+@Injectable()
+export class AppThrottlerGuard extends ThrottlerGuard {
+  protected async shouldSkip(context: ExecutionContext): Promise<boolean> {
+    return context.getType() === 'ws';
+  }
+}
+```
+
+- Behind a reverse proxy, the socket address is the proxy's, so all clients would share one limit. Read the client address from the `X-Forwarded-For` header your proxy sets, and only trust it when the connection comes from that proxy.
 
 ### GraphQL
 
@@ -304,29 +321,28 @@ export class GqlThrottlerGuard extends ThrottlerGuard {
 }
 ```
 
-However, when using Apollo Express/Fastify or Mercurius, it's important to configure the context correctly in the GraphQLModule to avoid any problems.
+The guard reads `req` and `res` from the GraphQL context. Nest adds `req` to it but not `res`, so map both in the `context` option of the `GraphQLModule`. Without `res` the limit still applies, but no rate limit headers are sent.
 
-#### Apollo Server (for Express):
+| Driver                       | `context` option                                              |
+| ---------------------------- | ------------------------------------------------------------- |
+| Apollo on Express            | `context: ({ req, res }) => ({ req, res })`                   |
+| Apollo on Fastify, Mercurius | `context: (request, reply) => ({ req: request, res: reply })` |
 
-For Apollo Server running on Express, you can set up the context in your GraphQLModule configuration as follows:
+#### Subscriptions
 
-```typescript
-GraphQLModule.forRoot({
-  // ... other GraphQL module options
-  context: ({ req, res }) => ({ req, res }),
-});
-```
+The guard runs when a subscription starts, not for each event it delivers, so the limit counts the subscriptions of a client.
 
-#### Apollo Server (for Fastify) & Mercurius:
+The request of a subscription is the WebSocket upgrade request, which is not in the GraphQL context by default, and there is no response. Map the request as well, or all subscribers share one limit:
 
-When using Apollo Server with Fastify or Mercurius, you need to configure the context differently. You should use request and reply objects. Here's an example:
+| Driver            | Options                                                                                      |
+| ----------------- | -------------------------------------------------------------------------------------------- |
+| Apollo on Express | `context: ({ req, res, extra }) => ({ req: req ?? extra.request, res })`                     |
+| Apollo on Fastify | `context: (request, reply) => ({ req: request.extra?.request ?? request, res: reply })`      |
+| Mercurius         | `subscription: { context: (_, request) => ({ req: request }) }`, next to the `context` above |
 
-```typescript
-GraphQLModule.forRoot({
-  // ... other GraphQL module options
-  context: (request, reply) => ({ request, reply }),
-});
-```
+The upgrade request bypasses the HTTP adapter, so its `trust proxy` setting does not apply. Behind a reverse proxy, override `getTracker()` to read the client address from `req.headers['x-forwarded-for']`, and only trust it when the connection comes from your proxy.
+
+To leave subscriptions unlimited, add `@SkipThrottle()` to the subscription resolver.
 
 ### Configuration
 
