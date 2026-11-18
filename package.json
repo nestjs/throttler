@@ -71,7 +71,7 @@
     "@vitest/coverage-v8": "5.0.1",
     "conventional-changelog-cli": "5.0.0",
     "cz-conventional-changelog": "3.3.0",
-    "graphql": "17.0.2",
+    "graphql": "17.1.0",
     "graphql-tools": "9.0.39",
     "husky": "9.1.7",
     "lint-staged": "17.5.1",
