@@ -113,10 +113,20 @@ export class ThrottlerStorageService implements ThrottlerStorage, OnApplicationS
 
   /**
    * Drop the expired hits of a throttler and sync its `totalHits` count.
+   *
+   * Hits are kept oldest first, so the expired ones are at the start and the
+   * rest of the window doesn't have to be scanned on every request.
    */
   private pruneExpiredHits(key: string, throttlerName: string, now = Date.now()): void {
-    const hits = this.getHitExpirations(key, throttlerName).filter((expiresAt) => expiresAt > now);
-    this.hitExpirations.get(key).set(throttlerName, hits);
+    const hits = this.getHitExpirations(key, throttlerName);
+    let expired = 0;
+    while (expired < hits.length && hits[expired] <= now) {
+      expired++;
+    }
+    // One splice: shifting the hits out one by one copies a large array each time.
+    if (expired > 0) {
+      hits.splice(0, expired);
+    }
     this.storage.get(key).totalHits.set(throttlerName, hits.length);
   }
 
@@ -145,11 +155,24 @@ export class ThrottlerStorageService implements ThrottlerStorage, OnApplicationS
 
   /**
    * Increase the `totalHit` count and record when the hit expires.
+   *
+   * The ttl can differ between calls for the same key (e.g. a ttl resolved per
+   * request), so a hit expiring before earlier ones is inserted in order.
    */
   private fireHitCount(key: string, throttlerName: string, ttl: number) {
     const { totalHits } = this.storage.get(key);
     totalHits.set(throttlerName, totalHits.get(throttlerName) + 1);
-    this.getHitExpirations(key, throttlerName).push(Date.now() + ttl);
+    const hits = this.getHitExpirations(key, throttlerName);
+    const expiresAt = Date.now() + ttl;
+    let index = hits.length;
+    while (index > 0 && hits[index - 1] > expiresAt) {
+      index--;
+    }
+    if (index === hits.length) {
+      hits.push(expiresAt);
+    } else {
+      hits.splice(index, 0, expiresAt);
+    }
   }
 
   /**
@@ -174,12 +197,7 @@ export class ThrottlerStorageService implements ThrottlerStorage, OnApplicationS
     }
     const hits = this.getHitExpirations(key, throttlerName);
     // With `limit: 0` there is no hit to wait for, only the window itself.
-    // Not `Math.min(...hits)`: spreading a large window overflows the call stack.
-    const timeToBlockExpire = hits.length
-      ? Math.ceil(
-          (hits.reduce((oldest, expiresAt) => Math.min(oldest, expiresAt)) - Date.now()) / 1000,
-        )
-      : timeToExpire;
+    const timeToBlockExpire = hits.length ? Math.ceil((hits[0] - Date.now()) / 1000) : timeToExpire;
     return {
       // Count the rejected request too, so a blocked result reports `totalHits > limit`.
       totalHits: totalHits.get(throttlerName) + (isBlocked ? 1 : 0),
