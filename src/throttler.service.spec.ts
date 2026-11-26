@@ -73,6 +73,23 @@ describe('ThrottlerStorageService', () => {
       expect(result.timeToBlockExpire).toBe(9);
     });
 
+    it('expires a hit with a shorter ttl before the earlier hits', async () => {
+      await service.increment('mixed-ttl', 10_000, 2, 0, 'test');
+      await service.increment('mixed-ttl', 50, 2, 0, 'test');
+      await sleep(80);
+      const result = await service.increment('mixed-ttl', 10_000, 2, 0, 'test');
+      expect(result.isBlocked).toBe(false);
+      expect(result.totalHits).toBe(2);
+    });
+
+    it('reports the hit expiring first as the time to wait when ttls differ', async () => {
+      await service.increment('mixed-ttl', 10_000, 2, 0, 'test');
+      await service.increment('mixed-ttl', 2_000, 2, 0, 'test');
+      const result = await service.increment('mixed-ttl', 10_000, 2, 0, 'test');
+      expect(result.isBlocked).toBe(true);
+      expect(result.timeToBlockExpire).toBe(2);
+    });
+
     it('blocks every request for a limit of zero', async () => {
       const result = await service.increment('zero', 1000, 0, 0, 'test');
       expect(result.isBlocked).toBe(true);
